@@ -1,11 +1,8 @@
-<script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="container">
     <div></div>
-    <HelloWorld msg="Vite + Vue" />
   </div>
 </template>
 
@@ -13,7 +10,7 @@ import HelloWorld from './components/HelloWorld.vue'
 .container {
   width: 100%;
   height: 100%;
-  background-image: url('./assets/console.png');
+  background-image: url("./assets/console.png");
   background-repeat: no-repeat;
   /* background-size: 100% auto; */
   background-size: auto 100%;
