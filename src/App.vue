@@ -1,8 +1,26 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from "vue"
+import FrameView from "./components/FrameView.vue"
+
+const remRatio = 0.052083333333333336
+
+const resizeRootFontSize = () => {
+  const winWidth = window.innerWidth
+
+  document.documentElement.style.fontSize = winWidth * remRatio + "px"
+}
+
+onMounted(() => {
+  resizeRootFontSize()
+  window.addEventListener("resize", () => {
+    resizeRootFontSize()
+  })
+})
+</script>
 
 <template>
   <div class="container">
-    <div></div>
+    <FrameView />
   </div>
 </template>
 
@@ -10,10 +28,10 @@
 .container {
   width: 100%;
   height: 100%;
-  background-image: url("./assets/console.png");
-  background-repeat: no-repeat;
-  /* background-size: 100% auto; */
-  background-size: auto 100%;
-  background-position: center;
+  background-color: #342c5f;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>
