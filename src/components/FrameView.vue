@@ -1,11 +1,17 @@
 <script setup lang="ts">
 import { CSSProperties, onMounted, ref } from "vue"
 import { ceilToTwo } from "../utils"
+import MainMenu from "./MainMenu.vue"
 
 const ratio = 2.3148175675675673
+const remRatio = 0.04
 const overRatio = 0.768
 const frameRef = ref<HTMLDivElement>()
 const frameStyle = ref<CSSProperties>()
+
+const resizeRootFontSize = (clientWidth: number) => {
+  document.documentElement.style.fontSize = ceilToTwo(clientWidth * remRatio) + "px"
+}
 
 const resizeFrame = () => {
   const winWidth = window.innerWidth
@@ -38,6 +44,9 @@ const resizeFrame = () => {
         left: -getOverWidth(parseFloat(frameWidth)) + "px",
       }
     }
+    resizeRootFontSize(parseFloat(frameWidth))
+  } else {
+    resizeRootFontSize(winWidth)
   }
 }
 
@@ -51,7 +60,9 @@ onMounted(() => {
 
 <template>
   <div class="frame-view" :style="{ width: frameStyle?.width }">
-    <div class="frame" ref="frameRef" :style="frameStyle"></div>
+    <div class="frame" ref="frameRef" :style="frameStyle">
+      <MainMenu />
+    </div>
   </div>
 </template>
 
