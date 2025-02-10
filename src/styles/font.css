@@ -1,0 +1,27 @@
+@font-face {
+  font-family: year-impact;
+  src:
+    local("Impact"),
+    url(https://act.mihoyo.com/zzz/event/e20250124year-z2p5y6/fonts/impact-webfont.a587477d..woff2)
+      format("woff2"),
+    url(https://act.mihoyo.com/zzz/event/e20250124year-z2p5y6/fonts/impact-webfont.70a85633..woff)
+      format("woff");
+  /* url(../assets/fonts/impact-webfont.woff) format("woff2"),
+    url(../assets/fonts/impact-webfont2.woff) format("woff"); */
+}
+
+@font-face {
+  font-family: year-mont;
+  src:
+    url(https://act.mihoyo.com/zzz/event/e20250124year-z2p5y6/fonts/mont-heavy-webfont.5bb8eff4..woff2)
+      format("woff2"),
+    url(https://act.mihoyo.com/zzz/event/e20250124year-z2p5y6/fonts/mont-heavy-webfont.0fb9c66d..woff)
+      format("woff");
+  /* url(../assets/fonts/mont-heavy.woff2) format("woff2"),
+    url(../assets/fonts/mont-heavy2.woff) format("woff"); */
+}
+
+@font-face {
+  font-family: year-hongmeng;
+  src: url(../assets/fonts/inpin_hongmeng.ttf) format("truetype");
+}

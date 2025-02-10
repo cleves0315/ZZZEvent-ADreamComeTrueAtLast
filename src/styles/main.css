@@ -1,6 +1,12 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  line-height: 1.15;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -19,4 +25,13 @@ html {
   width: 100%;
   height: 100%;
   overflow: hidden;
+}
+
+[lang="zh-cn"] {
+  --font-css: "Helvetica neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI",
+    "Microsoft YaHei", "Arial", "sans-serif";
+}
+
+html[lang="zh-cn"] body {
+  font-family: year-hongmeng, year-title, year-impact, year-mont, var(--font-css) !important;
 }
