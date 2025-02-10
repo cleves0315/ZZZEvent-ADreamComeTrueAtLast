@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
 import FrameView from "./components/FrameView.vue"
+import { ceilToTwo } from "./utils"
 
 const remRatio = 0.052083333333333336
 
 const resizeRootFontSize = () => {
   const winWidth = window.innerWidth
-
-  document.documentElement.style.fontSize = winWidth * remRatio + "px"
+  document.documentElement.style.fontSize = ceilToTwo(winWidth * remRatio) + "px"
 }
 
 onMounted(() => {

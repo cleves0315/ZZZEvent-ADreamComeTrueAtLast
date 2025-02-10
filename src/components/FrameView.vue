@@ -1,28 +1,41 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { CSSProperties, onMounted, ref } from "vue"
+import { ceilToTwo } from "../utils"
 
 const ratio = 2.3148175675675673
+const overRatio = 0.768
 const frameRef = ref<HTMLDivElement>()
-const frameStyle = ref({})
+const frameStyle = ref<CSSProperties>()
 
 const resizeFrame = () => {
   const winWidth = window.innerWidth
   const winHeight = window.innerHeight
-  const winRatio = winWidth / winHeight
+  let frameWidth = ceilToTwo(winWidth / overRatio)
+  let frameHeight = ceilToTwo(parseFloat(frameWidth) / ratio)
 
   // console.log(winWidth, winHeight, winRatio)
 
-  // console.log(winRatio > ratio)
+  const getOverWidth = (frameWidth: number) => {
+    if (frameWidth > winWidth) {
+      return ceilToTwo((frameWidth - winWidth) / 2, 3)
+    } else {
+      return 0
+    }
+  }
+
   if (frameRef.value) {
-    if (winRatio > ratio) {
+    if (parseFloat(frameHeight) <= winHeight) {
       frameStyle.value = {
-        width: Math.floor(winHeight * ratio) + "px",
-        height: "100%",
+        width: frameWidth + "px",
+        height: frameHeight + "px",
+        left: -getOverWidth(parseFloat(frameWidth)) + "px",
       }
     } else {
+      frameWidth = ceilToTwo(winHeight * ratio)
       frameStyle.value = {
-        width: "100%",
-        height: Math.floor(winWidth / ratio) + "px",
+        width: frameWidth + "px",
+        height: winHeight + "px",
+        left: -getOverWidth(parseFloat(frameWidth)) + "px",
       }
     }
   }
@@ -37,12 +50,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="frame" ref="frameRef" :style="frameStyle"></div>
+  <div class="frame-view" :style="{ width: frameStyle?.width }">
+    <div class="frame" ref="frameRef" :style="frameStyle"></div>
+  </div>
 </template>
 
 <style scoped>
-.frame {
+.frame-view {
+  width: 100%;
+  height: 100%;
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.frame {
+  position: absolute;
   background-image: url("../assets/default_bg2.jpg");
   background-repeat: no-repeat;
   background-size: 100% 100%;
