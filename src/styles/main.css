@@ -26,12 +26,3 @@ html {
   height: 100%;
   overflow: hidden;
 }
-
-[lang="zh-cn"] {
-  --font-css: "Helvetica neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI",
-    "Microsoft YaHei", "Arial", "sans-serif";
-}
-
-html[lang="zh-cn"] body {
-  font-family: year-hongmeng, year-title, year-impact, year-mont, var(--font-css) !important;
-}

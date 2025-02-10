@@ -25,3 +25,12 @@
   font-family: year-hongmeng;
   src: url(../assets/fonts/inpin_hongmeng.ttf) format("truetype");
 }
+
+[lang="zh-cn"] {
+  --font-css: "Helvetica neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei UI",
+    "Microsoft YaHei", "Arial", "sans-serif";
+}
+
+html[lang="zh-cn"] body {
+  font-family: year-hongmeng, year-title, year-impact, year-mont, var(--font-css) !important;
+}
