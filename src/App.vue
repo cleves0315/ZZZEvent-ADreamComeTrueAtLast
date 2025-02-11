@@ -12,7 +12,6 @@ import FrameView from "./components/FrameView.vue"
 .container {
   width: 100%;
   height: 100%;
-  background-color: #342c5f;
   position: relative;
   display: flex;
   align-items: center;

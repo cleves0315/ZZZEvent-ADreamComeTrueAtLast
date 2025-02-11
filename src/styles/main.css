@@ -6,13 +6,13 @@
 
 html {
   line-height: 1.15;
+  background-color: #342c5f;
   -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
   overflow: hidden;
-  background-color: #000;
 }
 
 body,
