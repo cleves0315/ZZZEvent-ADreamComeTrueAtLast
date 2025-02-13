@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@csstools/normalize.css": "^12.1.1",
+    "howler": "^2.2.4",
     "vue": "^3.4.37"
   },
   "devDependencies": {

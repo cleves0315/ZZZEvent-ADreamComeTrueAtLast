@@ -9,6 +9,7 @@ specifiers:
   eslint-plugin-prettier: ^5.2.1
   eslint-plugin-vue: ^9.28.0
   globals: ^15.9.0
+  howler: ^2.2.4
   prettier: ^3.3.3
   sass: ^1.78.0
   typescript: ^5.5.3
@@ -19,6 +20,7 @@ specifiers:
 
 dependencies:
   '@csstools/normalize.css': 12.1.1
+  howler: 2.2.4
   vue: 3.5.5_typescript@5.6.2
 
 devDependencies:
@@ -1250,6 +1252,10 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
     dev: true
+
+  /howler/2.2.4:
+    resolution: {integrity: sha512-iARIBPgcQrwtEr+tALF+rapJ8qSc+Set2GJQl7xT1MQzWaVkFebdJhR3alVlSiUf5U7nAANKuj3aWpwerocD5w==}
+    dev: false
 
   /ignore/5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
