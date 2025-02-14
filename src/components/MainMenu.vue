@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router"
+import { slideEnter } from "../utils"
 
 const router = useRouter()
 
-const onStart = () => {
+const onStart = async () => {
+  await slideEnter()
   router.push("/play")
 }
 </script>

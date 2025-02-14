@@ -3,13 +3,13 @@ import FrameView from "./components/FrameView.vue"
 </script>
 
 <template>
-  <div class="container">
+  <div class="app-container">
     <FrameView />
   </div>
 </template>
 
 <style scoped>
-.container {
+.app-container {
   width: 100%;
   height: 100%;
   position: relative;

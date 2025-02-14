@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted } from "vue"
-import { Howl, Howler } from "howler"
-// import ad from "./play_bgm.mp3"
+import { onMounted, onUnmounted } from "vue"
+import { Howl } from "howler"
 import ad from "/audio/play_bgm.mp3"
 
 import { GameManager, KeyboardInputManager, HTMLActuator, LocalStorageManager } from "../libs/play"
+import { useRouter } from "vue-router"
 
 onMounted(() => {
   window.requestAnimationFrame(function () {
@@ -20,65 +20,84 @@ onMounted(() => {
   })
 
   sound.play()
+
+  onUnmounted(() => {
+    sound.stop()
+  })
 })
+
+const router = useRouter()
+const onBack = () => {
+  router.push("/")
+}
 </script>
 
 <template>
-  <div class="play-container">
-    <div class="heading">
-      <div class="scores-container">
-        <div class="score-container">0</div>
-        <div class="best-container">0</div>
-      </div>
-    </div>
-
-    <div class="above-game">
-      <a class="restart-button">New Game</a>
-    </div>
-
-    <div class="game-container">
-      <div class="game-message">
-        <p></p>
-        <div class="lower">
-          <a class="keep-playing-button">Keep going</a>
-          <a class="retry-button">Try again</a>
+  <div class="play-view slide-enter-in">
+    <div class="play-container">
+      <div @click="onBack">back</div>
+      <div class="heading">
+        <div class="scores-container">
+          <div class="score-container">0</div>
+          <div class="best-container">0</div>
         </div>
       </div>
 
-      <div class="grid-container">
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
-        <div class="grid-row">
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-          <div class="grid-cell"></div>
-        </div>
+      <div class="above-game">
+        <a class="restart-button">New Game</a>
       </div>
 
-      <div class="tile-container"></div>
+      <div class="game-container">
+        <div class="game-message">
+          <p></p>
+          <div class="lower">
+            <a class="keep-playing-button">Keep going</a>
+            <a class="retry-button">Try again</a>
+          </div>
+        </div>
+
+        <div class="grid-container">
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+          <div class="grid-row">
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+          </div>
+        </div>
+
+        <div class="tile-container"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <style lang="scss">
 @import "../styles/play.scss";
+.play-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 .play-container {
   position: absolute;
   left: 3.5rem;
