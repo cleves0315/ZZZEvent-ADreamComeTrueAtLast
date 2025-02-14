@@ -1,4 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { useRouter } from "vue-router"
+
+const router = useRouter()
+
+const onStart = () => {
+  router.push("/play")
+}
+</script>
 
 <template>
   <svg
@@ -31,7 +39,7 @@
   </div>
   <img class="main-reward" src="../assets/main_reward.png" />
   <div class="main-btns">
-    <div class="main-btn-start">启动游戏</div>
+    <div class="main-btn-start" @click="onStart">启动游戏</div>
   </div>
 </template>
 

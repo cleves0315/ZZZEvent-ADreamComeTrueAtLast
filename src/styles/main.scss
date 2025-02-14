@@ -26,3 +26,10 @@ html {
   height: 100%;
   overflow: hidden;
 }
+
+*:not(input):not(textarea) {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
