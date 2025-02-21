@@ -140,7 +140,7 @@ onMounted(() => {
     height: 11%;
     background-repeat: no-repeat;
     background-size: 100% 100%;
-    border-radius: 99999px;
+    border-radius: 999rem;
 
     &:nth-child(1),
     &:nth-child(3),
