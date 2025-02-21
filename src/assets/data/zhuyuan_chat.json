@@ -1,0 +1,111 @@
+{
+  "roomName": "假期处理专项群",
+  "toptips": "朱鸢 邀请 哲、铃 加入群聊",
+  "firstIndex": 1,
+  "chatList": [
+    {
+      "avatar": "chat_avatar_zhuyuan.png",
+      "content": "哲，玲，把歉我临时有急事要处理，这次聚餐可能要爽约了",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_zhuyuan.png",
+      "content": "如果处理不好，我明年可能没有班上了",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_lin.png",
+      "reply": ["啊？现在治安局人才轮换这么快吗？", "冷静，真失业可以先来店里上班"],
+      "isRight": true
+    },
+    {
+      "avatar": "chat_avatar_zhuyuan.png",
+      "content": "啊，你们别误会",
+      "isRight": false
+    },
+    {
+      "avatar": "",
+      "content": "上次不是还灵有79天吗！不对，为什么我会说只有",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_zhuyuan.png",
+      "content": "加上太大小小的节假日和调休，就变成这样了",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_lin.png",
+      "reply": ["还是珍惜假期吧，录像店可是全年无休的", "店长不好做啊…一周七天都是工作日"],
+      "isRight": true
+    },
+    {
+      "avatar": "chat_avatar_bot.png",
+      "content": "主人。您之前说的是只要胆子大，天天都是假",
+      "isRight": false
+    },
+    {
+      "avatar": "",
+      "content": "为什么你会在群里？！",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_lin.png",
+      "content": "啊，是我把F宝接入进来的，说不定它能帮助到朱鸢",
+      "isRight": true
+    },
+    {
+      "avatar": "chat_avatar_zhuyuan.png",
+      "content": "这位是？",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_bot.png",
+      "content": "是新艾利都最优秀的智能管家",
+      "isRight": false
+    },
+    {
+      "avatar": "",
+      "content": "是一位发言从不看场合的智能管家",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_bot.png",
+      "content": "肯定。我只看系统环境",
+      "isRight": false
+    },
+    {
+      "avatar": "",
+      "content": "你…算了，你有办法帮到朱鸢吗？",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_bot.png",
+      "content": "肯定。作为主人最得力的「首席助手」，这对我不是难事",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_bot.png",
+      "content": "但会消耗较多算力，需申请额外的电费",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_lin.png",
+      "reply": ["先不管电费了，能让朱鸢有班上要紧", "上吧，为了消灭假期！"],
+      "isRight": true
+    },
+    {
+      "avatar": "chat_avatar_bot.png",
+      "content": "理解。随后请在专用操作页面喂饱我，我会提供对应方案",
+      "isRight": false
+    },
+    {
+      "avatar": "chat_avatar_zhuyuan.png",
+      "content": "啊，那…要上吗，我也来？",
+      "isRight": false
+    }
+  ],
+  "tips": {
+    "title": "友情提示",
+    "content": "每合成5次，获得1位1~9随机「电费加倍」倍率"
+  }
+}

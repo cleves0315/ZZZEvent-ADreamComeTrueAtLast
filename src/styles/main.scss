@@ -33,3 +33,12 @@ html {
   -ms-user-select: none;
   user-select: none;
 }
+
+.home-mask-fade-enter-active,
+.home-mask-fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.home-mask-fade-leave-to /* .fade-leave-active 在2.1.8+ */ {
+  opacity: 0;
+}
