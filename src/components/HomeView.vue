@@ -27,7 +27,8 @@ const readyStyle = {
   timeTxt: { color: "#fff" },
 }
 
-const isMute = ref(false)
+const isBgmMute = ref(false)
+const bgmState = ref("none")
 const showScreenMask = ref(false)
 
 const router = useRouter()
@@ -41,13 +42,41 @@ const chatListRef = ref<HTMLDivElement>()
 const bgmSound = ref()
 const msgSound = ref()
 
-document.addEventListener("visibilitychange", function () {
-  if (document.visibilityState === "hidden") {
+const smartSwitchBgm = (action: "pause" | "play") => {
+  if (!bgmSound.value) return
+  if (isBgmMute.value) return
+  if (bgmSound.value.state() === "stopped") return
+
+  if (action === "pause" && bgmState.value === "playing") {
     bgmSound.value.pause()
-  } else {
+  }
+  if (action === "play" && bgmState.value === "paused") {
     bgmSound.value.play()
   }
-})
+}
+
+document.addEventListener(
+  "visibilitychange",
+  throttle(() => {
+    if (document.visibilityState === "hidden") {
+      smartSwitchBgm("pause")
+    } else {
+      smartSwitchBgm("play")
+    }
+  }, 1000),
+)
+window.addEventListener(
+  "focus",
+  throttle(function () {
+    smartSwitchBgm("play")
+  }, 500),
+)
+window.addEventListener(
+  "blur",
+  throttle(function () {
+    smartSwitchBgm("pause")
+  }, 500),
+)
 
 const initChatList = () => {
   const timer = 400
@@ -67,6 +96,15 @@ onMounted(() => {
     autoplay: true,
     loop: true,
     volume: 1.0,
+    onplay: () => {
+      bgmState.value = "playing"
+    },
+    onpause: () => {
+      bgmState.value = "paused"
+    },
+    onStop: () => {
+      bgmState.value = "stopped"
+    },
   })
   msgSound.value = new Howl({
     src: [msgAnswer],
@@ -78,12 +116,15 @@ onMounted(() => {
 })
 
 const handleChangeBgm = () => {
-  isMute.value = !isMute.value
-  if (isMute.value) {
+  isBgmMute.value = !isBgmMute.value
+  if (isBgmMute.value) {
     bgmSound.value.pause()
   } else {
     bgmSound.value.play()
   }
+}
+const stopBgm = () => {
+  bgmSound.value.stop()
 }
 
 const playMsgSound = () => {
@@ -91,7 +132,7 @@ const playMsgSound = () => {
 }
 
 const handleBack = async () => {
-  bgmSound.value.stop()
+  stopBgm()
   await slideEnter()
   router.back()
 }
@@ -265,7 +306,7 @@ const toPlay = async () => {
   <div class="operate-wrap">
     <div
       class="operate-item operate-mute"
-      :data-state="isMute ? 'mute' : 'open'"
+      :data-state="isBgmMute ? 'mute' : 'open'"
       @click="handleChangeBgm"
     ></div>
     <div class="operate-item"></div>
