@@ -34,19 +34,12 @@ const router = useRouter()
 
 const curReplys = ref<string[]>([])
 
-const chatList = ref(chats.slice(0, chatFirstIndex + 1))
+const chatList = ref(chats.slice(0, 0))
 
 const chatListRef = ref<HTMLDivElement>()
 
 const bgmSound = ref()
 const msgSound = ref()
-
-bgmSound.value = new Howl({
-  src: [bgmHome],
-  autoplay: true,
-  loop: true,
-  volume: 1.0,
-})
 
 document.addEventListener("visibilitychange", function () {
   if (document.visibilityState === "hidden") {
@@ -55,11 +48,34 @@ document.addEventListener("visibilitychange", function () {
     bgmSound.value.play()
   }
 })
-msgSound.value = new Howl({
-  src: [msgAnswer],
-  volume: 1.0,
+
+const initChatList = () => {
+  const timer = 400
+  for (let i = 0; i <= chatFirstIndex; i++) {
+    setTimeout(
+      () => {
+        chatList.value.push(chats[i])
+      },
+      timer * i + 1,
+    )
+  }
+}
+
+onMounted(() => {
+  bgmSound.value = new Howl({
+    src: [bgmHome],
+    autoplay: true,
+    loop: true,
+    volume: 1.0,
+  })
+  msgSound.value = new Howl({
+    src: [msgAnswer],
+    volume: 1.0,
+  })
+  setTimeout(() => {
+    initChatList()
+  }, 2000)
 })
-onMounted(() => {})
 
 const handleChangeBgm = () => {
   isMute.value = !isMute.value
@@ -75,7 +91,7 @@ const playMsgSound = () => {
 }
 
 const handleBack = async () => {
-  bgmSound.value.pause()
+  bgmSound.value.stop()
   await slideEnter()
   router.back()
 }
