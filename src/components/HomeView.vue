@@ -266,10 +266,12 @@ const toPlay = async () => {
             v-for="(item, idx) in chatList"
             :key="idx"
           >
-            <div
-              class="chat-avatar"
-              :style="{ backgroundImage: `url(/src/assets/${item.avatar})` }"
-            ></div>
+            <div class="chat-avatar-wrap" :class="item.user === 'bot' && 'chat-avatar-bot'">
+              <div
+                class="chat-avatar"
+                :style="{ backgroundImage: `url(/src/assets/${item.avatar})` }"
+              ></div>
+            </div>
             <div class="chat-content">
               <div class="chat-txt" :data-text="item.content">
                 {{ item.content }}
@@ -622,7 +624,7 @@ const toPlay = async () => {
         transform: scale(1);
       }
     }
-    .chat-avatar {
+    .chat-avatar-wrap {
       width: 0.7rem;
       height: 0.7rem;
       border-radius: 50%;
@@ -631,7 +633,16 @@ const toPlay = async () => {
       animation: showAvatar 0.3s 0.3s forwards;
       background-size: 100% 100%;
       background-repeat: no-repeat;
-      border: 0.02rem solid #c4a7f5;
+      position: relative;
+      .chat-avatar {
+        position: absolute;
+        top: 0.02rem;
+        left: 0.02rem;
+        right: 0.02rem;
+        bottom: 0.02rem;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
+      }
     }
     .chat-content {
       position: relative;
