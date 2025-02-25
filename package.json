@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@csstools/normalize.css": "^12.1.1",
+    "@types/howler": "^2.2.12",
+    "@types/lodash": "^4.17.15",
     "gsap": "^3.12.7",
     "howler": "^2.2.4",
     "lodash": "^4.17.21",
