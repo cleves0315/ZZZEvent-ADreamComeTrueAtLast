@@ -6,7 +6,7 @@ const router = useRouter()
 
 const onStart = async () => {
   await slideEnter()
-  router.push("/home")
+  router.push("/cinema")
 }
 </script>
 
