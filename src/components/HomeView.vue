@@ -14,6 +14,7 @@ import {
   toptips,
   firstIndex as chatFirstIndex,
 } from "../assets/data/zhuyuan_chat.json"
+import { getStorage, setStorage, StorageKey } from "../utils/storage"
 
 const readyStyle = {
   item: { backgroundColor: "#FE9ACB", borderColor: "#FADC6B" },
@@ -27,7 +28,7 @@ const readyStyle = {
   timeTxt: { color: "#fff" },
 }
 
-const isBgmMute = ref(false)
+const isBgmMute = ref(getStorage(StorageKey.MUSIC_MUTED) ?? false)
 const bgmState = ref("none")
 const showScreenMask = ref(false)
 
@@ -93,7 +94,7 @@ const initChatList = () => {
 onMounted(() => {
   bgmSound.value = new Howl({
     src: [bgmHome],
-    autoplay: true,
+    autoplay: isBgmMute.value ? false : true,
     loop: true,
     volume: 1.0,
     onplay: () => {
@@ -102,7 +103,7 @@ onMounted(() => {
     onpause: () => {
       bgmState.value = "paused"
     },
-    onStop: () => {
+    onstop: () => {
       bgmState.value = "stopped"
     },
   })
@@ -117,6 +118,8 @@ onMounted(() => {
 
 const handleChangeBgm = () => {
   isBgmMute.value = !isBgmMute.value
+  setStorage(StorageKey.MUSIC_MUTED, isBgmMute.value)
+
   if (isBgmMute.value) {
     bgmSound.value.pause()
   } else {
@@ -128,6 +131,7 @@ const stopBgm = () => {
 }
 
 const playMsgSound = () => {
+  if (isBgmMute.value) return
   msgSound.value.play()
 }
 
