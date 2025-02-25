@@ -2,7 +2,7 @@ export enum StorageKey {
   MUSIC_MUTED = "MUSIC_MUTED",
 }
 
-export const setStorage = (key: StorageKey, value: any) => {
+export const setStorage = (key: StorageKey, value: unknown) => {
   localStorage.setItem(key, JSON.stringify(value))
 }
 
