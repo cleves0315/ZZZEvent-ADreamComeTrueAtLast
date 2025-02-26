@@ -2,11 +2,13 @@
 import { onMounted, ref } from "vue"
 import { Howl } from "howler"
 import msgAnswer from "/audio/btn_click.mp3"
-import { getStorage, StorageKey } from "../utils/storage"
+import bgmHome from "/audio/bgm_home.mp3"
 import { list } from "../assets/data/zhuyuan_chat_room.json"
+import { useBgm } from "../hooks/useBgm"
+import { useMusicMute } from "../hooks/useMusicMute"
 
-const isBgmMute = ref(getStorage(StorageKey.MUSIC_MUTED) ?? false)
-// const bgmSound = ref()
+const { isBgmMute, toggleBgmMute } = useMusicMute()
+const { bgmSound } = useBgm(bgmHome)
 const msgSound = ref()
 
 const content = ref("")
@@ -77,8 +79,13 @@ const writeText = (str: string) => {
 }
 
 const handleMute = () => {
-  isBgmMute.value = !isBgmMute.value
-  localStorage.setItem(StorageKey.MUSIC_MUTED, isBgmMute.value)
+  toggleBgmMute()
+
+  if (isBgmMute.value) {
+    bgmSound.value.pause()
+  } else {
+    bgmSound.value.play()
+  }
 }
 
 const handleJump = () => {
