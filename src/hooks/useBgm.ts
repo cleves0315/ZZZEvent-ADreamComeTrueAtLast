@@ -6,11 +6,11 @@ export const useBgm = (bgm: string) => {
   const bgmSound = ref()
   const bgmState = ref("none")
 
-  const { isBgmMute } = useMusicMute()
+  const { getBgmMuted } = useMusicMute()
 
   const smartSwitchBgm = (action: "pause" | "play") => {
     if (!bgmSound.value) return
-    if (isBgmMute.value) return
+    if (getBgmMuted()) return
     if (bgmSound.value.state() === "stopped") return
 
     if (action === "pause" && bgmState.value === "playing") {
@@ -24,7 +24,7 @@ export const useBgm = (bgm: string) => {
   onMounted(() => {
     bgmSound.value = new Howl({
       src: [bgm],
-      autoplay: isBgmMute.value ? false : true,
+      autoplay: getBgmMuted() ? false : true,
       loop: true,
       volume: 1.0,
       onplay: () => {

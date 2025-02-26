@@ -9,8 +9,13 @@ export const useMusicMute = () => {
     setStorage(StorageKey.MUSIC_MUTED, isBgmMute.value)
   }
 
+  const getBgmMuted = () => {
+    return getStorage(StorageKey.MUSIC_MUTED) ?? false
+  }
+
   return {
     isBgmMute,
     toggleBgmMute,
+    getBgmMuted,
   }
 }
