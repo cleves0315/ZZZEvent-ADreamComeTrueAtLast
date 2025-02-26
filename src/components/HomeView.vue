@@ -14,7 +14,8 @@ import {
   toptips,
   firstIndex as chatFirstIndex,
 } from "../assets/data/zhuyuan_chat.json"
-import { getStorage, setStorage, StorageKey } from "../utils/storage"
+import { useBgm } from "../hooks/useBgm"
+import { useMusicMute } from "../hooks/useMusicMute"
 
 const readyStyle = {
   item: { backgroundColor: "#FE9ACB", borderColor: "#FADC6B" },
@@ -28,8 +29,8 @@ const readyStyle = {
   timeTxt: { color: "#fff" },
 }
 
-const isBgmMute = ref(getStorage(StorageKey.MUSIC_MUTED) ?? false)
-const bgmState = ref("none")
+const { isBgmMute, toggleBgmMute } = useMusicMute()
+const { bgmSound } = useBgm(bgmHome)
 const showScreenMask = ref(false)
 
 const router = useRouter()
@@ -40,44 +41,7 @@ const chatList = ref(chats.slice(0, 0))
 
 const chatListRef = ref<HTMLDivElement>()
 
-const bgmSound = ref()
 const msgSound = ref()
-
-const smartSwitchBgm = (action: "pause" | "play") => {
-  if (!bgmSound.value) return
-  if (isBgmMute.value) return
-  if (bgmSound.value.state() === "stopped") return
-
-  if (action === "pause" && bgmState.value === "playing") {
-    bgmSound.value.pause()
-  }
-  if (action === "play" && bgmState.value === "paused") {
-    bgmSound.value.play()
-  }
-}
-
-document.addEventListener(
-  "visibilitychange",
-  throttle(() => {
-    if (document.visibilityState === "hidden") {
-      smartSwitchBgm("pause")
-    } else {
-      smartSwitchBgm("play")
-    }
-  }, 1000),
-)
-window.addEventListener(
-  "focus",
-  throttle(function () {
-    smartSwitchBgm("play")
-  }, 500),
-)
-window.addEventListener(
-  "blur",
-  throttle(function () {
-    smartSwitchBgm("pause")
-  }, 500),
-)
 
 const initChatList = () => {
   const timer = 400
@@ -92,21 +56,6 @@ const initChatList = () => {
 }
 
 onMounted(() => {
-  bgmSound.value = new Howl({
-    src: [bgmHome],
-    autoplay: isBgmMute.value ? false : true,
-    loop: true,
-    volume: 1.0,
-    onplay: () => {
-      bgmState.value = "playing"
-    },
-    onpause: () => {
-      bgmState.value = "paused"
-    },
-    onstop: () => {
-      bgmState.value = "stopped"
-    },
-  })
   msgSound.value = new Howl({
     src: [msgAnswer],
     volume: 1.0,
@@ -117,8 +66,7 @@ onMounted(() => {
 })
 
 const handleChangeBgm = () => {
-  isBgmMute.value = !isBgmMute.value
-  setStorage(StorageKey.MUSIC_MUTED, isBgmMute.value)
+  toggleBgmMute()
 
   if (isBgmMute.value) {
     bgmSound.value.pause()
