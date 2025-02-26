@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import { ref } from "vue"
+import { onMounted, ref } from "vue"
+import { Howl } from "howler"
+import msgAnswer from "/audio/btn_click.mp3"
 import { getStorage, StorageKey } from "../utils/storage"
+import { list } from "../assets/data/zhuyuan_chat_room.json"
 
 const isBgmMute = ref(getStorage(StorageKey.MUSIC_MUTED) ?? false)
+// const bgmSound = ref()
+const msgSound = ref()
 
 const content = ref("")
+
+const chatEnd = ref(false)
+
+const stopWrite = ref(false)
+const charIndex = ref(0)
+const lineIndex = ref(0)
 
 const curUser = ref("left")
 
@@ -16,24 +27,53 @@ const userRight = ref({
   name: "哲",
   avatar: "user_zhe_to_left.png",
 })
+msgSound.value = new Howl({
+  src: [msgAnswer],
+  volume: 1.0,
+})
+
+onMounted(() => {
+  const t = list[lineIndex.value].content
+  writeText(t)
+})
 
 const writeText = (str: string) => {
-  console.log("writeText")
-
   let text = str
-  let charIndex = 0
-  const typeText = () => {
-    if (charIndex < text.length) {
-      content.value += text.charAt(charIndex)
-      charIndex++
+  charIndex.value = 0
+  content.value = ""
+
+  const handle = () => {
+    if (stopWrite.value) {
+      content.value = text
+      charIndex.value = 0
+      stopWrite.value = false
+
+      if (lineIndex.value >= list.length - 1) {
+        chatEnd.value = true
+        setTimeout(() => {
+          chatEndHandler()
+        }, 1000)
+      }
+      return
+    }
+    if (charIndex.value < text.length) {
+      content.value += text.charAt(charIndex.value++)
       requestAnimationFrame(() => {
-        setTimeout(typeText, 20)
+        setTimeout(handle, 20)
       })
     } else {
-      charIndex = 0
+      charIndex.value = 0
+      content.value = text
+
+      if (lineIndex.value >= list.length - 1) {
+        chatEnd.value = true
+        setTimeout(() => {
+          chatEndHandler()
+        }, 1000)
+      }
     }
   }
-  typeText()
+  return handle()
 }
 
 const handleMute = () => {
@@ -45,8 +85,25 @@ const handleJump = () => {
   // typeText()
 }
 
-const handleNext = () => {
-  writeText("按揭贷款啦就是看到了就开始垃圾看到了手机壳啦")
+const handleNext = async () => {
+  if (chatEnd.value) return
+
+  if (!isBgmMute.value) {
+    msgSound.value.play()
+  }
+
+  if (charIndex.value !== 0) {
+    stopWrite.value = true
+    return
+  }
+
+  lineIndex.value++
+  const t = list[lineIndex.value].content
+  writeText(t)
+}
+
+const chatEndHandler = () => {
+  alert("chatEndHandler")
 }
 </script>
 
@@ -71,14 +128,14 @@ const handleNext = () => {
       <div
         class="operator-btn mute"
         :data-state="isBgmMute ? 'mute' : 'open'"
-        @click="handleMute"
+        @click.stop="handleMute"
       ></div>
-      <div class="operator-btn jump" @click="handleJump"></div>
+      <div class="operator-btn jump" @click.stop="handleJump"></div>
     </div>
     <div class="right-bottom"></div>
 
     <div class="dialog-block">
-      <div class="dialog-title" data-text="朱鸢">朱鸢</div>
+      <div class="dialog-title" :data-text="list[lineIndex].name">{{ list[lineIndex].name }}</div>
       <div class="dialog-content" :data-text="content">{{ content }}</div>
       <div class="progress"></div>
     </div>
