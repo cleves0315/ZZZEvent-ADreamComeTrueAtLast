@@ -1,17 +1,26 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { Howl } from "howler"
 import msgAnswer from "/audio/btn_click.mp3"
 import bgmHome from "/audio/bgm_home.mp3"
 import { list } from "../assets/data/zhuyuan_chat_room.json"
 import { useBgm } from "../hooks/useBgm"
 import { useMusicMute } from "../hooks/useMusicMute"
+import { gsap } from "gsap"
+
+const owner = {
+  user: "ling",
+  name: "玲",
+  avatar: "user_ling_to_right.png",
+  // avatar: "user_zhe_to_right.png",
+}
 
 const { isBgmMute, toggleBgmMute } = useMusicMute()
 const { bgmSound } = useBgm(bgmHome)
 const msgSound = ref()
 
 const content = ref("")
+const tipsCont = ref("")
 
 const chatEnd = ref(false)
 
@@ -19,23 +28,20 @@ const stopWrite = ref(false)
 const charIndex = ref(0)
 const lineIndex = ref(0)
 
-const curUser = ref("left")
+const curItem = computed(() => list[lineIndex.value])
+const isCurUserBot = computed(() => curItem.value.user === "bot")
+const curDirection = computed(() => (curItem.value.user === owner.user ? "left" : "right"))
+const userRight = computed((previous) =>
+  curItem.value.user === owner.user || isCurUserBot.value ? previous : curItem.value,
+)
 
-const userLeft = ref({
-  name: "铃",
-  avatar: "user_ling_to_right.png",
-})
-const userRight = ref({
-  name: "哲",
-  avatar: "user_zhe_to_left.png",
-})
 msgSound.value = new Howl({
   src: [msgAnswer],
   volume: 1.0,
 })
 
 onMounted(() => {
-  const t = list[lineIndex.value].content
+  const t = curItem.value.content
   writeText(t)
 })
 
@@ -89,7 +95,7 @@ const handleMute = () => {
 }
 
 const handleJump = () => {
-  // typeText()
+  handleTipsMsg("第二天")
 }
 
 const handleNext = async () => {
@@ -100,13 +106,37 @@ const handleNext = async () => {
   }
 
   if (charIndex.value !== 0) {
-    stopWrite.value = true
+    stopWrite.value = true // fast-forward
     return
   }
 
   lineIndex.value++
-  const t = list[lineIndex.value].content
-  writeText(t)
+  const msg = curItem.value
+  if (msg.user === "tips") {
+    handleTipsMsg(msg.content)
+  } else {
+    writeText(msg.content)
+  }
+}
+
+const handleTipsMsg = async (content: string) => {
+  tipsCont.value = content
+  gsap.set(".cinema-view", { pointerEvents: "none" })
+  gsap.set(".cinema-view-tips", { display: "flex" })
+  await gsap.to(".cinema-view-tips", { opacity: 1, duration: 0.5 })
+  await gsap.to(".cinema-view-tips-cont", { opacity: 1, duration: 0.5 })
+  gsap.set(".tips-progress", { opacity: 1 })
+  gsap.set(".cinema-view-tips", { pointerEvents: "auto" })
+}
+
+const handleTipsNext = async () => {
+  setTimeout(handleNext)
+  await gsap.to(".cinema-view-tips", { opacity: 0, duration: 0.5 })
+  gsap.set(".cinema-view", { pointerEvents: "auto" })
+  gsap.set(".cinema-view-tips", { display: "none", pointerEvents: "none" })
+  gsap.set(".cinema-view-tips-cont", { opacity: 0 })
+  gsap.set(".tips-progress", { opacity: 0 })
+  tipsCont.value = ""
 }
 
 const chatEndHandler = () => {
@@ -130,6 +160,11 @@ const chatEndHandler = () => {
     </defs>
   </svg>
 
+  <div class="cinema-view-tips" @click.stop="handleTipsNext">
+    <span class="cinema-view-tips-cont">{{ tipsCont }}</span>
+    <div class="tips-progress"></div>
+  </div>
+
   <div class="cinema-view" @click="handleNext">
     <div class="right-top-operator">
       <div
@@ -142,25 +177,74 @@ const chatEndHandler = () => {
     <div class="right-bottom"></div>
 
     <div class="dialog-block">
-      <div class="dialog-title" :data-text="list[lineIndex].name">{{ list[lineIndex].name }}</div>
+      <div v-if="isCurUserBot" class="dialog-avatar"></div>
+      <div
+        class="dialog-name"
+        :data-text="curItem.name"
+        :style="isCurUserBot ? { transform: 'translateX(1.4rem)' } : {}"
+      >
+        {{ curItem.name }}
+      </div>
       <div class="dialog-content" :data-text="content">{{ content }}</div>
       <div class="progress"></div>
     </div>
 
     <div
       class="user-left"
-      :class="curUser === 'left' ? '' : 'hide'"
-      :style="{ backgroundImage: `url(/src/assets/${userLeft.avatar})` }"
+      :class="curDirection === 'left' ? '' : 'hide'"
+      :style="{ backgroundImage: `url(/src/assets/${owner.avatar})` }"
     ></div>
     <div
       class="user-right"
-      :class="curUser === 'right' ? '' : 'hide'"
-      :style="{ backgroundImage: `url(/src/assets/${userRight.avatar})` }"
+      :class="curDirection === 'right' ? '' : 'hide'"
+      :style="{ backgroundImage: `url(/src/assets/${userRight?.avatar})` }"
     ></div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.cinema-view-tips {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  z-index: 10;
+  color: #fff;
+  font-size: 0.36rem;
+  // display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  opacity: 0;
+  display: none;
+  pointer-events: none;
+  gap: 0.35rem;
+
+  .cinema-view-tips-cont {
+    opacity: 0;
+  }
+  @keyframes greyProgress {
+    0% {
+      background-image: url(../assets/progress_grey_1.png);
+    }
+    50% {
+      background-image: url(../assets/progress_grey_2.png);
+    }
+    100% {
+      background-image: url(../assets/progress_grey_1.png);
+    }
+  }
+  .tips-progress {
+    width: 0.4rem;
+    height: 0.31rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    animation: greyProgress 1s infinite;
+    opacity: 0;
+  }
+}
 .cinema-view {
   width: 100%;
   height: 100%;
@@ -224,11 +308,22 @@ const chatEndHandler = () => {
   background-size: 100% auto;
   background-repeat: no-repeat;
   background-image: url(../assets/dialog_bg.png);
-  .dialog-title {
+  .dialog-avatar {
+    // display: none;
     position: absolute;
-    font-size: 0.6rem;
+    top: -0.18rem;
+    left: 0.5rem;
+    width: 1.9rem;
+    height: 1.9rem;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url(../assets/ciname_bot_avatar.png);
+  }
+  .dialog-name {
+    position: absolute;
     top: 0.8rem;
     left: 1.1rem;
+    font-size: 0.6rem;
     color: #fff;
     &::after {
       content: attr(data-text);
@@ -283,12 +378,13 @@ const chatEndHandler = () => {
 }
 .user-left {
   position: absolute;
-  top: 0;
+  top: 0.5rem;
   bottom: 0;
   left: 2.5rem;
-  width: 6.75rem;
+  width: 7rem;
   background-position: bottom;
-  background-size: 100% auto;
+  // background-size: 100% auto;
+  background-size: auto 100%;
   background-repeat: no-repeat;
   transition: filter 0.3s;
   &.hide {
