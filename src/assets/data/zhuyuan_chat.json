@@ -16,7 +16,7 @@
       "isRight": false
     },
     {
-      "user": "lin",
+      "user": "ling",
       "avatar": "chat_avatar_lin.png",
       "reply": ["啊？现在治安局人才轮换这么快吗？", "冷静，真失业可以先来店里上班"],
       "isRight": true
@@ -40,7 +40,7 @@
       "isRight": false
     },
     {
-      "user": "lin",
+      "user": "ling",
       "avatar": "chat_avatar_lin.png",
       "reply": ["还是珍惜假期吧，录像店可是全年无休的", "店长不好做啊…一周七天都是工作日"],
       "isRight": true
@@ -58,7 +58,7 @@
       "isRight": false
     },
     {
-      "user": "lin",
+      "user": "ling",
       "avatar": "chat_avatar_lin.png",
       "content": "啊，是我把F宝接入进来的，说不定它能帮助到朱鸢",
       "isRight": true
@@ -106,7 +106,7 @@
       "isRight": false
     },
     {
-      "user": "lin",
+      "user": "ling",
       "avatar": "chat_avatar_lin.png",
       "reply": ["先不管电费了，能让朱鸢有班上要紧", "上吧，为了消灭假期！"],
       "isRight": true
