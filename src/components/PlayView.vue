@@ -89,6 +89,7 @@ const onBack = async () => {
     </div>
     <div class="right-bottom"></div>
 
+    <div class="play-bot-avatar"></div>
     <div class="play-container">
       <div class="heading">
         <div class="scores-container">
@@ -232,6 +233,16 @@ const onBack = async () => {
   background-image: url(../assets/play_form.png);
   background-repeat: no-repeat;
   background-size: 100% auto;
+}
+.play-bot-avatar {
+  position: absolute;
+  top: 0.79rem;
+  left: 4.44rem;
+  width: 1.1rem;
+  height: 2rem;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-image: url(../assets/play_bot_1.png);
 }
 .score-label {
   position: absolute;
