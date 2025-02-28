@@ -61,7 +61,8 @@ HTMLActuator.prototype.addTile = function (tile) {
   this.applyClasses(wrapper, classes)
 
   inner.classList.add("tile-inner")
-  inner.textContent = tile.value
+  inner.setAttribute("data-value", tile.value)
+  // inner.textContent = tile.value
 
   if (tile.previousPosition) {
     // Make sure that the tile gets rendered in the previous position first
@@ -77,6 +78,8 @@ HTMLActuator.prototype.addTile = function (tile) {
     tile.mergedFrom.forEach(function (merged) {
       self.addTile(merged)
     })
+
+    this.addStar(wrapper)
   } else {
     classes.push("tile-new")
     this.applyClasses(wrapper, classes)
@@ -135,4 +138,17 @@ HTMLActuator.prototype.clearMessage = function () {
   // IE only takes one value to remove at a time.
   this.messageContainer.classList.remove("game-won")
   this.messageContainer.classList.remove("game-over")
+}
+
+HTMLActuator.prototype.addStar = function (element) {
+  const starWrap = document.createElement("div")
+  starWrap.classList.add("tile-merged-star-wrapper")
+
+  for (let i = 0; i < 5; i++) {
+    const star = document.createElement("div")
+    star.classList.add("tile-merged-star")
+    starWrap.appendChild(star)
+  }
+
+  element.appendChild(starWrap)
 }

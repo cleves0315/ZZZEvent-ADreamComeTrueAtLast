@@ -1,22 +1,22 @@
 @import "helpers";
 
-$field-width: 5.3rem;
-$grid-spacing: 0.5rem;
+$field-width: 6.9rem;
+$grid-spacing: 0.22rem;
 $grid-row-cells: 4;
-$tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
-$tile-border-radius: 0.2rem;
+// $tile-size: calc(($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells);
+$tile-size: 1.43rem;
+$tile-border-radius: 0;
 
 $mobile-threshold: $field-width + 0.2rem;
 
 $text-color: #776e65;
 $bright-text-color: #f9f6f2;
 
-$tile-color: #eee4da;
 $tile-gold-color: #edc22e;
-$tile-gold-glow-color: lighten($tile-gold-color, 15%);
+// $tile-gold-glow-color: lighten($tile-gold-color, 15%);
 
 $game-container-margin-top: 0;
-$game-container-background: #bbada0;
+$game-container-background: transparent;
 
 $transition-speed: 100ms;
 
@@ -50,7 +50,7 @@ $transition-speed: 100ms;
 // Styles for buttons
 @mixin button {
   display: inline-block;
-  background: darken($game-container-background, 20%);
+  // background: darken($game-container-background, 20%);
   border-radius: 3px;
   padding: 0 20px;
   text-decoration: none;
@@ -62,8 +62,8 @@ $transition-speed: 100ms;
 // Game field mixin used to render CSS at different width
 @mixin game-field {
   .game-container {
-    margin-top: $game-container-margin-top;
-    position: relative;
+    // margin-top: $game-container-margin-top;
+    position: absolute;
     padding: $grid-spacing;
 
     cursor: default;
@@ -85,6 +85,9 @@ $transition-speed: 100ms;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
 
+    top: 3.34rem;
+    left: 1.8rem;
+
     .game-message {
       display: none;
 
@@ -93,7 +96,6 @@ $transition-speed: 100ms;
       right: 0;
       bottom: 0;
       left: 0;
-      background: rgba($tile-color, 0.5);
       z-index: 100;
 
       text-align: center;
@@ -169,8 +171,6 @@ $transition-speed: 100ms;
 
     border-radius: $tile-border-radius;
 
-    background: rgba($tile-color, 0.35);
-
     &:last-child {
       margin-right: 0;
     }
@@ -184,17 +184,19 @@ $transition-speed: 100ms;
   .tile {
     &,
     .tile-inner {
-      width: ceil($tile-size);
-      height: ceil($tile-size);
-      line-height: ceil($tile-size);
+      width: $tile-size;
+      height: $tile-size;
+      line-height: $tile-size;
     }
 
     // Build position classes
     @for $x from 1 through $grid-row-cells {
       @for $y from 1 through $grid-row-cells {
         &.tile-position-#{$x}-#{$y} {
-          $xPos: floor(($tile-size + $grid-spacing) * ($x - 1));
-          $yPos: floor(($tile-size + $grid-spacing) * ($y - 1));
+          // $xPos: (($tile-size + $grid-spacing) * ($x - 1));
+          // $yPos: (($tile-size + $grid-spacing) * ($y - 1));
+          $xPos: (($tile-size + $grid-spacing - 0.04rem) * ($x - 1));
+          $yPos: (($tile-size + $grid-spacing - 0.04rem) * ($y - 1));
           @include transform(translate($xPos, $yPos));
         }
       }
@@ -211,12 +213,50 @@ $transition-speed: 100ms;
   .tile-inner {
     border-radius: $tile-border-radius;
 
-    background: $tile-color;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    background-image: url(../assets/chess.png);
+    transform: rotate(90deg);
+
     text-align: center;
     font-weight: bold;
     z-index: 10;
 
     font-size: 0.4rem;
+
+    &[data-value="2"] {
+      background-position: -4.83rem;
+    }
+    &[data-value="4"] {
+      background-position: -11.14rem;
+    }
+    &[data-value="8"] {
+      background-position: -15.86rem;
+    }
+    &[data-value="16"] {
+      background-position: -3.24rem;
+    }
+    &[data-value="32"] {
+      background-position: -9.57rem;
+    }
+    &[data-value="64"] {
+      background-position: -14.3rem;
+    }
+    &[data-value="128"] {
+      background-position: -1.7rem;
+    }
+    &[data-value="256"] {
+      background-position: -8rem;
+    }
+    &[data-value="512"] {
+      background-position: -12.7rem;
+    }
+    &[data-value="1024"] {
+      background-position: -0.1rem;
+    }
+    &[data-value="2048"] {
+      background-position: -6.42rem;
+    }
   }
 
   // Movement transition
@@ -308,9 +348,8 @@ $transition-speed: 100ms;
   }
 
   // Super tiles (above 2048)
-  &.tile-super .tile-inner {
+  &.x .tile-inner {
     color: $bright-text-color;
-    background: mix(#333, $tile-gold-color, 95%);
 
     font-size: 30px;
 
@@ -351,10 +390,136 @@ $transition-speed: 100ms;
   }
 }
 
+@keyframes pop {
+  0% {
+    transform: rotate(90deg) scale(0.8);
+  }
+  14% {
+    transform: rotate(90deg) scale(1.14, 1);
+  }
+  28% {
+    transform: rotate(90deg) scale(1.14, 1.1);
+  }
+  42% {
+    transform: rotate(90deg) scale(0.8, 1.1);
+  }
+  57% {
+    transform: rotate(90deg) scale(0.8, 0.9);
+  }
+  71% {
+    transform: rotate(90deg) scale(1, 0.9);
+  }
+  85% {
+    transform: rotate(90deg) scale(1.1, 0.95);
+  }
+  100% {
+    transform: rotate(90deg) scale(0.95, 0.95);
+  }
+}
+
 .tile-merged .tile-inner {
+  position: relative;
   z-index: 20;
-  @include animation(pop 200ms ease $transition-speed);
-  @include animation-fill-mode(backwards);
+  animation: pop 200ms ease;
+}
+
+.tile-merged .tile-merged-star-wrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 21;
+
+  @keyframes star-appear1 {
+    60% {
+      left: 1.3rem;
+      top: 0.2rem;
+      transform: rotate(0deg) scale(1);
+    }
+    100% {
+      left: 1.6rem;
+      top: 0.15rem;
+      transform: rotate(90deg) scale(0);
+    }
+  }
+  @keyframes star-appear2 {
+    60% {
+      left: 0.2rem;
+      top: -0.1rem;
+      transform: rotate(-180deg) scale(1);
+    }
+    100% {
+      left: -0.1rem;
+      top: -0.6rem;
+      transform: rotate(-270deg) scale(0);
+    }
+  }
+  @keyframes star-appear3 {
+    60% {
+      left: -0.1rem;
+      top: 0.6rem;
+      transform: rotate(-180deg) scale(1);
+    }
+    100% {
+      left: -0.4rem;
+      top: 0.6rem;
+      transform: rotate(-270deg) scale(0);
+    }
+  }
+  @keyframes star-appear4 {
+    60% {
+      left: 1rem;
+      top: 0.9rem;
+      transform: rotate(0deg) scale(0.5);
+    }
+    100% {
+      left: 1.1rem;
+      top: 1.4rem;
+      transform: rotate(90deg) scale(0);
+    }
+  }
+  @keyframes star-appear5 {
+    60% {
+      left: 0.9rem;
+      top: -0.4rem;
+      transform: rotate(0deg) scale(0.5);
+    }
+    100% {
+      left: 1.1rem;
+      top: -0.6rem;
+      transform: rotate(90deg) scale(0);
+    }
+  }
+
+  .tile-merged-star {
+    position: absolute;
+    left: 0.6rem;
+    top: 0.4rem;
+    width: 25%;
+    height: 41.7%;
+    background-repeat: no-repeat;
+    background-size: auto 100%;
+    background-position: right bottom;
+    background-image: url(../assets/chess.png);
+    transform: rotate(-90deg) scale(0);
+
+    &:nth-child(1) {
+      animation: star-appear1 300ms linear;
+    }
+    &:nth-child(2) {
+      animation: star-appear2 300ms linear;
+    }
+    &:nth-child(3) {
+      animation: star-appear3 250ms linear 50ms;
+    }
+    &:nth-child(4) {
+      animation: star-appear4 250ms linear 50ms;
+    }
+    &:nth-child(5) {
+      animation: star-appear5 200ms linear 100ms;
+    }
+  }
 }
 
 .above-game {
@@ -383,7 +548,6 @@ $transition-speed: 100ms;
   $field-width: 280px;
   $grid-spacing: 10px;
   $grid-row-cells: 4;
-  $tile-size: ($field-width - $grid-spacing * ($grid-row-cells + 1)) / $grid-row-cells;
   $tile-border-radius: 3px;
   $game-container-margin-top: 17px;
 
@@ -410,11 +574,6 @@ $transition-speed: 100ms;
 
   // Render the game field at the right width
   @include game-field;
-
-  // Rest of the font-size adjustments in the tile class
-  .tile .tile-inner {
-    font-size: 35px;
-  }
 
   .game-message {
     p {
