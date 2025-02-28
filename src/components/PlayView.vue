@@ -7,16 +7,27 @@ import { GameManager, KeyboardInputManager, HTMLActuator, LocalStorageManager } 
 import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
 import { gsap } from "gsap"
+import throttle from "lodash/throttle"
 
 const router = useRouter()
 
+const isOver = ref(false)
 const showModal = ref(false)
+
+const handleGameOver = () => {
+  isOver.value = true
+  toggleModalState()
+}
+
+window.addEventListener("ganmeOver", throttle(handleGameOver, 1000, { trailing: false }))
 
 const toggleModalState = async () => {
   showModal.value = !showModal.value
+
   if (showModal.value) {
     gsap.set(".play-view-modal", { display: "block" })
   }
+
   gsap.to(".play-view-modal-mask", { opacity: showModal.value ? 1 : 0, duration: 0.2 })
   await gsap.to(".play-view-modal-body", { opacity: showModal.value ? 1 : 0, duration: 0.2 })
 
@@ -164,10 +175,18 @@ const onBack = async () => {
           </div>
         </div>
       </div>
-      <div class="play-view-modal-btn play-view-modal-btn-1" @click="toggleModalState">
+      <div
+        v-if="!isOver"
+        class="play-view-modal-btn play-view-modal-btn-1"
+        @click="toggleModalState"
+      >
         <div class="play-view-modal-btn-txt" data-text="取消">取消</div>
       </div>
-      <div class="play-view-modal-btn play-view-modal-btn-2" @click="onBack">
+      <div
+        class="play-view-modal-btn play-view-modal-btn-2"
+        :class="isOver ? 'play-view-modal-btn-over' : ''"
+        @click="onBack"
+      >
         <div class="play-view-modal-btn-txt" data-text="确认">确认</div>
       </div>
     </div>
@@ -491,6 +510,12 @@ const onBack = async () => {
     &.play-view-modal-btn-2 {
       right: 0.5rem;
       background-image: url(../assets/modal_btn_2.png);
+
+      &.play-view-modal-btn-over {
+        left: 50%;
+        transform: translateX(-50%);
+        background-image: url(../assets/modal_btn_1.png);
+      }
     }
 
     .play-view-modal-btn-txt {

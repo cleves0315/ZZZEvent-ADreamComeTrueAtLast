@@ -13,6 +13,8 @@ export function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("restart", this.restart.bind(this))
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this))
 
+  this.ganmeOverEvent = new CustomEvent("ganmeOver")
+
   this.setup()
   this.restart()
 }
@@ -186,6 +188,7 @@ GameManager.prototype.move = function (direction) {
 
     if (!this.movesAvailable()) {
       this.over = true // Game over!
+      window.dispatchEvent(this.ganmeOverEvent)
     }
 
     this.actuate()
