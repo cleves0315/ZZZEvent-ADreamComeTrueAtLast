@@ -108,8 +108,12 @@ HTMLActuator.prototype.positionClass = function (position) {
 HTMLActuator.prototype.updateScore = function (score) {
   this.clearContainer(this.scoreContainer)
 
+  function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  }
+
   var difference = score - this.score
-  this.score = score
+  this.score = formatNumber(score)
 
   this.scoreContainer.textContent = this.score
 
@@ -117,6 +121,7 @@ HTMLActuator.prototype.updateScore = function (score) {
     var addition = document.createElement("div")
     addition.classList.add("score-addition")
     addition.textContent = "+" + difference
+    addition.setAttribute("data-text", "+" + difference)
 
     this.scoreContainer.appendChild(addition)
   }

@@ -14,6 +14,7 @@ export function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this))
 
   this.setup()
+  this.restart()
 }
 
 // Restart the game
