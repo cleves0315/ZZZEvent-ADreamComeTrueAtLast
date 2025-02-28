@@ -8,6 +8,7 @@ import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
 import { gsap } from "gsap"
 import throttle from "lodash/throttle"
+import { useBgm } from "../hooks/useBgm"
 
 const router = useRouter()
 
@@ -20,6 +21,8 @@ const handleGameOver = () => {
 }
 
 window.addEventListener("ganmeOver", throttle(handleGameOver, 1000, { trailing: false }))
+
+useBgm(ad)
 
 const toggleModalState = async () => {
   showModal.value = !showModal.value
@@ -39,20 +42,6 @@ const toggleModalState = async () => {
 onMounted(() => {
   window.requestAnimationFrame(function () {
     new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager)
-  })
-
-  const sound = new Howl({
-    src: [ad],
-    autoplay: true,
-    loop: true,
-    volume: 1.0,
-    onend: function () {},
-  })
-
-  sound.play()
-
-  onUnmounted(() => {
-    sound.stop()
   })
 })
 
@@ -201,6 +190,9 @@ const onBack = async () => {
   left: 0;
   right: 0;
   bottom: 0;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-image: url(../assets/bg2.jpg);
 }
 .qq-block-bottom {
   position: absolute;

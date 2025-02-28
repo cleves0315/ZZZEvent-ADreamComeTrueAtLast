@@ -121,9 +121,6 @@ onMounted(() => {
 }
 .frame {
   position: absolute;
-  background-image: url("../assets/default_bg2.jpg");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
   overflow: hidden;
 }
 .route-slide-wrapper {

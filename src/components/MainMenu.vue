@@ -6,7 +6,7 @@ const router = useRouter()
 
 const onStart = async () => {
   await slideEnter()
-  router.push("/cinema")
+  router.push("/home")
 }
 </script>
 
@@ -26,26 +26,38 @@ const onStart = async () => {
     </defs>
   </svg>
 
-  <div class="main-share"></div>
-  <div class="main-title"></div>
-  <div class="main-subtitle">
-    约定的聚餐近在眼前，突发全员爽约危机！ 好消息，您只需付出一点点额外电费，即可消除烦恼。
-  </div>
-  <div class="main-tips">
-    <p data-text="完成全部关卡，在活动内成就列表领取奖励道具" class="main-tips-1">
-      完成全部关卡，在活动内成就列表领取奖励道具
-    </p>
-    <p data-text="绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与" class="main-tips-2">
-      绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与
-    </p>
-  </div>
-  <img class="main-reward" src="../assets/main_reward.png" />
-  <div class="main-btns">
-    <div class="main-btn-start" @click="onStart">启动游戏</div>
+  <div class="main-view">
+    <div class="main-share"></div>
+    <div class="main-title"></div>
+    <div class="main-subtitle">
+      约定的聚餐近在眼前，突发全员爽约危机！ 好消息，您只需付出一点点额外电费，即可消除烦恼。
+    </div>
+    <div class="main-tips">
+      <p data-text="完成全部关卡，在活动内成就列表领取奖励道具" class="main-tips-1">
+        完成全部关卡，在活动内成就列表领取奖励道具
+      </p>
+      <p data-text="绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与" class="main-tips-2">
+        绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与
+      </p>
+    </div>
+    <img class="main-reward" src="../assets/main_reward.png" />
+    <div class="main-btns">
+      <div class="main-btn-start" @click="onStart">启动游戏</div>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.main-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url(../assets/default_bg2.jpg);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
 .main-share {
   position: absolute;
   top: -0.02rem;

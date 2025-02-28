@@ -171,112 +171,124 @@ const toPlay = async () => {
     </defs>
   </svg>
 
-  <div class="circle-wrap">
-    <div class="back-btn" @click="handleBack"></div>
-  </div>
-  <div class="qq-block">
-    <div class="dialog-list">
-      <div class="dialog-item" :style="readyStyle.item">
-        <div
-          class="dialog-avatar"
-          :style="{ ...readyStyle.avatar, backgroundImage: `url(${zhuyuan})` }"
-        ></div>
-        <div class="dialog-content">
-          <div class="dialog-name" :style="readyStyle.name">朱鸢</div>
-          <div class="dialog-time" :style="readyStyle.time">
-            <div class="dialog-time-tag" :style="readyStyle.timeTag"></div>
-            <div class="dialog-time-txt" :style="readyStyle.timeTxt">11小时后</div>
-          </div>
-        </div>
-      </div>
-      <div class="dialog-item item-await" v-for="i in 4" :key="i">
-        <div class="dialog-avatar">?</div>
-        <div class="dialog-content">
-          <div class="dialog-name">???</div>
-          <div class="dialog-time">
-            <div class="dialog-time-tag"></div>
-            <div class="dialog-time-txt">11小时后</div>
-          </div>
-        </div>
-      </div>
+  <div class="home-view">
+    <div class="circle-wrap">
+      <div class="back-btn" @click="handleBack"></div>
     </div>
-    <div class="chat-block">
-      <div class="chat-frame">
-        <div class="chat-title" :data-text="roomName">{{ roomName }}</div>
-      </div>
-      <div class="chat-bg"></div>
-      <div class="chat-list" ref="chatListRef" @click="handleNextChat">
-        <div class="chat-tips">{{ toptips }}</div>
-        <div class="chat-list-inner">
+    <div class="qq-block">
+      <div class="dialog-list">
+        <div class="dialog-item" :style="readyStyle.item">
           <div
-            class="chat-item"
-            :class="item.isRight && 'chat-item-right'"
-            v-for="(item, idx) in chatList"
-            :key="idx"
-          >
-            <div class="chat-avatar-wrap" :class="item.user === 'bot' && 'chat-avatar-bot'">
-              <div
-                class="chat-avatar"
-                :style="{ backgroundImage: `url(/src/assets/${item.avatar})` }"
-              ></div>
+            class="dialog-avatar"
+            :style="{ ...readyStyle.avatar, backgroundImage: `url(${zhuyuan})` }"
+          ></div>
+          <div class="dialog-content">
+            <div class="dialog-name" :style="readyStyle.name">朱鸢</div>
+            <div class="dialog-time" :style="readyStyle.time">
+              <div class="dialog-time-tag" :style="readyStyle.timeTag"></div>
+              <div class="dialog-time-txt" :style="readyStyle.timeTxt">11小时后</div>
             </div>
-            <div class="chat-content">
-              <div class="chat-txt" :data-text="item.content">
-                {{ item.content }}
+          </div>
+        </div>
+        <div class="dialog-item item-await" v-for="i in 4" :key="i">
+          <div class="dialog-avatar">?</div>
+          <div class="dialog-content">
+            <div class="dialog-name">???</div>
+            <div class="dialog-time">
+              <div class="dialog-time-tag"></div>
+              <div class="dialog-time-txt">11小时后</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="chat-block">
+        <div class="chat-frame">
+          <div class="chat-title" :data-text="roomName">{{ roomName }}</div>
+        </div>
+        <div class="chat-bg"></div>
+        <div class="chat-list" ref="chatListRef" @click="handleNextChat">
+          <div class="chat-tips">{{ toptips }}</div>
+          <div class="chat-list-inner">
+            <div
+              class="chat-item"
+              :class="item.isRight && 'chat-item-right'"
+              v-for="(item, idx) in chatList"
+              :key="idx"
+            >
+              <div class="chat-avatar-wrap" :class="item.user === 'bot' && 'chat-avatar-bot'">
+                <div
+                  class="chat-avatar"
+                  :style="{ backgroundImage: `url(/src/assets/${item.avatar})` }"
+                ></div>
+              </div>
+              <div class="chat-content">
+                <div class="chat-txt" :data-text="item.content">
+                  {{ item.content }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="chat-operate">
-          <div
-            class="reply-item"
-            v-for="(item, idx) in curReplys"
-            :key="idx"
-            @click.stop="handleReplay(item)"
-          >
-            <span class="reply-item-txt" :data-text="item">{{ item }}</span>
-          </div>
-        </div>
-      </div>
-      <transition name="home-mask-fade">
-        <div class="chat-tips-mask" v-show="showScreenMask">
-          <div class="chat-tips-wrap">
-            <div class="chat-tips-white-mask"></div>
-            <div class="chat-friendly-tips">
-              <div class="chat-friendly-tips-title" data-text="友情支援">友情支援</div>
-              <div
-                class="chat-friendly-tips-cont"
-                data-text="每合成5次，获得1位1~9随机「电费加倍」倍率"
-              >
-                每合成5次，获得1位1~9随机「电费加倍」倍率
-              </div>
+          <div class="chat-operate">
+            <div
+              class="reply-item"
+              v-for="(item, idx) in curReplys"
+              :key="idx"
+              @click.stop="handleReplay(item)"
+            >
+              <span class="reply-item-txt" :data-text="item">{{ item }}</span>
             </div>
           </div>
         </div>
-      </transition>
+        <transition name="home-mask-fade">
+          <div class="chat-tips-mask" v-show="showScreenMask">
+            <div class="chat-tips-wrap">
+              <div class="chat-tips-white-mask"></div>
+              <div class="chat-friendly-tips">
+                <div class="chat-friendly-tips-title" data-text="友情支援">友情支援</div>
+                <div
+                  class="chat-friendly-tips-cont"
+                  data-text="每合成5次，获得1位1~9随机「电费加倍」倍率"
+                >
+                  每合成5次，获得1位1~9随机「电费加倍」倍率
+                </div>
+              </div>
+            </div>
+          </div>
+        </transition>
+      </div>
     </div>
-  </div>
-  <div class="qq-block-bottom"></div>
-  <div class="operate-wrap">
-    <div
-      class="operate-item operate-mute"
-      :data-state="isBgmMute ? 'mute' : 'open'"
-      @click="handleChangeBgm"
-    ></div>
-    <div class="operate-item"></div>
-    <div class="operate-item"></div>
-  </div>
-  <div class="task-btn"></div>
-  <div class="right-bottom"></div>
-  <transition name="home-mask-fade">
-    <div class="mask-wrap" v-show="showScreenMask">
-      <div class="mask"></div>
-      <div class="mask-btn" @click="toPlay">开始游戏</div>
+    <div class="qq-block-bottom"></div>
+    <div class="operate-wrap">
+      <div
+        class="operate-item operate-mute"
+        :data-state="isBgmMute ? 'mute' : 'open'"
+        @click="handleChangeBgm"
+      ></div>
+      <div class="operate-item"></div>
+      <div class="operate-item"></div>
     </div>
-  </transition>
+    <div class="task-btn"></div>
+    <div class="right-bottom"></div>
+    <transition name="home-mask-fade">
+      <div class="mask-wrap" v-show="showScreenMask">
+        <div class="mask"></div>
+        <div class="mask-btn" @click="toPlay">开始游戏</div>
+      </div>
+    </transition>
+  </div>
 </template>
 
 <style scoped lang="scss">
+.home-view {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-image: url(../assets/bg2.jpg);
+}
 .circle-wrap {
   position: absolute;
   top: -0.02rem;
