@@ -346,16 +346,15 @@ const handleBook = async () => {
   background-repeat: no-repeat;
   .back-btn {
     position: absolute;
-    left: 0.5rem;
-    bottom: 0.5rem;
-    width: 1rem;
-    height: 1rem;
+    left: 0.56rem;
+    top: 0.7rem;
+    width: 0.9rem;
+    height: 0.87rem;
     cursor: pointer;
     background-repeat: no-repeat;
-    // background-color: red;
     border-radius: 50%;
-    background-size: 100% 100%;
-    background-size: url(../assets/download.png);
+    background-size: 100% auto;
+    background-image: url(../assets/back_1.png);
   }
 }
 .qq-block {
