@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router"
-import zhuyuan from "../assets/zhuyuan_task.png"
 import { slideEnter } from "../utils"
 import throttle from "lodash/throttle"
 import { onMounted, ref } from "vue"
@@ -16,20 +15,19 @@ import {
 } from "../assets/data/zhuyuan_chat.json"
 import { useBgm } from "../hooks/useBgm"
 import { useMusicMute } from "../hooks/useMusicMute"
+import ViewModal from "./ViewModal.vue"
+import { useModal } from "../hooks/useModal"
 
-const readyStyle = {
-  item: { backgroundColor: "#FE9ACB", borderColor: "#FADC6B" },
-  avatar: {
-    border: "0.04rem solid #913C74",
-    backgroundColor: "#FD9BCB",
-  },
-  name: { color: "#913C74" },
-  time: { backgroundColor: "#FF6EC1" },
-  timeTag: { backgroundColor: "#fff" },
-  timeTxt: { color: "#fff" },
-}
+const dialogList = ref([
+  { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: "zhuyuan_task.png" },
+  { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
+  { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
+  { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
+  { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
+])
 
 const { isBgmMute, toggleBgmMute } = useMusicMute()
+const { toggleModal } = useModal()
 const { bgmSound } = useBgm(bgmHome)
 const showScreenMask = ref(false)
 
@@ -153,9 +151,28 @@ const toPlay = async () => {
   await slideEnter()
   router.push("/play")
 }
+
+const handleBook = async () => {
+  await slideEnter()
+  router.push("/cinema")
+}
 </script>
 
 <template>
+  <svg
+    data-v-49463ad2=""
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    style="display: none"
+  >
+    <defs>
+      <filter id="stroke-text-svg-filter-1">
+        <feMorphology operator="dilate" radius="0.4359375"></feMorphology>
+        <feComposite operator="xor" in="SourceGraphic"></feComposite>
+      </filter>
+    </defs>
+  </svg>
   <svg
     data-v-49463ad2=""
     version="1.1"
@@ -170,6 +187,20 @@ const toPlay = async () => {
       </filter>
     </defs>
   </svg>
+  <svg
+    data-v-49463ad2=""
+    version="1.1"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    style="display: none"
+  >
+    <defs>
+      <filter id="stroke-text-svg-filter-5">
+        <feMorphology operator="dilate" radius="2.4359375"></feMorphology>
+        <feComposite operator="xor" in="SourceGraphic"></feComposite>
+      </filter>
+    </defs>
+  </svg>
 
   <div class="home-view">
     <div class="circle-wrap">
@@ -177,26 +208,23 @@ const toPlay = async () => {
     </div>
     <div class="qq-block">
       <div class="dialog-list">
-        <div class="dialog-item" :style="readyStyle.item">
+        <div
+          class="dialog-item"
+          :class="item.isLock ? 'lock' : 'unlock'"
+          v-for="(item, i) in dialogList"
+          :key="i"
+        >
           <div
             class="dialog-avatar"
-            :style="{ ...readyStyle.avatar, backgroundImage: `url(${zhuyuan})` }"
-          ></div>
-          <div class="dialog-content">
-            <div class="dialog-name" :style="readyStyle.name">朱鸢</div>
-            <div class="dialog-time" :style="readyStyle.time">
-              <div class="dialog-time-tag" :style="readyStyle.timeTag"></div>
-              <div class="dialog-time-txt" :style="readyStyle.timeTxt">11小时后</div>
-            </div>
+            :style="item.isLock ? {} : { backgroundImage: `url(/src/assets/${item.avatar})` }"
+          >
+            {{ item.isLock ? "?" : "" }}
           </div>
-        </div>
-        <div class="dialog-item item-await" v-for="i in 4" :key="i">
-          <div class="dialog-avatar">?</div>
           <div class="dialog-content">
-            <div class="dialog-name">???</div>
+            <div class="dialog-name">{{ item.isLock ? "???" : item.name }}</div>
             <div class="dialog-time">
-              <div class="dialog-time-tag"></div>
-              <div class="dialog-time-txt">11小时后</div>
+              <div class="dialog-time-tag" :class="item.isLock ? 'lock' : ''"></div>
+              <div class="dialog-time-txt">{{ item.isLock ? "11小时后" : "尚未通关" }}</div>
             </div>
           </div>
         </div>
@@ -264,10 +292,10 @@ const toPlay = async () => {
         :data-state="isBgmMute ? 'mute' : 'open'"
         @click="handleChangeBgm"
       ></div>
-      <div class="operate-item"></div>
+      <div class="operate-item" @click="handleBook"></div>
       <div class="operate-item"></div>
     </div>
-    <div class="task-btn"></div>
+    <div class="task-btn" @click="toggleModal"></div>
     <div class="right-bottom"></div>
     <transition name="home-mask-fade">
       <div class="mask-wrap" v-show="showScreenMask">
@@ -275,6 +303,23 @@ const toPlay = async () => {
         <div class="mask-btn" @click="toPlay">开始游戏</div>
       </div>
     </transition>
+
+    <ViewModal close-on-click-mask>
+      <div class="home-modal-wrap">
+        <div class="modal-head">
+          <div class="modal-title" data-text="成就列表">成就列表</div>
+          <div class="modal-subtitle-wrap">
+            <div class="gift-box"></div>
+            <div class="modal-subtitle" data-text="活动奖励将于15分钟内通过游戏内邮箱发放">
+              活动奖励将于15分钟内通过游戏内邮箱发放
+            </div>
+          </div>
+          <div class="modal-head-btn">
+            <div class="modal-head-btn-txt">全部领取</div>
+          </div>
+        </div>
+      </div>
+    </ViewModal>
   </div>
 </template>
 
@@ -370,9 +415,9 @@ const toPlay = async () => {
     border-radius: 50%;
     color: #141215;
     background-color: #c4a7f5;
+    border: 0.04rem solid #c4a7f5;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    // background-image: url(../assets/zhuyuan_task.png);
   }
 
   .dialog-name {
@@ -392,15 +437,36 @@ const toPlay = async () => {
   }
   .dialog-time-tag {
     width: 0.14rem;
-    height: 0.14rem;
-    background-size: 100% 100%;
+    height: 0.2rem;
+    background-size: 100% auto;
     background-repeat: no-repeat;
-    // background-image: url(../assets/share_wrap_1.png);
-    background-color: red;
+    background-image: url(../assets/unlock.png);
+    &.lock {
+      background-image: url(../assets/lock.png);
+    }
   }
   .dialog-time-txt {
     height: 0.18rem;
     line-height: 0.18rem;
+  }
+
+  .dialog-item.unlock {
+    background-color: #fe9acb;
+    border-color: #fadc6b;
+
+    .dialog-avatar {
+      border-color: #913c74;
+      background-color: #ff6ec1;
+    }
+    .dialog-name {
+      color: #891461;
+    }
+    .dialog-time {
+      background-color: #ff6ec1;
+    }
+    .dialog-time-txt {
+      color: #fff;
+    }
   }
 }
 .task-btn {
@@ -836,6 +902,90 @@ const toPlay = async () => {
       border-radius: 0.28rem;
       filter: blur(4px);
       background-color: rgba(255, 255, 255, 0.8);
+    }
+  }
+}
+
+.home-modal-wrap {
+  width: 13.8rem;
+  height: 9.2rem;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-image: url(../assets/modal_bg_2.png);
+
+  .modal-head {
+    position: absolute;
+    top: 0.35rem;
+    left: 0.55rem;
+    right: 1rem;
+  }
+  .modal-title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0.5rem;
+    color: #fff;
+
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      color: #61478c;
+      filter: url(#stroke-text-svg-filter-5);
+    }
+  }
+  .modal-subtitle-wrap {
+    position: absolute;
+    top: 0.7rem;
+    left: 0;
+  }
+  .gift-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0.25rem;
+    height: 0.25rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../assets/box.png);
+  }
+  .modal-subtitle {
+    position: absolute;
+    left: 0.35rem;
+    top: 0;
+    width: 6rem;
+    font-size: 0.24rem;
+    color: #d9c2fe;
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      color: #61478c;
+      filter: url(#stroke-text-svg-filter-1);
+    }
+  }
+  .modal-head-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3.3rem;
+    height: 0.96rem;
+    font-size: 0.4rem;
+    color: #2d2d2d;
+    font-style: italic;
+    cursor: pointer;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../assets/btn_bg_black.png);
+
+    .modal-head-btn-txt {
+      position: absolute;
+      top: 0.2rem;
+      left: 0.8rem;
     }
   }
 }

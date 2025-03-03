@@ -8,14 +8,14 @@ export const useModal = () => {
     store.toggleModal()
 
     if (store.showModal) {
-      gsap.set(".play-view-modal", { display: "block" })
+      gsap.set(".view-modal", { display: "block" })
     }
 
-    gsap.to(".play-view-modal-mask", { opacity: store.showModal ? 1 : 0, duration: 0.2 })
-    await gsap.to(".play-view-modal-body", { opacity: store.showModal ? 1 : 0, duration: 0.2 })
+    gsap.to(".view-modal-mask", { opacity: store.showModal ? 1 : 0, duration: 0.2 })
+    await gsap.to(".view-modal-body", { opacity: store.showModal ? 1 : 0, duration: 0.2 })
 
     if (!store.showModal) {
-      gsap.set(".play-view-modal", { display: "none" })
+      gsap.set(".view-modal", { display: "none" })
     }
   }
 
