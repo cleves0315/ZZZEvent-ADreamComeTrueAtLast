@@ -15,7 +15,7 @@ const owner = {
   // avatar: "user_zhe_to_right.png",
 }
 
-const { isBgmMute, toggleBgmMute } = useMusicMute()
+const { isMute, toggleMute } = useMusicMute()
 const { bgmSound } = useBgm(bgmHome)
 const msgSound = ref()
 
@@ -85,12 +85,12 @@ const writeText = (str: string) => {
 }
 
 const handleMute = () => {
-  toggleBgmMute()
+  toggleMute()
 
-  if (isBgmMute.value) {
-    bgmSound.value.pause()
+  if (isMute.value) {
+    bgmSound.value?.pause()
   } else {
-    bgmSound.value.play()
+    bgmSound.value?.play()
   }
 }
 
@@ -101,7 +101,7 @@ const handleJump = () => {
 const handleNext = async () => {
   if (chatEnd.value) return
 
-  if (!isBgmMute.value) {
+  if (!isMute.value) {
     msgSound.value.play()
   }
 
@@ -169,7 +169,7 @@ const chatEndHandler = () => {
     <div class="right-top-operator">
       <div
         class="operator-btn mute"
-        :data-state="isBgmMute ? 'mute' : 'open'"
+        :data-state="isMute ? 'mute' : 'open'"
         @click.stop="handleMute"
       ></div>
       <div class="operator-btn jump" @click.stop="handleJump"></div>
@@ -246,6 +246,7 @@ const chatEndHandler = () => {
   }
 }
 .cinema-view {
+  position: relative;
   width: 100%;
   height: 100%;
   background-size: 100% 100%;

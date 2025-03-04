@@ -1,21 +1,16 @@
-import { ref } from "vue"
-import { getStorage, setStorage, StorageKey } from "../utils/storage"
+import { computed } from "vue"
+import { useStore } from "../stores"
 
 export const useMusicMute = () => {
-  const isBgmMute = ref(getStorage(StorageKey.MUSIC_MUTED) ?? false)
+  const store = useStore()
+  const isMute = computed(() => store.isMute)
 
-  const toggleBgmMute = () => {
-    isBgmMute.value = !isBgmMute.value
-    setStorage(StorageKey.MUSIC_MUTED, isBgmMute.value)
-  }
-
-  const getBgmMuted = () => {
-    return getStorage(StorageKey.MUSIC_MUTED) ?? false
+  const toggleMute = () => {
+    store.toggleMute()
   }
 
   return {
-    isBgmMute,
-    toggleBgmMute,
-    getBgmMuted,
+    isMute,
+    toggleMute,
   }
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from "vue"
-import { Howl } from "howler"
+import { onMounted, ref } from "vue"
 import ad from "/audio/play_bgm.mp3"
 
 import { GameManager, KeyboardInputManager, HTMLActuator, LocalStorageManager } from "../libs/play"
@@ -87,6 +86,8 @@ const onBack = async () => {
     <div class="right-top" @click="toggleModalState">
       <span class="right-top-txt">结束关卡</span>
     </div>
+    <div class="play-view-random-number"></div>
+    <div class="cover-box"></div>
     <div class="right-bottom"></div>
 
     <div class="play-bot-avatar"></div>
@@ -192,7 +193,7 @@ const onBack = async () => {
   bottom: 0;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-image: url(../assets/bg2.jpg);
+  // background-image: url(../assets/bg2.jpg);
 }
 .qq-block-bottom {
   position: absolute;
@@ -207,21 +208,39 @@ const onBack = async () => {
 }
 .right-top {
   position: absolute;
-  top: 0.5rem;
-  right: 2.9rem;
-  width: 4rem;
-  height: 1.5rem;
+  top: 0.45rem;
+  right: 2.8rem;
+  width: 4.2rem;
+  height: 1.8rem;
   cursor: pointer;
   background-size: 100% auto;
   background-repeat: no-repeat;
   background-image: url(../assets/btn_bg_1.png);
   .right-top-txt {
     position: absolute;
-    top: 0.43rem;
+    top: 0.47rem;
     left: 1.3rem;
     font-size: 0.4rem;
     color: #312d2e;
   }
+}
+.play-view-random-number {
+  position: absolute;
+  top: 4.12rem;
+  right: 4.36rem;
+  width: 4.26rem;
+  height: 2.5rem;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-image: url(../assets/random_number.png);
+}
+.cover-box {
+  position: absolute;
+  top: 8.37rem;
+  right: 7.74rem;
+  width: 0.8rem;
+  height: 0.3rem;
+  background-color: #5e468b;
 }
 .right-bottom {
   position: absolute;

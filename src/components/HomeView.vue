@@ -26,7 +26,7 @@ const dialogList = ref([
   { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
 ])
 
-const { isBgmMute, toggleBgmMute } = useMusicMute()
+const { isMute, toggleMute } = useMusicMute()
 const { toggleModal } = useModal()
 const { bgmSound } = useBgm(bgmHome)
 const showScreenMask = ref(false)
@@ -63,26 +63,22 @@ onMounted(() => {
   }, 2000)
 })
 
-const handleChangeBgm = () => {
-  toggleBgmMute()
+const handleChangeMuteState = () => {
+  toggleMute()
 
-  if (isBgmMute.value) {
-    bgmSound.value.pause()
+  if (isMute.value) {
+    bgmSound.value?.pause()
   } else {
-    bgmSound.value.play()
+    bgmSound.value?.play()
   }
-}
-const stopBgm = () => {
-  bgmSound.value.stop()
 }
 
 const playMsgSound = () => {
-  if (isBgmMute.value) return
+  if (isMute.value) return
   msgSound.value.play()
 }
 
 const handleBack = async () => {
-  stopBgm()
   await slideEnter()
   router.back()
 }
@@ -289,8 +285,8 @@ const handleBook = async () => {
     <div class="operate-wrap">
       <div
         class="operate-item operate-mute"
-        :data-state="isBgmMute ? 'mute' : 'open'"
-        @click="handleChangeBgm"
+        :data-state="isMute ? 'mute' : 'open'"
+        @click="handleChangeMuteState"
       ></div>
       <div class="operate-item" @click="handleBook"></div>
       <div class="operate-item"></div>
@@ -332,12 +328,22 @@ const handleBook = async () => {
   bottom: 0;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-image: url(../assets/bg2.jpg);
+  // background-image: url(../assets/bg2.jpg);
 }
+// .actor {
+//   position: absolute;
+//   top: 1rem;
+//   right: 5rem;
+//   width: 4rem;
+//   height: 10rem;
+//   background-size: 100% auto;
+//   background-repeat: no-repeat;
+//   background-image: url(../assets/niko.png);
+// }
 .circle-wrap {
   position: absolute;
-  top: -0.02rem;
-  left: 3.2rem;
+  top: -0.03rem;
+  left: 3.27rem;
   width: 1.84rem;
   height: 2.13rem;
   z-index: 3;
@@ -358,7 +364,7 @@ const handleBook = async () => {
   }
 }
 .qq-block {
-  width: 15rem;
+  width: 15.2rem;
   height: 10.5rem;
   position: absolute;
   top: 0;
@@ -472,8 +478,8 @@ const handleBook = async () => {
   width: 5rem;
   height: 4rem;
   position: absolute;
-  bottom: 0.5rem;
-  right: 2.8rem;
+  bottom: 0.55rem;
+  right: 2.87rem;
   cursor: pointer;
   background-size: 100% auto;
   background-repeat: no-repeat;
@@ -482,7 +488,7 @@ const handleBook = async () => {
 .operate-wrap {
   position: absolute;
   top: 0.45rem;
-  right: 3.3rem;
+  right: 3.2rem;
   width: 4.3rem;
   height: 1.3rem;
   border: 0.1rem solid #d8c5ff;
