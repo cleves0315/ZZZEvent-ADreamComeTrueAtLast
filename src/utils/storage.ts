@@ -7,5 +7,5 @@ export const setStorage = (key: StorageKey, value: unknown) => {
 }
 
 export const getStorage = (key: StorageKey) => {
-  return JSON.parse(localStorage.getItem(key) || "")
+  return JSON.parse(localStorage.getItem(key) || "{}")
 }
