@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import FrameView from "./components/FrameView.vue"
+import FlexibleView from "./components/FlexibleView.vue"
 </script>
 
 <template>
   <div class="app-container">
-    <FrameView />
+    <FlexibleView />
   </div>
 </template>
 

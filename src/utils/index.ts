@@ -7,7 +7,7 @@ export const ceilToTwo = (num: number, decimal = 2) => {
 }
 
 export const slideEnter = (): Promise<string> => {
-  const frameElm = document.querySelector(".frame")
+  const frameElm = document.querySelector(".layout")
   if (frameElm) {
     const frameWidth = frameElm.clientWidth // important!!!
     const lineWidth = frameWidth / 10
@@ -46,6 +46,6 @@ export const slideEnter = (): Promise<string> => {
       }, 1500)
     })
   } else {
-    return Promise.reject("frame not found")
+    return Promise.reject("layout not found")
   }
 }

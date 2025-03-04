@@ -2,11 +2,12 @@
 import { CSSProperties, onMounted, ref } from "vue"
 import { ceilToTwo } from "../utils"
 import { RouterView } from "vue-router"
+import AnimatingBG from "./AnimatingBG.vue"
 
 const viewportFrameRatio = 0.768
 const frameAspectRatio = 2.3148175675675673
 const remRatio = 0.04
-const frameRef = ref<HTMLDivElement>()
+const layoutRef = ref<HTMLDivElement>()
 const frameStyle = ref<CSSProperties>()
 
 const resizeRootFontSize = (clientWidth: number) => {
@@ -53,7 +54,7 @@ const resizeFrame = () => {
 
   // console.log(winWidth, winHeight)
 
-  if (frameRef.value) {
+  if (layoutRef.value) {
     // no rotate
     frameWidth = ceilToTwo(winWidth / viewportFrameRatio)
     frameHeight = ceilToTwo(parseFloat(frameWidth) / frameAspectRatio)
@@ -87,8 +88,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="frame-view" :style="{ width: frameStyle?.width }">
-    <div class="frame" ref="frameRef" :style="frameStyle">
+  <div class="flexible-view" :style="{ width: frameStyle?.width }">
+    <div class="layout" ref="layoutRef" :style="frameStyle">
+      <AnimatingBG :style="{ width: frameStyle?.width, height: frameStyle?.height }" />
       <div class="route-slide-wrapper">
         <div class="route-slide-line route-slide-line-right route-slide-line-right1"></div>
         <div class="route-slide-line route-slide-line-left route-slide-line-left1"></div>
@@ -110,8 +112,8 @@ onMounted(() => {
   </div>
 </template>
 
-<style scoped>
-.frame-view {
+<style scoped lang="scss">
+.flexible-view {
   width: 100%;
   height: 100%;
   position: relative;
@@ -119,7 +121,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
 }
-.frame {
+.layout {
   position: absolute;
   overflow: hidden;
 }
