@@ -6,6 +6,6 @@ export const setStorage = (key: StorageKey, value: unknown) => {
   localStorage.setItem(key, JSON.stringify(value))
 }
 
-export const getStorage = (key: StorageKey) => {
-  return JSON.parse(localStorage.getItem(key) || "{}")
+export const getStorage = (key: StorageKey): string | null => {
+  return JSON.parse(localStorage.getItem(key) || "null")
 }
