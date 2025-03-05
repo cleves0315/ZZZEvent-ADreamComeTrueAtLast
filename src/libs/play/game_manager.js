@@ -188,6 +188,7 @@ GameManager.prototype.move = function (direction) {
 
     if (!this.movesAvailable()) {
       this.over = true // Game over!
+      console.error("game over")
       window.dispatchEvent(this.ganmeOverEvent)
     }
 
