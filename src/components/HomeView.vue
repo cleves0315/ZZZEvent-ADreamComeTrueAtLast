@@ -30,6 +30,7 @@ const { isMute, toggleMute } = useMusicMute()
 const { toggleModal } = useModal()
 const { bgmSound } = useBgm(bgmHome)
 const showScreenMask = ref(false)
+const showReply = ref(false)
 
 const router = useRouter()
 
@@ -41,14 +42,21 @@ const chatListRef = ref<HTMLDivElement>()
 
 const msgSound = ref()
 
+const initing = ref(true)
+
 const initChatList = () => {
-  const timer = 400
-  for (let i = 0; i <= chatFirstIndex; i++) {
+  const interval = 400
+  for (let i = 0; i < chatFirstIndex; i++) {
     setTimeout(
       () => {
         chatList.value.push(chats[i])
+        if (i === chatFirstIndex - 1) {
+          requestAnimationFrame(() => {
+            initing.value = false
+          })
+        }
       },
-      timer * i + 1,
+      interval * i + 1,
     )
   }
 }
@@ -94,10 +102,39 @@ const chatListScrollToBottom = () => {
   })
 }
 
+const toggleReply = async () => {
+  showReply.value = !showReply.value
+  const cls = ".chat-operate"
+
+  if (showReply.value) {
+    gsap.set(cls, { display: "flex", opacity: 0 })
+    await gsap.to(cls, { duration: 0.3, opacity: 1 })
+  } else {
+    await gsap.to(cls, { duration: 0.3, opacity: 0 })
+    gsap.set(cls, { display: "none" })
+  }
+}
+
+const toggleMask = () => {
+  showScreenMask.value = !showScreenMask.value
+  const cls = ".home-view-mask"
+
+  if (showScreenMask.value) {
+    gsap.set(cls, { display: "block", opacity: 0 }).then(() => {
+      gsap.to(cls, { duration: 0.3, opacity: 1 })
+    })
+  } else {
+    gsap.to(cls, { duration: 0.3, opacity: 0 }).then(() => {
+      gsap.set(cls, { display: "none" })
+    })
+  }
+}
+
 const handleNextChat = throttle(
   () => {
+    if (initing.value) return
     if (chatList.value.length >= chats.length) return
-    if (curReplys.value.length) return
+    if (showReply.value) return
 
     const newChat = chats[chatList.value.length]
     if (newChat.reply?.length) {
@@ -105,7 +142,7 @@ const handleNextChat = throttle(
 
       chatListScrollToBottom()
       gsap.set(".chat-list", { overflow: "hidden" })
-      gsap.to(".chat-operate", { duration: 0.3, opacity: "1", zIndex: 5 })
+      toggleReply()
       return
     }
 
@@ -114,10 +151,11 @@ const handleNextChat = throttle(
       chatListScrollToBottom()
       playMsgSound()
     }
-    // end
+
+    // chat end
     if (chatList.value.length >= chats.length) {
       setTimeout(() => {
-        showScreenMask.value = true
+        toggleMask()
       }, 1500)
     }
   },
@@ -130,9 +168,8 @@ const handleReplay = throttle(
     playMsgSound()
     const newChat = chats[chatList.value.length]
     chatList.value.push({ ...newChat, content: msg })
-    gsap.to(".chat-operate", { duration: 0.3, opacity: "0", zIndex: "-1" }).then(() => {
-      curReplys.value = []
-    })
+    await toggleReply()
+    // curReplys.value = []
 
     chatListScrollToBottom()
 
@@ -143,14 +180,15 @@ const handleReplay = throttle(
 )
 
 const toPlay = async () => {
-  showScreenMask.value = false
+  toggleMask()
   await slideEnter()
   router.push("/play")
 }
 
 const handleBook = async () => {
-  await slideEnter()
-  router.push("/cinema")
+  toggleMask()
+  // await slideEnter()
+  // router.push("/cinema")
 }
 </script>
 
@@ -225,6 +263,7 @@ const handleBook = async () => {
           </div>
         </div>
       </div>
+
       <div class="chat-block">
         <div class="chat-frame">
           <div class="chat-title" :data-text="roomName">{{ roomName }}</div>
@@ -252,6 +291,7 @@ const handleBook = async () => {
               </div>
             </div>
           </div>
+
           <div class="chat-operate">
             <div
               class="reply-item"
@@ -263,25 +303,29 @@ const handleBook = async () => {
             </div>
           </div>
         </div>
-        <transition name="home-mask-fade">
-          <div class="chat-tips-mask" v-show="showScreenMask">
-            <div class="chat-tips-wrap">
-              <div class="chat-tips-white-mask"></div>
-              <div class="chat-friendly-tips">
-                <div class="chat-friendly-tips-title" data-text="友情支援">友情支援</div>
-                <div
-                  class="chat-friendly-tips-cont"
-                  data-text="每合成5次，获得1位1~9随机「电费加倍」倍率"
-                >
-                  每合成5次，获得1位1~9随机「电费加倍」倍率
-                </div>
+
+        <div class="chat-tips-mask home-view-mask">
+          <div class="chat-tips-wrap">
+            <div class="chat-tips-white-mask"></div>
+            <div class="chat-friendly-tips">
+              <div class="chat-friendly-tips-title" data-text="友情支援">友情支援</div>
+              <div
+                class="chat-friendly-tips-cont"
+                data-text="每合成5次，获得1位1~9随机「电费加倍」倍率"
+              >
+                每合成5次，获得1位1~9随机「电费加倍」倍率
               </div>
             </div>
           </div>
-        </transition>
+        </div>
+
+        <div class="mask-btn home-view-mask" @click="toPlay">
+          <span class="mask-btn-txt">开始游戏</span>
+        </div>
       </div>
     </div>
     <div class="qq-block-bottom"></div>
+
     <div class="operate-wrap">
       <div
         class="operate-item operate-mute"
@@ -291,14 +335,13 @@ const handleBook = async () => {
       <div class="operate-item" @click="handleBook"></div>
       <div class="operate-item"></div>
     </div>
+
     <div class="task-btn" @click="toggleModal"></div>
     <div class="right-bottom"></div>
-    <transition name="home-mask-fade">
-      <div class="mask-wrap" v-show="showScreenMask">
-        <div class="mask"></div>
-        <div class="mask-btn" @click="toPlay">开始游戏</div>
-      </div>
-    </transition>
+
+    <div class="mask-wrap home-view-mask">
+      <div class="mask"></div>
+    </div>
 
     <ViewModal close-on-click-mask>
       <div class="home-modal-wrap">
@@ -734,14 +777,12 @@ const handleBook = async () => {
 }
 .chat-operate {
   display: flex;
-  opacity: 0;
+  flex-direction: column;
+  align-items: center;
   position: sticky;
   bottom: 0;
   left: 0.13rem;
   right: 0.2rem;
-
-  flex-direction: column;
-  align-items: center;
   flex-shrink: 0;
   margin: 0 auto;
   width: 6.97rem;
@@ -751,6 +792,8 @@ const handleBook = async () => {
   padding: 0.15rem;
   gap: 0.1rem;
   z-index: 5;
+
+  display: none;
 
   .reply-item {
     cursor: pointer;
@@ -789,7 +832,7 @@ const handleBook = async () => {
   }
 }
 .chat-tips-mask {
-  // display: none;
+  display: none;
   position: absolute;
   top: 1.3rem;
   left: 0.32rem;
@@ -864,7 +907,51 @@ const handleBook = async () => {
   }
 }
 
+.mask-btn {
+  display: none;
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
+  width: 6.6rem;
+  height: 1rem;
+  z-index: 11;
+  cursor: pointer;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url(../assets/btn_bg_yellow.png);
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: -0.08rem;
+    z-index: -1;
+    bottom: 0;
+    border-radius: 0.28rem;
+    filter: blur(4px);
+    background-color: rgba(255, 255, 255, 0.8);
+  }
+
+  .mask-btn-txt {
+    position: absolute;
+    top: 0.2rem;
+    left: 2.2rem;
+    font-size: 0.44rem;
+    color: #312d2e;
+    font-style: italic;
+  }
+}
+
 .mask-wrap {
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -879,35 +966,6 @@ const handleBook = async () => {
     right: 0;
     bottom: 0;
     background-color: transparent;
-  }
-  .mask-btn {
-    position: absolute;
-    top: 10.3rem;
-    left: 5.6rem;
-    width: 6.8rem;
-    height: 1rem;
-    color: #332614;
-    font-style: italic;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    font-size: 0.44rem;
-    background-image: url(../assets/btn_bg_yellow.png);
-    &::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: -0.08rem;
-      z-index: -1;
-      bottom: 0;
-      border-radius: 0.28rem;
-      filter: blur(4px);
-      background-color: rgba(255, 255, 255, 0.8);
-    }
   }
 }
 
