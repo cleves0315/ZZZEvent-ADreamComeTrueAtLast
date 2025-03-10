@@ -3,10 +3,20 @@ import { computed, onMounted, ref } from "vue"
 import { Howl } from "howler"
 import msgAnswer from "/audio/btn_click.mp3"
 import bgmHome from "/audio/bgm_home.mp3"
-import { list } from "../assets/data/zhuyuan_chat_room.json"
 import { useBgm } from "../hooks/useBgm"
 import { useMusicMute } from "../hooks/useMusicMute"
 import { gsap } from "gsap"
+import { useRouter } from "vue-router"
+import { slideEnter } from "../utils"
+import { useFirstVisit } from "../hooks/useFirstVisit"
+import { CinemaUserEnum } from "../router"
+
+interface ListItem {
+  user: string
+  name: string
+  avatar: string
+  content: string
+}
 
 const owner = {
   user: "ling",
@@ -14,6 +24,19 @@ const owner = {
   avatar: "user_ling_to_right.png",
   // avatar: "user_zhe_to_right.png",
 }
+
+const lists = ref<ListItem[]>([])
+
+const router = useRouter()
+
+const { user } = defineProps({
+  user: String,
+})
+
+// console.log("user", route.params)
+console.log("user", user)
+
+const { markVisit } = useFirstVisit()
 
 const { isMute, toggleMute } = useMusicMute()
 const { bgmSound } = useBgm(bgmHome)
@@ -28,61 +51,10 @@ const stopWrite = ref(false)
 const charIndex = ref(0)
 const lineIndex = ref(0)
 
-const curItem = computed(() => list[lineIndex.value])
-const isCurUserBot = computed(() => curItem.value.user === "bot")
-const curDirection = computed(() => (curItem.value.user === owner.user ? "left" : "right"))
-const userRight = computed((previous) =>
-  curItem.value.user === owner.user || isCurUserBot.value ? previous : curItem.value,
-)
-
 msgSound.value = new Howl({
   src: [msgAnswer],
   volume: 1.0,
 })
-
-onMounted(() => {
-  const t = curItem.value.content
-  writeText(t)
-})
-
-const writeText = (str: string) => {
-  let text = str
-  charIndex.value = 0
-  content.value = ""
-
-  const handle = () => {
-    if (stopWrite.value) {
-      content.value = text
-      charIndex.value = 0
-      stopWrite.value = false
-
-      if (lineIndex.value >= list.length - 1) {
-        chatEnd.value = true
-        setTimeout(() => {
-          chatEndHandler()
-        }, 1000)
-      }
-      return
-    }
-    if (charIndex.value < text.length) {
-      content.value += text.charAt(charIndex.value++)
-      requestAnimationFrame(() => {
-        setTimeout(handle, 20)
-      })
-    } else {
-      charIndex.value = 0
-      content.value = text
-
-      if (lineIndex.value >= list.length - 1) {
-        chatEnd.value = true
-        setTimeout(() => {
-          chatEndHandler()
-        }, 1000)
-      }
-    }
-  }
-  return handle()
-}
 
 const handleMute = () => {
   toggleMute()
@@ -96,6 +68,78 @@ const handleMute = () => {
 
 const handleJump = () => {
   handleTipsMsg("第二天")
+}
+
+const curItem = computed(() => lists.value[lineIndex.value] || {})
+const isCurUserBot = computed(() => curItem.value.user === "bot")
+const curDirection = computed(() => (curItem.value.user === owner.user ? "left" : "right"))
+const userRight = computed((previous) =>
+  curItem.value.user === owner.user || isCurUserBot.value ? previous : curItem.value,
+)
+
+const fetchData = async () => {
+  let response
+  switch (user) {
+    case CinemaUserEnum.zhuyuan0:
+      response = await import("../assets/data/zhuyuan_chatroom_0.json")
+      break
+    case CinemaUserEnum.zhuyuan1:
+      response = await import("../assets/data/zhuyuan_chatroom_1.json")
+      break
+
+    default:
+      break
+  }
+
+  lists.value = response?.default.list || []
+}
+
+onMounted(() => {
+  fetchData().then(() => {
+    const t = curItem.value.content
+    if (t) {
+      writeText(t)
+    }
+  })
+})
+
+const writeText = (str: string) => {
+  let text = str
+  charIndex.value = 0
+  content.value = ""
+
+  const handle = () => {
+    if (stopWrite.value) {
+      content.value = text
+      charIndex.value = 0
+      stopWrite.value = false
+
+      if (lineIndex.value >= lists.value.length - 1) {
+        chatEnd.value = true
+        setTimeout(() => {
+          chatEndCallback()
+        }, 1000)
+      }
+      return
+    }
+    if (charIndex.value < text.length) {
+      content.value += text.charAt(charIndex.value++)
+      requestAnimationFrame(() => {
+        setTimeout(handle, 20)
+      })
+    } else {
+      charIndex.value = 0
+      content.value = text
+
+      if (lineIndex.value >= lists.value.length - 1) {
+        chatEnd.value = true
+        setTimeout(() => {
+          chatEndCallback()
+        }, 1000)
+      }
+    }
+  }
+  return handle()
 }
 
 const handleNext = async () => {
@@ -139,8 +183,10 @@ const handleTipsNext = async () => {
   tipsCont.value = ""
 }
 
-const chatEndHandler = () => {
-  alert("chatEndHandler")
+const chatEndCallback = async () => {
+  markVisit()
+  await slideEnter()
+  router.replace("/home")
 }
 </script>
 
@@ -398,7 +444,7 @@ const chatEndHandler = () => {
   bottom: 0;
   right: 4.5rem;
   width: 5rem;
-  background-position: bottom;
+  background-position: top;
   background-size: 100% auto;
   background-repeat: no-repeat;
   &.hide {

@@ -2,7 +2,7 @@
 import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
 import throttle from "lodash/throttle"
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { Howl } from "howler"
 import msgAnswer from "/audio/message_answer.mp3"
 import bgmHome from "/audio/bgm_home.mp3"
@@ -17,6 +17,8 @@ import { useBgm } from "../hooks/useBgm"
 import { useMusicMute } from "../hooks/useMusicMute"
 import ViewModal from "./ViewModal.vue"
 import { useModal } from "../hooks/useModal"
+import { useChatMarked } from "../hooks/useChatMark"
+import { CinemaUserEnum } from "../router"
 
 const dialogList = ref([
   { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: "zhuyuan_task.png" },
@@ -27,16 +29,24 @@ const dialogList = ref([
 ])
 
 const { isMute, toggleMute } = useMusicMute()
+
 const { toggleModal } = useModal()
+
+const { chatsMarked, markChatEnd } = useChatMarked()
+
 const { bgmSound } = useBgm(bgmHome)
+
+const curChatIndex = ref(0)
+
 const showScreenMask = ref(false)
+
 const showReply = ref(false)
 
 const router = useRouter()
 
 const curReplys = ref<string[]>([])
 
-const chatList = ref(chats.slice(0, 0))
+const curChatList = ref(chats.slice(0, 0))
 
 const chatListRef = ref<HTMLDivElement>()
 
@@ -44,20 +54,35 @@ const msgSound = ref()
 
 const initing = ref(true)
 
+const curChatMarked = computed(() => chatsMarked.value[curChatIndex.value])
+
+const markCurChat = () => {
+  markChatEnd(curChatMarked.value.user)
+}
+
 const initChatList = () => {
-  const interval = 400
-  for (let i = 0; i < chatFirstIndex; i++) {
-    setTimeout(
-      () => {
-        chatList.value.push(chats[i])
-        if (i === chatFirstIndex - 1) {
-          requestAnimationFrame(() => {
-            initing.value = false
-          })
-        }
-      },
-      interval * i + 1,
-    )
+  if (curChatMarked.value.chatEnd) {
+    curChatList.value = chats
+    initing.value = false
+    chatListScrollToBottom()
+    toggleMask(true)
+  } else {
+    setTimeout(() => {
+      const interval = 400
+      for (let i = 0; i < chatFirstIndex; i++) {
+        setTimeout(
+          () => {
+            curChatList.value.push(chats[i])
+            if (i === chatFirstIndex - 1) {
+              requestAnimationFrame(() => {
+                initing.value = false
+              })
+            }
+          },
+          interval * i + 1,
+        )
+      }
+    }, 2000)
   }
 }
 
@@ -66,9 +91,7 @@ onMounted(() => {
     src: [msgAnswer],
     volume: 1.0,
   })
-  setTimeout(() => {
-    initChatList()
-  }, 2000)
+  initChatList()
 })
 
 const handleChangeMuteState = () => {
@@ -115,16 +138,22 @@ const toggleReply = async () => {
   }
 }
 
-const toggleMask = () => {
+const toggleMask = (mask?: boolean) => {
   showScreenMask.value = !showScreenMask.value
   const cls = ".home-view-mask"
 
   if (showScreenMask.value) {
     gsap.set(cls, { display: "block", opacity: 0 }).then(() => {
+      if (mask) {
+        gsap.set(".mask-wrap", { display: "none" })
+      }
       gsap.to(cls, { duration: 0.3, opacity: 1 })
     })
   } else {
     gsap.to(cls, { duration: 0.3, opacity: 0 }).then(() => {
+      if (mask) {
+        gsap.set(".mask-wrap", { display: "block" })
+      }
       gsap.set(cls, { display: "none" })
     })
   }
@@ -133,27 +162,28 @@ const toggleMask = () => {
 const handleNextChat = throttle(
   () => {
     if (initing.value) return
-    if (chatList.value.length >= chats.length) return
+    if (curChatList.value.length >= chats.length) return
     if (showReply.value) return
 
-    const newChat = chats[chatList.value.length]
+    const newChat = chats[curChatList.value.length]
     if (newChat.reply?.length) {
       curReplys.value = newChat.reply as string[]
 
       chatListScrollToBottom()
-      gsap.set(".chat-list", { overflow: "hidden" })
+      gsap.set(".chat-list-inner", { overflow: "hidden" })
       toggleReply()
       return
     }
 
-    chatList.value.push(newChat)
+    curChatList.value.push(newChat)
     if (chatListRef.value) {
       chatListScrollToBottom()
       playMsgSound()
     }
 
     // chat end
-    if (chatList.value.length >= chats.length) {
+    if (curChatList.value.length >= chats.length) {
+      markCurChat()
       setTimeout(() => {
         toggleMask()
       }, 1500)
@@ -166,14 +196,14 @@ const handleNextChat = throttle(
 const handleReplay = throttle(
   async (msg: string) => {
     playMsgSound()
-    const newChat = chats[chatList.value.length]
-    chatList.value.push({ ...newChat, content: msg })
+    const newChat = chats[curChatList.value.length]
+    curChatList.value.push({ ...newChat, content: msg })
     await toggleReply()
     // curReplys.value = []
 
     chatListScrollToBottom()
 
-    gsap.set(".chat-list", { overflow: "scroll" })
+    gsap.set(".chat-list-inner", { overflow: "scroll" })
   },
   500,
   { trailing: false },
@@ -186,9 +216,9 @@ const toPlay = async () => {
 }
 
 const handleBook = async () => {
-  toggleMask()
-  // await slideEnter()
-  // router.push("/cinema")
+  // toggleMask()
+  await slideEnter()
+  router.push(`/cinema/${CinemaUserEnum.zhuyuan1}`)
 }
 </script>
 
@@ -269,13 +299,13 @@ const handleBook = async () => {
           <div class="chat-title" :data-text="roomName">{{ roomName }}</div>
         </div>
         <div class="chat-bg"></div>
-        <div class="chat-list" ref="chatListRef" @click="handleNextChat">
+        <div class="chat-list" @click="handleNextChat">
           <div class="chat-tips">{{ toptips }}</div>
-          <div class="chat-list-inner">
+          <div class="chat-list-inner" ref="chatListRef">
             <div
               class="chat-item"
-              :class="item.isRight && 'chat-item-right'"
-              v-for="(item, idx) in chatList"
+              :class="[item.isRight && 'chat-item-right', !curChatMarked.chatEnd && 'has-animate']"
+              v-for="(item, idx) in curChatList"
               :key="idx"
             >
               <div class="chat-avatar-wrap" :class="item.user === 'bot' && 'chat-avatar-bot'">
@@ -647,14 +677,10 @@ const handleBook = async () => {
   right: 0.2rem;
   bottom: 0.33rem;
   z-index: 1;
-  overflow: scroll;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 0.14rem;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
 
   .chat-tips {
     width: 100%;
@@ -665,11 +691,16 @@ const handleBook = async () => {
   }
 
   .chat-list-inner {
-    flex: 1;
+    flex-shrink: 0;
     display: flex;
     flex-direction: column;
     gap: 0.14rem;
-    // padding-bottom: 1.5rem;
+    height: 3.9rem;
+    overflow: scroll;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .chat-item {
@@ -698,16 +729,26 @@ const handleBook = async () => {
         transform: scale(1);
       }
     }
+    &.has-animate {
+      .chat-avatar-wrap {
+        transform: scale(0);
+        animation: showAvatar 0.3s 0.3s forwards;
+      }
+      .chat-content {
+        transform: scale(0);
+        transform-origin: top left;
+        animation: showContent 0.3s 0.3s forwards;
+      }
+    }
     .chat-avatar-wrap {
       width: 0.7rem;
       height: 0.7rem;
       border-radius: 50%;
       background-color: #c4a7f5;
-      transform: scale(0);
-      animation: showAvatar 0.3s 0.3s forwards;
       background-size: 100% 100%;
       background-repeat: no-repeat;
       position: relative;
+
       .chat-avatar {
         position: absolute;
         top: 0.02rem;
@@ -728,9 +769,7 @@ const handleBook = async () => {
       padding: 0.2rem 0.3rem;
       max-width: 4.8rem;
       border-radius: 0.3rem;
-      transform: scale(0);
-      transform-origin: top left;
-      animation: showContent 0.3s 0.3s forwards;
+
       &::after {
         content: "";
         position: absolute;
@@ -959,6 +998,7 @@ const handleBook = async () => {
   bottom: 0;
   z-index: 10;
   background-color: rgba(0, 0, 0, 0.7);
+
   .mask {
     position: absolute;
     top: 0;
