@@ -9,12 +9,14 @@
     {
       "user": "ling",
       "name": "铃",
+      "mood": "5",
       "avatar": "user_ling_to_right.png",
       "content": "这么快！你的假期问题已经解决了吗？"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "3",
       "avatar": "user_zhe_to_left.png",
       "content": "F宝，你是怎么办到的？"
     },
@@ -27,12 +29,14 @@
     {
       "user": "ling",
       "name": "铃",
+      "mood": "4",
       "avatar": "user_ling_to_right.png",
       "content": "啊？还能用这种方式解决的吗？"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "4",
       "avatar": "user_zhe_to_left.png",
       "content": "这可是104天假期，你怎么处理的？"
     },
@@ -45,12 +49,14 @@
     {
       "user": "ling",
       "name": "铃",
+      "mood": "1",
       "avatar": "user_ling_to_right.png",
       "content": "嗯…听上去还算合理。"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "3",
       "avatar": "user_zhe_to_left.png",
       "content": "哪里合理了，假期又不是录像带，能这样转手给其他人吗。"
     },
@@ -63,12 +69,14 @@
     {
       "user": "ling",
       "name": "铃",
+      "mood": "3",
       "avatar": "user_ling_to_right.png",
       "content": "那还有83天呢？"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "3",
       "avatar": "user_zhe_to_left.png",
       "content": "以这个处理方式，应该要轮到青衣了。"
     },
@@ -81,12 +89,14 @@
     {
       "user": "ling",
       "name": "铃",
+      "mood": "2",
       "avatar": "user_ling_to_right.png",
       "content": "哥，我从明天开始帮你泡咖啡可以吗？"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "2",
       "avatar": "user_zhe_to_left.png",
       "content": "可以，但没有假期没有奖金。"
     },
@@ -105,6 +115,7 @@
     {
       "user": "ling",
       "name": "铃",
+      "mood": "3",
       "avatar": "user_ling_to_right.png",
       "content": "最该好好休息的是你自己吧…那104天假就这样分完了？"
     },
@@ -117,6 +128,7 @@
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "1",
       "avatar": "user_zhe_to_left.png",
       "content": "青衣比我们家的某位智能管家省电多了，要不发给青衣作为奖励？"
     },
@@ -135,54 +147,70 @@
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "3",
       "avatar": "user_zhe_to_left.png",
       "content": "等等！朱鸢，我开玩笑的！"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "4",
       "avatar": "user_zhe_to_left.png",
       "content": "这样真的能行吗…太乱来了，又不是在做梦。"
     },
     {
       "user": "ling",
       "name": "铃",
+      "mood": "5",
       "avatar": "user_ling_to_right.png",
       "content": "哥，我忽然想到个问题。青衣的替补是谁？"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "1",
       "avatar": "user_zhe_to_left.png",
       "content": "嗯？不太清楚，但大概是朱鸢吧。"
     },
     {
       "user": "ling",
       "name": "铃",
+      "mood": "5",
       "avatar": "user_ling_to_right.png",
       "content": "那，赛斯的替补又是谁？"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "1",
       "avatar": "user_zhe_to_left.png",
       "content": "是青衣吧，但青衣不在的话就是朱鸢，啊…"
     },
     {
+      "user": "ling",
+      "name": "铃",
+      "mood": "4",
+      "avatar": "user_ling_to_right.png",
+      "content": "…"
+    },
+    {
       "user": "zhe",
       "name": "哲",
+      "mood": "4",
       "avatar": "user_zhe_to_left.png",
       "content": "…"
     },
     {
       "user": "ling",
       "name": "铃",
+      "mood": "4",
       "avatar": "user_ling_to_right.png",
       "content": "啊啊啊不管了，这都是什么事儿啊！睡觉！"
     },
     {
       "user": "zhe",
       "name": "哲",
+      "mood": "3",
       "avatar": "user_zhe_to_left.png",
       "content": "还是想想好事吧…起码朱鸢能来聚餐了，晚安铃。"
     }

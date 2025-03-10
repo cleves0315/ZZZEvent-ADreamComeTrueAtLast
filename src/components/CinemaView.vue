@@ -16,6 +16,7 @@ interface ListItem {
   name: string
   avatar: string
   content: string
+  mood?: string
 }
 
 const owner = {
@@ -32,9 +33,6 @@ const router = useRouter()
 const { user } = defineProps({
   user: String,
 })
-
-// console.log("user", route.params)
-console.log("user", user)
 
 const { markVisit } = useFirstVisit()
 
@@ -73,7 +71,10 @@ const handleJump = () => {
 const curItem = computed(() => lists.value[lineIndex.value] || {})
 const isCurUserBot = computed(() => curItem.value.user === "bot")
 const curDirection = computed(() => (curItem.value.user === owner.user ? "left" : "right"))
-const userRight = computed((previous) =>
+const userLeft = computed<ListItem | undefined>((previous) =>
+  curItem.value.user !== owner.user || isCurUserBot.value ? previous : curItem.value,
+)
+const userRight = computed<ListItem | undefined>((previous) =>
   curItem.value.user === owner.user || isCurUserBot.value ? previous : curItem.value,
 )
 
@@ -237,12 +238,14 @@ const chatEndCallback = async () => {
 
     <div
       class="user-left"
+      :data-mood="userLeft?.mood"
       :class="curDirection === 'left' ? '' : 'hide'"
-      :style="{ backgroundImage: `url(/src/assets/${owner.avatar})` }"
+      :style="{ backgroundImage: `url(/src/assets/${userLeft?.avatar})` }"
     ></div>
     <div
       class="user-right"
       :class="curDirection === 'right' ? '' : 'hide'"
+      :data-mood="userRight?.mood"
       :style="{ backgroundImage: `url(/src/assets/${userRight?.avatar})` }"
     ></div>
   </div>
@@ -434,8 +437,35 @@ const chatEndCallback = async () => {
   background-size: auto 100%;
   background-repeat: no-repeat;
   transition: filter 0.3s;
+
   &.hide {
     filter: brightness(0.6) contrast(0.8);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 2.57rem;
+    width: 3.95rem;
+    height: 3.4rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+  }
+  &[data-mood="1"]::after {
+    background-image: url(../assets/lin_l_1.png);
+  }
+  &[data-mood="2"]::after {
+    background-image: url(../assets/lin_l_2.png);
+  }
+  &[data-mood="3"]::after {
+    background-image: url(../assets/lin_l_3.png);
+  }
+  &[data-mood="4"]::after {
+    background-image: url(../assets/lin_l_4.png);
+  }
+  &[data-mood="5"]::after {
+    background-image: url(../assets/lin_l_5.png);
   }
 }
 .user-right {
@@ -447,8 +477,32 @@ const chatEndCallback = async () => {
   background-position: top;
   background-size: 100% auto;
   background-repeat: no-repeat;
+
   &.hide {
     filter: brightness(0.6) contrast(0.8);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0.75rem;
+    width: 3.95rem;
+    height: 3.8rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+  }
+  &[data-mood="1"]::after {
+    background-image: url(../assets/ze_r_1.png);
+  }
+  &[data-mood="2"]::after {
+    background-image: url(../assets/ze_r_2.png);
+  }
+  &[data-mood="3"]::after {
+    background-image: url(../assets/ze_r_3.png);
+  }
+  &[data-mood="4"]::after {
+    background-image: url(../assets/ze_r_4.png);
   }
 }
 </style>
