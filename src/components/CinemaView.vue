@@ -11,7 +11,7 @@ import { slideEnter } from "../utils"
 import { useFirstVisit } from "../hooks/useFirstVisit"
 import { CinemaUserEnum } from "../router"
 
-interface ListItem {
+interface ChatRoomItem {
   user: string
   name: string
   avatar: string
@@ -26,7 +26,7 @@ const owner = {
   // avatar: "user_zhe_to_right.png",
 }
 
-const lists = ref<ListItem[]>([])
+const lists = ref<ChatRoomItem[]>([])
 
 const router = useRouter()
 
@@ -71,10 +71,10 @@ const handleJump = () => {
 const curItem = computed(() => lists.value[lineIndex.value] || {})
 const isCurUserBot = computed(() => curItem.value.user === "bot")
 const curDirection = computed(() => (curItem.value.user === owner.user ? "left" : "right"))
-const userLeft = computed<ListItem | undefined>((previous) =>
+const userLeft = computed<ChatRoomItem | undefined>((previous) =>
   curItem.value.user !== owner.user || isCurUserBot.value ? previous : curItem.value,
 )
-const userRight = computed<ListItem | undefined>((previous) =>
+const userRight = computed<ChatRoomItem | undefined>((previous) =>
   curItem.value.user === owner.user || isCurUserBot.value ? previous : curItem.value,
 )
 
