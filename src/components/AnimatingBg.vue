@@ -36,6 +36,10 @@ watchEffect(() => {
     autoplay
     loop
     muted
+    playsinline
+    webkit-playsinline
+    preload="auto"
+    disable-picture-in-picture="true"
     :style="{ width: style?.width, height: style?.height }"
   ></video>
 </template>

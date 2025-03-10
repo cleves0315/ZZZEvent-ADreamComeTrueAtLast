@@ -2,7 +2,7 @@
 import { CSSProperties, onMounted, ref } from "vue"
 import { ceilToTwo } from "../utils"
 import { RouterView } from "vue-router"
-import AnimatingBG from "./AnimatingBG.vue"
+import AnimatingBg from "./AnimatingBg.vue"
 
 const viewportFrameRatio = 0.768
 const frameAspectRatio = 2.3148175675675673
@@ -90,7 +90,7 @@ onMounted(() => {
 <template>
   <div class="flexible-view" :style="{ width: frameStyle?.width }">
     <div class="layout" ref="layoutRef" :style="frameStyle">
-      <AnimatingBG :style="{ width: frameStyle?.width, height: frameStyle?.height }" />
+      <AnimatingBg :style="{ width: frameStyle?.width, height: frameStyle?.height }" />
       <div class="route-slide-wrapper">
         <div class="route-slide-line route-slide-line-right route-slide-line-right1"></div>
         <div class="route-slide-line route-slide-line-left route-slide-line-left1"></div>

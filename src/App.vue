@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import FlexibleView from "./components/FlexibleView.vue"
+document.ondblclick = function (e) {
+  e.preventDefault()
+}
 </script>
 
 <template>
