@@ -17,7 +17,7 @@ import { useBgm } from "../hooks/useBgm"
 import { useMusicMute } from "../hooks/useMusicMute"
 import ViewModal from "./ViewModal.vue"
 import { useModal } from "../hooks/useModal"
-import { useChatMarked } from "../hooks/useChatMark"
+import { ChatMarkAction, useChatMarked } from "../hooks/useChatMark"
 import { CinemaUserEnum } from "../router"
 
 const dialogList = ref([
@@ -36,7 +36,7 @@ const { chatsMarked, markChatEnd } = useChatMarked()
 
 const { bgmSound } = useBgm(bgmHome)
 
-const curChatIndex = ref(0)
+const curDialogIndex = ref(0)
 
 const showScreenMask = ref(false)
 
@@ -54,10 +54,24 @@ const msgSound = ref()
 
 const initing = ref(true)
 
-const curChatMarked = computed(() => chatsMarked.value[curChatIndex.value])
+const opRecords = ref<ChatMarkAction[]>([])
+
+const curChatMarked = computed(() => chatsMarked.value[curDialogIndex.value])
+
+const curDialogOpRecords = computed(() => {
+  const acc: Record<string, number> = {}
+  curChatMarked.value.actions.forEach(({ index, opIndex }) => {
+    acc[index] = opIndex
+  })
+  return acc
+})
+
+const markOpRecords = (action: ChatMarkAction) => {
+  opRecords.value.push(action)
+}
 
 const markCurChat = () => {
-  markChatEnd(curChatMarked.value.user)
+  markChatEnd(curChatMarked.value.user, opRecords.value)
 }
 
 const initChatList = () => {
@@ -194,10 +208,14 @@ const handleNextChat = throttle(
 )
 
 const handleReplay = throttle(
-  async (msg: string) => {
+  async (msg: string, opIndex: number) => {
     playMsgSound()
+
+    markOpRecords({ index: curChatList.value.length, opIndex })
+
     const newChat = chats[curChatList.value.length]
     curChatList.value.push({ ...newChat, content: msg })
+
     await toggleReply()
     // curReplys.value = []
 
@@ -316,7 +334,7 @@ const handleBook = async () => {
               </div>
               <div class="chat-content">
                 <div class="chat-txt" :data-text="item.content">
-                  {{ item.content }}
+                  {{ item.content ?? item?.reply[curDialogOpRecords[idx] ?? 0] }}
                 </div>
               </div>
             </div>
@@ -327,7 +345,7 @@ const handleBook = async () => {
               class="reply-item"
               v-for="(item, idx) in curReplys"
               :key="idx"
-              @click.stop="handleReplay(item)"
+              @click.stop="handleReplay(item, idx)"
             >
               <span class="reply-item-txt" :data-text="item">{{ item }}</span>
             </div>

@@ -1,20 +1,24 @@
 import { ref } from "vue"
 import { getStorage, setStorage, StorageKey } from "../utils/storage"
 
-type ChatMark = {
+export type ChatMarkAction = { index: number; opIndex: number }
+
+export type ChatMark = {
   user: string
   chatEnd: boolean
+  actions: ChatMarkAction[]
 }
 
-export const useChatMarked = () => {
-  const chatsMarked = ref(
-    (getStorage(StorageKey.CHATS_MARKED) as ChatMark[]) || [{ user: "zhuyuan", chatEnd: false }],
-  )
+const defaultChatMarked: ChatMark[] = [{ user: "zhuyuan", chatEnd: false, actions: [] }]
 
-  const markChatEnd = (user: string) => {
+export const useChatMarked = () => {
+  const chatsMarked = ref((getStorage(StorageKey.CHATS_MARKED) as ChatMark[]) || defaultChatMarked)
+
+  const markChatEnd = (user: string, actions: ChatMarkAction[]) => {
     const chat = chatsMarked.value.find((chat) => chat.user === user)
     if (chat) {
       chat.chatEnd = true
+      chat.actions = actions
       setStorage(StorageKey.CHATS_MARKED, chatsMarked.value)
     }
   }
