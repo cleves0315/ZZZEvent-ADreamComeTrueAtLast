@@ -1,3 +1,4 @@
+// @ts-nocheck
 export * from "./animframe_polyfill"
 export * from "./bind_polyfill"
 export * from "./classlist_polyfill"
