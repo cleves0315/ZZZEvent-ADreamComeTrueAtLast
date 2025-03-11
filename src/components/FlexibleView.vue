@@ -104,9 +104,7 @@ onMounted(() => {
         <div class="route-slide-line route-slide-line-left route-slide-line-left5"></div>
       </div>
       <RouterView v-slot="{ Component }">
-        <transition>
-          <component :is="Component" />
-        </transition>
+        <component :is="Component" />
       </RouterView>
     </div>
   </div>
