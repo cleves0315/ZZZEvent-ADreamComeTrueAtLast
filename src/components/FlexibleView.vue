@@ -20,6 +20,8 @@ const resizeFrame = () => {
   let frameWidth, frameHeight
 
   if (winWidth < winHeight) {
+    // screen rotates 90deg
+    window.isFrameRotated = true
     const diff = winHeight - winWidth
     document.body.style.margin = "0"
     document.body.style.position = "fixed"
@@ -33,6 +35,7 @@ const resizeFrame = () => {
     winWidth = window.innerHeight
     winHeight = window.innerWidth
   } else {
+    window.isFrameRotated = false
     document.body.style.margin = "0"
     document.body.style.position = "fixed"
     document.body.style.width = winWidth + "px"
@@ -55,7 +58,6 @@ const resizeFrame = () => {
   // console.log(winWidth, winHeight)
 
   if (layoutRef.value) {
-    // no rotate
     frameWidth = ceilToTwo(winWidth / viewportFrameRatio)
     frameHeight = ceilToTwo(parseFloat(frameWidth) / frameAspectRatio)
     if (parseFloat(frameHeight) <= winHeight) {

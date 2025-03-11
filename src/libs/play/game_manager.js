@@ -139,7 +139,10 @@ GameManager.prototype.move = function (direction) {
 
   var cell, tile
 
-  var vector = this.getVector(direction)
+  var vector = this.getVector(
+    // The screen is rotated 90 degrees, so the direction must be adjusted
+    window.isFrameRotated ? (direction - 1 < 0 ? 3 : direction - 1) : direction,
+  )
   var traversals = this.buildTraversals(vector)
   var moved = false
 
@@ -158,6 +161,7 @@ GameManager.prototype.move = function (direction) {
 
         // Only one merger per row traversal?
         if (next && next.value === tile.value && !next.mergedFrom) {
+          // TODO
           var merged = new Tile(positions.next, tile.value * 2)
           merged.mergedFrom = [tile, next]
 
