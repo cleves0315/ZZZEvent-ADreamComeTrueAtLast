@@ -113,11 +113,15 @@ HTMLActuator.prototype.updateScore = function (score) {
   }
 
   var difference = score - this.score
-  this.score = formatNumber(score)
+  this.score = score
 
-  this.scoreContainer.textContent = this.score
+  this.scoreContainer.textContent = formatNumber(this.score)
 
   if (difference > 0) {
+    this.scoreContainer.dispatchEvent(
+      new CustomEvent("updateScore", { detail: { score: this.score } }),
+    )
+
     var addition = document.createElement("div")
     addition.classList.add("score-addition")
     addition.textContent = "+" + difference

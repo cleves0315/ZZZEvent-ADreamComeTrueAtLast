@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
+import { computed, onMounted, ref } from "vue"
 import ad from "/audio/play_bgm.mp3"
-
 import { GameManager, KeyboardInputManager, HTMLActuator, LocalStorageManager } from "../libs/play"
 import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
@@ -12,14 +11,41 @@ import { useBgm } from "../hooks/useBgm"
 const router = useRouter()
 
 const isOver = ref(false)
+
 const showModal = ref(false)
+
+const score = ref(0)
+
+const targetScore = ref(20)
+
+const percent = computed(() => {
+  const num = Math.ceil((score.value / targetScore.value) * 100)
+  return Math.min(num, 100)
+})
+
+const isFinish = computed(() => {
+  const res = percent.value === 100
+  if (res) {
+    gsap.set(".target-score-success", { opacity: 0, width: "0rem", display: "block" })
+    gsap.to(".target-score-success", { opacity: 1, width: "2.56rem", duration: 0.6 })
+
+    gsap.set(".play-view-suc-tips", { display: "block" })
+    gsap.set(".play-view-suc-tips-bg", { transform: "translateX(100%)" })
+    gsap.set(".play-view-suc-tips-text", { opacity: 0 })
+    gsap.to(".play-view-suc-tips-bg", { transform: "translateX(0)", duration: 1 })
+    gsap.to(".play-view-suc-tips-text", { opacity: 1, duration: 1 })
+  }
+  return res
+})
 
 const handleGameOver = () => {
   isOver.value = true
   toggleModalState()
 }
 
-window.addEventListener("ganmeOver", throttle(handleGameOver, 1000, { trailing: false }))
+const handleUpdateScore = (e: any) => {
+  score.value = parseFloat(e.detail.score)
+}
 
 useBgm(ad)
 
@@ -40,7 +66,9 @@ const toggleModalState = async () => {
 
 onMounted(() => {
   window.requestAnimationFrame(function () {
-    new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager)
+    const gameManager = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager)
+    window.addEventListener("ganmeOver", throttle(handleGameOver, 1000, { trailing: false }))
+    gameManager.actuator.scoreContainer?.addEventListener("updateScore", handleUpdateScore)
   })
 })
 
@@ -86,7 +114,16 @@ const onBack = async () => {
     <div class="right-top" @click="toggleModalState">
       <span class="right-top-txt">结束关卡</span>
     </div>
-    <div class="play-view-random-number"></div>
+    <div class="play-view-suc-tips">
+      <div class="play-view-suc-tips-bg"></div>
+      <div class="play-view-suc-tips-text">目标达成可随时结算</div>
+    </div>
+
+    <div class="play-view-random-number-wrap">
+      <div class="play-view-random-number" data-num="1"></div>
+      <div class="play-view-random-number"></div>
+      <div class="play-view-random-number"></div>
+    </div>
     <div class="cover-box"></div>
     <div class="right-bottom"></div>
 
@@ -98,6 +135,16 @@ const onBack = async () => {
           <div class="score-container">0</div>
           <div class="best-container" style="display: none">0</div>
           <div class="score-label-2" data-text="目标电费">目标电费</div>
+          <div class="target-score-wrap">
+            <div
+              class="target-score-progress"
+              :style="{ clipPath: `inset(0 ${100 - percent}% 0 0)` }"
+            ></div>
+            <div class="target-score-success"></div>
+            <span class="target-score" :data-text="isFinish ? '已达成' : targetScore">{{
+              isFinish ? "已达成" : targetScore
+            }}</span>
+          </div>
         </div>
       </div>
 
@@ -153,11 +200,15 @@ const onBack = async () => {
       <div class="play-view-modal-body-content">
         <div class="play-view-modal-body-content-row-1">
           <div class="play-view-modal-body-content-text" data-text="当前电费">当前电费</div>
-          <div class="play-view-modal-body-content-value" data-text="32131230">32131230</div>
+          <div class="play-view-modal-body-content-value" :data-text="score">
+            {{ score }}
+          </div>
         </div>
         <div class="play-view-modal-body-content-row-2">
           <div class="play-view-modal-body-content-text" data-text="目标电费">目标电费</div>
-          <div class="play-view-modal-body-content-value" data-text="32131230">32131230</div>
+          <div class="play-view-modal-body-content-value" :data-text="targetScore">
+            {{ targetScore }}
+          </div>
         </div>
         <div class="play-view-modal-body-content-tips">
           <div class="play-view-modal-body-content-tips-txt">
@@ -212,6 +263,7 @@ const onBack = async () => {
   right: 2.8rem;
   width: 4.2rem;
   height: 1.8rem;
+  z-index: 3;
   cursor: pointer;
   background-size: 100% auto;
   background-repeat: no-repeat;
@@ -224,15 +276,91 @@ const onBack = async () => {
     color: #312d2e;
   }
 }
-.play-view-random-number {
+.play-view-suc-tips {
+  display: none;
+  position: absolute;
+  top: 0.84rem;
+  right: 6.54rem;
+  width: 3.2rem;
+  height: 1.8rem;
+
+  .play-view-suc-tips-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../assets/play_suc_bg.png);
+  }
+
+  .play-view-suc-tips-text {
+    position: absolute;
+    font-size: 0.22rem;
+    color: #507012;
+    top: 0.24rem;
+    left: 0.85rem;
+  }
+}
+.play-view-random-number-wrap {
   position: absolute;
   top: 4.12rem;
   right: 4.36rem;
   width: 4.26rem;
-  height: 2.5rem;
+  height: 2.26rem;
   background-size: 100% auto;
   background-repeat: no-repeat;
   background-image: url(../assets/random_number.png);
+
+  .play-view-random-number {
+    position: absolute;
+    width: 0.9rem;
+    height: 1.7rem;
+    top: 0.3rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: 0 -0.5rem;
+    background-image: url(../assets/play_random_num.png);
+    transform: scaleY(0.88);
+
+    &:nth-child(1) {
+      left: 0.3rem;
+    }
+    &:nth-child(2) {
+      left: 1.68rem;
+    }
+    &:nth-child(3) {
+      left: 3.1rem;
+    }
+    &[data-num="1"] {
+      background-position: 0rem -5.7rem;
+    }
+    &[data-num="2"] {
+      background-position: 0rem -8.3rem;
+    }
+    &[data-num="3"] {
+      background-position: 0rem -10.9rem;
+    }
+    &[data-num="4"] {
+      background-position: 0rem -13.56rem;
+    }
+    &[data-num="5"] {
+      background-position: 0rem -16.15rem;
+    }
+    &[data-num="6"] {
+      background-position: 0rem -18.8rem;
+    }
+    &[data-num="7"] {
+      background-position: 0rem -21.4rem;
+    }
+    &[data-num="8"] {
+      background-position: 0rem -24.04rem;
+    }
+    &[data-num="9"] {
+      background-position: 0rem -26.65rem;
+    }
+  }
 }
 .cover-box {
   position: absolute;
@@ -325,7 +453,7 @@ const onBack = async () => {
   position: absolute;
   font-size: 0.28rem;
   color: #fff;
-  top: 2.17rem;
+  top: 2.1rem;
   left: 4.6rem;
 
   &::after {
@@ -333,8 +461,62 @@ const onBack = async () => {
     position: absolute;
     top: 0;
     left: 0;
-    color: #5d497c;
+    color: #8470a6;
     filter: url(#stroke-text-svg-filter-1);
+  }
+}
+
+.target-score-wrap {
+  position: absolute;
+  top: 2.1rem;
+  right: 1.4rem;
+  width: 2.28rem;
+  height: 0.4rem;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-image: url(../assets/play_pg_bg.png);
+
+  .target-score-progress {
+    position: absolute;
+    top: 0.09rem;
+    left: 0.1rem;
+    right: 0.1rem;
+    height: 0.25rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../assets/play_pg_val.png);
+  }
+
+  .target-score-success {
+    display: none;
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: -0.28rem;
+    bottom: 0;
+    z-index: 1;
+    background-size: 2.56rem auto;
+    background-repeat: no-repeat;
+    background-image: url(../assets/play_pg_suc.png);
+  }
+
+  .target-score {
+    position: absolute;
+    top: 0.06rem;
+    right: 0.18rem;
+    font-size: 0.24rem;
+    color: #fff;
+    z-index: 2;
+
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: #503d76;
+      filter: url(#stroke-text-svg-filter-1);
+    }
   }
 }
 

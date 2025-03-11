@@ -39,25 +39,25 @@ GameManager.prototype.isGameTerminated = function () {
 
 // Set up the game
 GameManager.prototype.setup = function () {
-  var previousState = this.storageManager.getGameState()
+  // var previousState = this.storageManager.getGameState()
 
   // Reload the game from a previous game if present
-  if (previousState) {
-    this.grid = new Grid(previousState.grid.size, previousState.grid.cells) // Reload grid
-    this.score = previousState.score
-    this.over = previousState.over
-    this.won = previousState.won
-    this.keepPlaying = previousState.keepPlaying
-  } else {
-    this.grid = new Grid(this.size)
-    this.score = 0
-    this.over = false
-    this.won = false
-    this.keepPlaying = false
+  // if (previousState) {
+  //   this.grid = new Grid(previousState.grid.size, previousState.grid.cells) // Reload grid
+  //   this.score = previousState.score
+  //   this.over = previousState.over
+  //   this.won = previousState.won
+  //   this.keepPlaying = previousState.keepPlaying
+  // } else {
+  this.grid = new Grid(this.size)
+  this.score = 0
+  this.over = false
+  this.won = false
+  this.keepPlaying = false
 
-    // Add the initial tiles
-    this.addStartTiles()
-  }
+  // Add the initial tiles
+  this.addStartTiles()
+  // }
 
   // Update the actuator
   this.actuate()
