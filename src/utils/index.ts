@@ -1,9 +1,13 @@
 import { gsap } from "gsap"
 
 export const ceilToTwo = (num: number, decimal = 2) => {
-  const factor = Math.pow(10, decimal) // 计算10的幂
-  const rounded = Math.ceil(num * factor) / factor // 向上取整
-  return rounded.toFixed(decimal) // 返回指定小数位的字符串
+  const factor = Math.pow(10, decimal)
+  const rounded = Math.ceil(num * factor) / factor
+  return rounded.toFixed(decimal)
+}
+
+export const formatNumber = (num: number) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
 
 export const slideEnter = (): Promise<string> => {

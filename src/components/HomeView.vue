@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router"
-import { slideEnter } from "../utils"
+import { formatNumber, slideEnter } from "../utils"
 import throttle from "lodash/throttle"
 import { computed, onMounted, ref } from "vue"
 import { Howl } from "howler"
@@ -355,13 +355,21 @@ const handleBook = async () => {
         <div class="chat-tips-mask home-view-mask">
           <div class="chat-tips-wrap">
             <div class="chat-tips-white-mask"></div>
-            <div class="chat-friendly-tips">
-              <div class="chat-friendly-tips-title" data-text="友情支援">友情支援</div>
-              <div
-                class="chat-friendly-tips-cont"
-                data-text="每合成5次，获得1位1~9随机「电费加倍」倍率"
-              >
-                每合成5次，获得1位1~9随机「电费加倍」倍率
+            <div class="chat-friendly-tips-wrap">
+              <div class="chat-friendly-tips">
+                <div class="chat-friendly-tips-title" data-text="友情支援">友情支援</div>
+                <div
+                  class="chat-friendly-tips-cont"
+                  data-text="每合成5次，获得1位1~9随机「电费加倍」倍率"
+                >
+                  每合成5次，获得1位1~9随机「电费加倍」倍率
+                </div>
+              </div>
+              <div v-if="curChatMarked.game.finished" class="best-score-wrap">
+                <div class="best-score-label" data-text="本关历史合成最高">本关历史合成最高</div>
+                <div class="best-score-val-wrap">
+                  <div class="best-score-val">{{ formatNumber(curChatMarked.game.bestScore) }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -927,11 +935,16 @@ const handleBook = async () => {
     background-color: #fff;
     filter: blur(2rem);
   }
-  .chat-friendly-tips {
+  .chat-friendly-tips-wrap {
     position: absolute;
-    bottom: 1.4rem;
-    left: 0.2rem;
-    right: 0.2rem;
+    bottom: 1.5rem;
+    left: 0.15rem;
+    right: 0.15rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .chat-friendly-tips {
     height: 2.4rem;
     color: #fff;
     background-size: 100% auto;
@@ -960,6 +973,47 @@ const handleBook = async () => {
       top: 1.2rem;
       left: 0.3rem;
       width: 6rem;
+    }
+  }
+  .best-score-wrap {
+    position: relative;
+    height: 0.8rem;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url(../assets/row_bg_1.png);
+    .best-score-label {
+      position: absolute;
+      top: 0.17rem;
+      left: 0.23rem;
+      font-size: 0.4rem;
+      color: #fff;
+
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        color: #60488b;
+        filter: url(#stroke-text-svg-filter-5);
+      }
+    }
+    .best-score-val-wrap {
+      position: absolute;
+      top: 0.13rem;
+      right: 0.13rem;
+      width: 2.65rem;
+      height: 0.6rem;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-image: url(../assets/modal_row_bg_2.png);
+    }
+    .best-score-val {
+      position: absolute;
+      top: 0.11rem;
+      right: 0.15rem;
+      color: #fff;
+      font-size: 0.27rem;
     }
   }
 }

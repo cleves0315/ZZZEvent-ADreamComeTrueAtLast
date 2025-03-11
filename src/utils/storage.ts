@@ -1,7 +1,7 @@
 export enum StorageKey {
   FIRST_VISIT = "first_visit",
   MUSIC_MUTED = "music_muted",
-  CHATS_MARKED = "chats_marked",
+  DIALOG_STATE = "dialog_state",
 }
 
 export const setStorage = (key: StorageKey, value: unknown) => {

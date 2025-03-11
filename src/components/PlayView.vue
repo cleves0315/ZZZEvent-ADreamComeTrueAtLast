@@ -7,8 +7,11 @@ import { slideEnter } from "../utils"
 import { gsap } from "gsap"
 import throttle from "lodash/throttle"
 import { useBgm } from "../hooks/useBgm"
+import { useChatMarked } from "../hooks/useChatMark"
 
 const router = useRouter()
+
+const { markGameEnd } = useChatMarked()
 
 const isOver = ref(false)
 
@@ -23,9 +26,9 @@ const percent = computed(() => {
   return Math.min(num, 100)
 })
 
-const isFinish = computed(() => {
+const isFinish = computed((prev) => {
   const res = percent.value === 100
-  if (res) {
+  if (!prev && res) {
     gsap.set(".target-score-success", { opacity: 0, width: "0rem", display: "block" })
     gsap.to(".target-score-success", { opacity: 1, width: "2.56rem", duration: 0.6 })
 
@@ -34,6 +37,9 @@ const isFinish = computed(() => {
     gsap.set(".play-view-suc-tips-text", { opacity: 0 })
     gsap.to(".play-view-suc-tips-bg", { transform: "translateX(0)", duration: 1 })
     gsap.to(".play-view-suc-tips-text", { opacity: 1, duration: 1 })
+  }
+  if (res) {
+    markGameEnd("zhuyuan", score.value)
   }
   return res
 })
