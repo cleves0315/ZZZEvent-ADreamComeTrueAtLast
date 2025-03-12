@@ -28,6 +28,42 @@ const dialogList = ref([
   { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
 ])
 
+const bookContents = [
+  {
+    title: "活动时间",
+    content: ["2025/1/24 10:00:00 ~ 2025/2/5 03:59:59"],
+  },
+  {
+    title: "参与条件",
+    content: ["纯网管级≥8级，在主线序章：嘉间中解锁「活动」功能后即可参与。"],
+  },
+  {
+    title: "活动简介",
+    content: [
+      "约定的聚餐近在眼前，突发全员爽约危机！",
+      "好消息，您只需付出一点点额外电费，即可消除烦恼。",
+    ],
+  },
+  {
+    title: "活动玩法说明",
+    content: ["帮助 Fairy 赚取电费，解决朋友们的烦恼，守护期盼已久的聚餐。"],
+  },
+  {
+    title: "赚取电费",
+    content: ["通过划动合并相同的电费单元来获得电费，满足关卡目标即可结束关卡。"],
+  },
+  {
+    title: "友情支援",
+    content: ["达成友情支援的条件，可以获得「电费加倍」数字，组成「电费加倍」倍率。"],
+  },
+  {
+    title: "电费加倍",
+    content: [
+      "电费加倍」倍率 ≥3 位数的可以点击按钮使用「电费加倍」，下一次合成获得的电费将乘以「电费加倍」倍率！积极利用「电费加倍」，赚取更多电费吧！",
+    ],
+  },
+]
+
 const { isMute, toggleMute } = useMusicMute()
 
 const { toggleModal } = useModal()
@@ -239,9 +275,7 @@ const toPlay = async () => {
 }
 
 const handleBook = async () => {
-  // toggleMask()
-  await slideEnter()
-  router.push(`/cinema/${CinemaUserEnum.zhuyuan1}`)
+  toggleModal()
 }
 </script>
 
@@ -418,7 +452,33 @@ const handleBook = async () => {
     </div>
 
     <ViewModal>
-      <div class="home-modal-wrap">
+      <!-- Book -->
+      <!-- <div class="modal-achv-close" @click="toggleModal"></div> -->
+      <div class="home-modal-wrap book-modal">
+        <div class="book-modal-title" data-text="活动说明">活动说明</div>
+        <div class="book-modal-content">
+          <div class="book-modal-row" v-for="(item, idx) in bookContents" :key="idx">
+            <div class="book-modal-row-title-wrap">
+              <div class="book-modal-title-cil"></div>
+              <div class="book-modal-text" :data-text="item.title">{{ item.title }}</div>
+            </div>
+            <div class="book-modal-text" :data-text="m" v-for="(m, i) in item.content" :key="i">
+              {{ m }}
+            </div>
+          </div>
+        </div>
+        <div class="book-modal-footer">
+          <div class="book-modal-btn">
+            <span class="book-modal-btn-text" data-text="查看协议">查看协议</span>
+          </div>
+          <div class="book-modal-btn" @click="toggleModal">
+            <span class="book-modal-btn-text" data-text="确认">确认</span>
+          </div>
+        </div>
+      </div>
+      <!-- Achievement -->
+      <!-- <div class="home-modal-wrap home-modal-achv">
+        <div class="modal-achv-close" @click="toggleModal"></div>
         <div class="modal-head">
           <div class="modal-title" data-text="成就列表">成就列表</div>
           <div class="modal-subtitle-wrap">
@@ -431,7 +491,7 @@ const handleBook = async () => {
             <div class="modal-head-btn-txt">全部领取</div>
           </div>
         </div>
-      </div>
+      </div> -->
     </ViewModal>
   </div>
 </template>
@@ -1173,23 +1233,38 @@ const handleBook = async () => {
 }
 
 .home-modal-wrap {
+  position: relative;
   width: 13.8rem;
   height: 9.2rem;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-image: url(../assets/modal_bg_2.png);
 
-  .modal-head {
-    position: absolute;
-    top: 0.35rem;
-    left: 0.55rem;
-    right: 1rem;
+  &.book-modal {
+    background-image: url(../assets/modal_bg_3.png);
   }
-  .modal-title {
+  &.home-modal-achv {
+    background-image: url(../assets/modal_bg_2.png);
+  }
+
+  .modal-achv-close {
     position: absolute;
-    top: 0;
-    left: 0;
-    font-size: 0.5rem;
+    top: 0.3rem;
+    right: -1.1rem;
+    width: 2.8rem;
+    height: 1.2rem;
+    z-index: -1;
+    cursor: pointer;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url("../assets/btn_close.png");
+  }
+
+  // book
+  .book-modal-title {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    font-size: 0.51rem;
     color: #fff;
 
     &::after {
@@ -1202,56 +1277,185 @@ const handleBook = async () => {
       filter: url(#stroke-text-svg-filter-5);
     }
   }
-  .modal-subtitle-wrap {
+
+  .book-modal-content {
     position: absolute;
-    top: 0.7rem;
-    left: 0;
+    top: 1.78rem;
+    left: 0.44rem;
+    right: 0.44rem;
+    bottom: 1.47rem;
+    border: 0.08rem solid #ccb9f9;
+    background-color: #5d4888;
+    border-radius: 0.3rem;
+    padding: 0.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    overflow: scroll;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+
+    .book-modal-row-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.1rem;
+    }
+
+    .book-modal-row {
+      font-size: 0.31rem;
+      color: #ece5fe;
+    }
+
+    .book-modal-title-cil {
+      width: 0.28rem;
+      height: 0.28rem;
+      background-color: #ece5fe;
+      border-radius: 50%;
+    }
+
+    .book-modal-text {
+      position: relative;
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        color: #5d4888;
+        filter: url(#stroke-text-svg-filter-3);
+      }
+    }
   }
-  .gift-box {
+
+  .book-modal-footer {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 0.25rem;
-    height: 0.25rem;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    background-image: url(../assets/box.png);
+    width: 100%;
+    top: 7.97rem;
+
+    .book-modal-btn {
+      position: absolute;
+      top: 0;
+      left: 3rem;
+      width: 3.8rem;
+      height: 1.2rem;
+      font-size: 0.4rem;
+      color: #2d2d2d;
+      font-style: italic;
+      cursor: pointer;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-image: url(../assets/modal_btn_2.png);
+      display: flex;
+      justify-content: center;
+
+      &:active {
+        background-image: url(../assets/modal_btn_1.png);
+
+        .book-modal-btn-text::after {
+          color: #ffd467;
+        }
+      }
+
+      &:nth-child(2) {
+        left: 7.07rem;
+      }
+    }
+    .book-modal-btn-text {
+      position: absolute;
+      top: 0.2rem;
+      font-size: 0.34rem;
+      color: #312d2e;
+      font-style: italic;
+
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        color: #b196fe;
+        filter: url(#stroke-text-svg-filter-3);
+      }
+    }
   }
-  .modal-subtitle {
+
+  .modal-head {
     position: absolute;
-    left: 0.35rem;
-    top: 0;
-    width: 6rem;
-    font-size: 0.24rem;
-    color: #d9c2fe;
-    &::after {
-      content: attr(data-text);
+    top: 0.35rem;
+    left: 0.55rem;
+    right: 1rem;
+
+    .modal-title {
       position: absolute;
       top: 0;
       left: 0;
-      z-index: 0;
-      color: #61478c;
-      filter: url(#stroke-text-svg-filter-1);
-    }
-  }
-  .modal-head-btn {
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 3.3rem;
-    height: 0.96rem;
-    font-size: 0.4rem;
-    color: #2d2d2d;
-    font-style: italic;
-    cursor: pointer;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    background-image: url(../assets/btn_bg_black.png);
+      font-size: 0.5rem;
+      color: #fff;
 
-    .modal-head-btn-txt {
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        color: #61478c;
+        filter: url(#stroke-text-svg-filter-5);
+      }
+    }
+
+    .modal-subtitle-wrap {
       position: absolute;
-      top: 0.2rem;
-      left: 0.8rem;
+      top: 0.7rem;
+      left: 0;
+    }
+    .gift-box {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0.25rem;
+      height: 0.25rem;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-image: url(../assets/box.png);
+    }
+    .modal-subtitle {
+      position: absolute;
+      left: 0.35rem;
+      top: 0;
+      width: 6rem;
+      font-size: 0.24rem;
+      color: #d9c2fe;
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        color: #61478c;
+        filter: url(#stroke-text-svg-filter-1);
+      }
+    }
+    .modal-head-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 3.3rem;
+      height: 0.96rem;
+      font-size: 0.4rem;
+      color: #2d2d2d;
+      font-style: italic;
+      cursor: pointer;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-image: url(../assets/btn_bg_black.png);
+
+      .modal-head-btn-txt {
+        position: absolute;
+        top: 0.2rem;
+        left: 0.8rem;
+      }
     }
   }
 }
