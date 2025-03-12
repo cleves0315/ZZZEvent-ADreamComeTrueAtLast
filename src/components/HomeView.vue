@@ -227,6 +227,11 @@ const handleReplay = throttle(
   { trailing: false },
 )
 
+const toReview = async () => {
+  await slideEnter()
+  router.push(`/cinema/${CinemaUserEnum.zhuyuan1}`)
+}
+
 const toPlay = async () => {
   toggleMask()
   await slideEnter()
@@ -375,8 +380,21 @@ const handleBook = async () => {
           </div>
         </div>
 
-        <div class="mask-btn home-view-mask" @click="toPlay">
-          <span class="mask-btn-txt">开始游戏</span>
+        <div class="mask-btn-wrap home-view-mask">
+          <div v-if="!curChatMarked.game.finished" class="mask-btn" @click="toPlay">
+            <span class="mask-btn-icon"></span>
+            <span class="mask-btn-txt">开始游戏</span>
+          </div>
+          <div v-else class="mask-btn-inner">
+            <div class="mask-btn-2" @click="toReview">
+              <span class="mask-btn-icon-1"></span>
+              <span class="mask-btn-txt" data-text="剧情回顾">剧情回顾</span>
+            </div>
+            <div class="mask-btn-2" @click="toPlay">
+              <span class="mask-btn-icon-2"></span>
+              <span class="mask-btn-txt">开始游戏</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -399,7 +417,7 @@ const handleBook = async () => {
       <div class="mask"></div>
     </div>
 
-    <ViewModal close-on-click-mask>
+    <ViewModal>
       <div class="home-modal-wrap">
         <div class="modal-head">
           <div class="modal-title" data-text="成就列表">成就列表</div>
@@ -529,29 +547,32 @@ const handleBook = async () => {
     font-size: 0.38rem;
   }
   .dialog-time {
+    position: relative;
     background-color: #9874db;
     border-radius: 999rem;
-    color: #141215;
-    font-size: 0.22rem;
-    padding: 0.14rem 0.15rem;
-    width: 1.6rem;
-    display: flex;
-    align-items: center;
-    gap: 0.08rem;
+    width: 1.73rem;
+    height: 0.48rem;
   }
   .dialog-time-tag {
-    width: 0.14rem;
-    height: 0.2rem;
+    position: absolute;
+    top: 0.12rem;
+    left: 0.16rem;
+    width: 0.2rem;
+    height: 0.23rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-image: url(../assets/unlock.png);
+
     &.lock {
       background-image: url(../assets/lock.png);
     }
   }
   .dialog-time-txt {
-    height: 0.18rem;
-    line-height: 0.18rem;
+    position: absolute;
+    top: 0.11rem;
+    left: 0.44rem;
+    color: #141215;
+    font-size: 0.23rem;
   }
 
   .dialog-item.unlock {
@@ -1018,7 +1039,7 @@ const handleBook = async () => {
   }
 }
 
-.mask-btn {
+.mask-btn-wrap {
   display: none;
   position: absolute;
   left: 0.5rem;
@@ -1026,18 +1047,7 @@ const handleBook = async () => {
   width: 6.6rem;
   height: 1rem;
   z-index: 11;
-  cursor: pointer;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-size: 100% 100%;
-    background-repeat: no-repeat;
-    background-image: url(../assets/btn_bg_yellow.png);
-  }
+
   &::after {
     content: "";
     position: absolute;
@@ -1047,17 +1057,98 @@ const handleBook = async () => {
     z-index: -1;
     bottom: 0;
     border-radius: 0.28rem;
-    filter: blur(4px);
-    background-color: rgba(255, 255, 255, 0.8);
+    // filter: blur(4px);
+    // background-color: rgba(255, 255, 255, 0.8);
   }
 
-  .mask-btn-txt {
-    position: absolute;
-    top: 0.2rem;
-    left: 2.2rem;
-    font-size: 0.44rem;
-    color: #312d2e;
-    font-style: italic;
+  .mask-btn {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url(../assets/btn_bg_yellow.png);
+
+    &::after,
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0.23rem;
+      width: 0.45rem;
+      height: 0.45rem;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-image: url(../assets/btn_ip_2.png);
+    }
+    &::after {
+      left: 0.25rem;
+    }
+    &::before {
+      right: 0.25rem;
+      transform: rotateY(180deg);
+    }
+
+    .mask-btn-txt {
+      position: absolute;
+      top: 0.2rem;
+      left: 2.2rem;
+      font-size: 0.44rem;
+      color: #312d2e;
+      font-style: italic;
+    }
+  }
+
+  .mask-btn-inner {
+    display: flex;
+    gap: 0.2rem;
+    width: 100%;
+    height: 100%;
+  }
+  .mask-btn-2 {
+    flex: 1;
+    height: 100%;
+    position: relative;
+    cursor: pointer;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-image: url(../assets/modal_btn_2.png);
+
+    .mask-btn-icon-1,
+    .mask-btn-icon-2 {
+      position: absolute;
+      top: 0.23rem;
+      left: 0.25rem;
+      width: 0.45rem;
+      height: 0.45rem;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+    }
+    .mask-btn-icon-1 {
+      background-image: url(../assets/btn_ir_1.png);
+    }
+    .mask-btn-icon-2 {
+      background-image: url(../assets/btn_ip_1.png);
+    }
+
+    .mask-btn-txt {
+      position: absolute;
+      top: 0.25rem;
+      left: 1.1rem;
+      font-size: 0.36rem;
+      color: #312d2e;
+      font-style: italic;
+
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        color: #b196fe;
+        filter: url(#stroke-text-svg-filter-3);
+      }
+    }
   }
 }
 

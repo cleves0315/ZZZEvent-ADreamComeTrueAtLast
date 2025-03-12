@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, onBeforeMount, ref } from "vue"
 import { Howl } from "howler"
 import msgAnswer from "/audio/btn_click.mp3"
 import bgmHome from "/audio/bgm_home.mp3"
@@ -95,7 +95,7 @@ const fetchData = async () => {
   lists.value = response?.default.list || []
 }
 
-onMounted(() => {
+onBeforeMount(() => {
   fetchData().then(() => {
     const t = curItem.value.content
     if (t) {
