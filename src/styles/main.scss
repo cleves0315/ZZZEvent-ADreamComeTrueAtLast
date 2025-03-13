@@ -41,11 +41,40 @@ html {
   user-select: none;
 }
 
-.home-mask-fade-enter-active,
-.home-mask-fade-leave-active {
-  transition: opacity 0.3s;
-}
+.dc-button {
+  position: relative;
+  width: 3.8rem;
+  height: 1.2rem;
+  cursor: pointer;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-image: url(../assets/modal_btn_2.png);
+  display: flex;
+  justify-content: center;
 
-.home-mask-fade-leave-to /* .fade-leave-active 在2.1.8+ */ {
-  opacity: 0;
+  &:active {
+    background-image: url(../assets/modal_btn_1.png);
+
+    .dc-button-text::after {
+      color: #ffd467;
+    }
+  }
+
+  .dc-button-text {
+    position: absolute;
+    top: 0.2rem;
+    font-size: 0.34rem;
+    color: #312d2e;
+    font-style: italic;
+
+    &::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      color: #b196fe;
+      filter: url(#stroke-text-svg-filter-3);
+    }
+  }
 }

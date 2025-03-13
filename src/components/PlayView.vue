@@ -228,17 +228,19 @@ const onBack = async () => {
       </div>
       <div
         v-if="!isOver"
-        class="play-view-modal-btn play-view-modal-btn-1"
+        class="play-view-modal-btn play-view-modal-btn-1 dc-button"
+        data-index="1"
         @click="toggleModalState"
       >
-        <div class="play-view-modal-btn-txt" data-text="取消">取消</div>
+        <div class="dc-button-text" data-text="取消">取消</div>
       </div>
       <div
-        class="play-view-modal-btn play-view-modal-btn-2"
+        class="play-view-modal-btn play-view-modal-btn-2 dc-button"
         :class="isOver ? 'play-view-modal-btn-over' : ''"
         @click.once="onBack"
+        data-index="2"
       >
-        <div class="play-view-modal-btn-txt" data-text="确认">确认</div>
+        <div class="dc-button-text" data-text="确认">确认</div>
       </div>
     </div>
   </div>
@@ -702,32 +704,18 @@ const onBack = async () => {
     bottom: 0.4rem;
     width: 3.8rem;
     height: 0.91rem;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    cursor: pointer;
 
-    &.play-view-modal-btn-1 {
+    &[data-index="1"] {
       left: 0.5rem;
-      background-image: url(../assets/modal_btn_1.png);
     }
-    &.play-view-modal-btn-2 {
+    &[data-index="2"] {
       right: 0.5rem;
-      background-image: url(../assets/modal_btn_2.png);
 
       &.play-view-modal-btn-over {
         left: 50%;
+        right: unset;
         transform: translateX(-50%);
-        background-image: url(../assets/modal_btn_1.png);
       }
-    }
-
-    .play-view-modal-btn-txt {
-      position: absolute;
-      top: 0.2rem;
-      left: 1.5rem;
-      font-size: 0.35rem;
-      color: #2b2c2b;
-      font-style: italic;
     }
   }
 }
