@@ -169,24 +169,30 @@ const handleBack = async () => {
 const chatListScrollToBottom = () => {
   setTimeout(() => {
     if (chatListRef.value) {
+      gsap.set(".chat-list,.chat-list-inner", { pointerEvents: "none" })
       chatListRef.value.scrollTo({
         top: chatListRef.value.scrollHeight,
         behavior: "smooth",
       })
+      setTimeout(() => {
+        gsap.set(".chat-list,.chat-list-inner", { pointerEvents: "auto" })
+      }, 500)
     }
   })
 }
 
 const toggleReply = async () => {
   showReply.value = !showReply.value
-  const cls = ".chat-operate"
+  const cls = ".chat-operate,.chat-operate-bg"
 
   if (showReply.value) {
-    gsap.set(cls, { display: "flex", opacity: 0 })
+    gsap.set(".chat-list", { overflow: "hidden" })
+    gsap.set(cls, { display: "block", opacity: 0 })
     await gsap.to(cls, { duration: 0.3, opacity: 1 })
   } else {
     await gsap.to(cls, { duration: 0.3, opacity: 0 })
     gsap.set(cls, { display: "none" })
+    gsap.set(".chat-list", { overflow: "scroll" })
   }
 }
 
@@ -211,6 +217,13 @@ const toggleMask = (mask?: boolean) => {
   }
 }
 
+const chatEndCallback = () => {
+  markCurChat()
+  setTimeout(() => {
+    toggleMask()
+  }, 1500)
+}
+
 const handleNextChat = throttle(
   () => {
     if (initing.value) return
@@ -221,9 +234,13 @@ const handleNextChat = throttle(
     if (newChat.reply?.length) {
       curReplys.value = newChat.reply as string[]
 
-      chatListScrollToBottom()
-      gsap.set(".chat-list-inner", { overflow: "hidden" })
       toggleReply()
+
+      const h = document.querySelector(".chat-list-inner")?.scrollHeight || 0
+      const h2 = document.querySelector(".chat-operate-bg")?.clientHeight || 0
+      gsap.set(".chat-list-inner", { minHeight: h + h2 + "px" })
+      chatListScrollToBottom()
+
       return
     }
 
@@ -235,10 +252,7 @@ const handleNextChat = throttle(
 
     // chat end
     if (curChatList.value.length >= chats.length) {
-      markCurChat()
-      setTimeout(() => {
-        toggleMask()
-      }, 1500)
+      chatEndCallback()
     }
   },
   500,
@@ -248,18 +262,19 @@ const handleNextChat = throttle(
 const handleReplay = throttle(
   async (msg: string, opIndex: number) => {
     playMsgSound()
-
     markOpRecords({ index: curChatList.value.length, opIndex })
 
     const newChat = chats[curChatList.value.length]
     curChatList.value.push({ ...newChat, content: msg })
 
-    await toggleReply()
-    // curReplys.value = []
-
     chatListScrollToBottom()
+    await toggleReply()
+    curReplys.value = []
 
-    gsap.set(".chat-list-inner", { overflow: "scroll" })
+    // chat end
+    if (curChatList.value.length >= chats.length) {
+      chatEndCallback()
+    }
   },
   500,
   { trailing: false },
@@ -267,7 +282,7 @@ const handleReplay = throttle(
 
 const toReview = async () => {
   await slideEnter()
-  router.push(`/cinema/${CinemaUserEnum.zhuyuan1}`)
+  router.replace(`/cinema/${CinemaUserEnum.zhuyuan1}`)
 }
 
 const toPlay = async () => {
@@ -355,13 +370,12 @@ const handleBook = async () => {
       </div>
 
       <div class="chat-block">
-        <div class="chat-frame">
-          <div class="chat-title" :data-text="roomName">{{ roomName }}</div>
-        </div>
+        <div class="chat-frame"></div>
+        <div class="chat-title" :data-text="roomName">{{ roomName }}</div>
         <div class="chat-bg"></div>
-        <div class="chat-list" @click="handleNextChat">
+        <div class="chat-list" ref="chatListRef" @click="handleNextChat">
           <div class="chat-tips">{{ toptips }}</div>
-          <div class="chat-list-inner" ref="chatListRef">
+          <div class="chat-list-inner">
             <div
               class="chat-item"
               :class="[item.isRight && 'chat-item-right', !curChatMarked.chatEnd && 'has-animate']"
@@ -380,17 +394,19 @@ const handleBook = async () => {
                 </div>
               </div>
             </div>
+            <div class="chat-inner-empty"></div>
           </div>
+        </div>
 
-          <div class="chat-operate">
-            <div
-              class="reply-item"
-              v-for="(item, idx) in curReplys"
-              :key="idx"
-              @click.stop="handleReplay(item, idx)"
-            >
-              <span class="reply-item-txt" :data-text="item">{{ item }}</span>
-            </div>
+        <div class="chat-operate-bg"></div>
+        <div class="chat-operate">
+          <div
+            class="reply-item"
+            v-for="(item, idx) in curReplys"
+            :key="idx"
+            @click.stop="handleReplay(item, idx)"
+          >
+            <span class="reply-item-txt" :data-text="item">{{ item }}</span>
           </div>
         </div>
 
@@ -777,11 +793,13 @@ const handleBook = async () => {
     left: 1.6rem;
     font-size: 0.4rem;
     color: #dac6ff;
+    z-index: 2;
+
     &::after {
       content: attr(data-text);
       position: absolute;
       left: 0;
-      color: #503e82;
+      color: #58468c;
       z-index: 0;
       filter: url(#stroke-text-svg-filter-3);
     }
@@ -792,12 +810,16 @@ const handleBook = async () => {
   top: 1.5rem;
   left: 0.2rem;
   right: 0.2rem;
-  bottom: 0.33rem;
+  bottom: 0.32rem;
   z-index: 1;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   gap: 0.14rem;
+  overflow: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   .chat-tips {
     width: 100%;
@@ -808,15 +830,16 @@ const handleBook = async () => {
   }
 
   .chat-list-inner {
-    flex-shrink: 0;
+    height: auto;
     display: flex;
     flex-direction: column;
     gap: 0.14rem;
-    height: 3.9rem;
-    overflow: scroll;
 
-    &::-webkit-scrollbar {
-      display: none;
+    .chat-inner-empty {
+      flex-shrink: 0;
+      display: block;
+      width: 100%;
+      height: 0.04rem;
     }
   }
 
@@ -824,9 +847,6 @@ const handleBook = async () => {
     display: flex;
     gap: 0.2rem;
     padding: 0 0.3rem;
-    &:last-child {
-      margin-bottom: 0.2rem;
-    }
     @keyframes showAvatar {
       0% {
         transform: scale(0);
@@ -900,6 +920,7 @@ const handleBook = async () => {
     }
     .chat-txt {
       position: relative;
+
       &::after {
         content: attr(data-text);
         position: absolute;
@@ -931,29 +952,30 @@ const handleBook = async () => {
     }
   }
 }
-.chat-operate {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: sticky;
-  bottom: 0;
-  left: 0.13rem;
-  right: 0.2rem;
-  flex-shrink: 0;
-  margin: 0 auto;
-  width: 6.97rem;
-  height: 1.9rem;
-  border-radius: 0 0 0.5rem 0.5rem;
-  background-color: #c4a7f5;
-  padding: 0.15rem;
-  gap: 0.1rem;
-  z-index: 5;
 
+@mixin chat-operate {
+  position: absolute;
+  left: 0.2rem;
+  right: 0.2rem;
+  bottom: 0.2rem;
+  height: 2rem;
+}
+.chat-operate-bg {
+  @include chat-operate;
+  background-color: #c4a7f5;
+  border-radius: 0 0 0.5rem 0.5rem;
+  display: none;
+}
+.chat-operate {
+  @include chat-operate;
+  z-index: 5;
   display: none;
 
   .reply-item {
     cursor: pointer;
-    width: 100%;
+    position: absolute;
+    left: 0.25rem;
+    right: 0.25rem;
     height: 0.75rem;
     display: flex;
     align-items: center;
@@ -961,13 +983,17 @@ const handleBook = async () => {
     font-size: 0.26rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
+
     &:nth-child(1) {
+      top: 0.15rem;
       background-image: url(../assets/reply_1.png);
       .reply-item-txt::after {
         color: #ffd265;
       }
     }
+
     &:nth-child(2) {
+      top: 1rem;
       background-image: url(../assets/reply_2.png);
       .reply-item-txt::after {
         color: #decfff;
@@ -1091,7 +1117,7 @@ const handleBook = async () => {
     }
     .best-score-val-wrap {
       position: absolute;
-      top: 0.13rem;
+      top: 0.14rem;
       right: 0.13rem;
       width: 2.65rem;
       height: 0.6rem;
