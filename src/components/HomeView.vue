@@ -68,6 +68,8 @@ const { isMute, toggleMute } = useMusicMute()
 
 const { toggleModal } = useModal()
 
+const currentModal = ref<"book" | "achv">()
+
 const { chatsMarked, markChatEnd } = useChatMarked()
 
 const { bgmSound } = useBgm(bgmHome)
@@ -275,6 +277,7 @@ const toPlay = async () => {
 }
 
 const handleBook = async () => {
+  currentModal.value = "book"
   toggleModal()
 }
 </script>
@@ -444,7 +447,15 @@ const handleBook = async () => {
       <div class="operate-item"></div>
     </div>
 
-    <div class="task-btn" @click="toggleModal"></div>
+    <div
+      class="task-btn"
+      @click="
+        () => {
+          toggleModal()
+          currentModal = 'achv'
+        }
+      "
+    ></div>
     <div class="right-bottom"></div>
 
     <div class="mask-wrap home-view-mask">
@@ -453,8 +464,7 @@ const handleBook = async () => {
 
     <ViewModal>
       <!-- Book -->
-      <!-- <div class="modal-achv-close" @click="toggleModal"></div> -->
-      <div class="home-modal-wrap book-modal">
+      <div v-if="currentModal === 'book'" class="home-modal-wrap book-modal">
         <div class="book-modal-title" data-text="活动说明">活动说明</div>
         <div class="book-modal-content">
           <div class="book-modal-row" v-for="(item, idx) in bookContents" :key="idx">
@@ -477,7 +487,7 @@ const handleBook = async () => {
         </div>
       </div>
       <!-- Achievement -->
-      <!-- <div class="home-modal-wrap home-modal-achv">
+      <div v-else class="home-modal-wrap home-modal-achv">
         <div class="modal-achv-close" @click="toggleModal"></div>
         <div class="modal-head">
           <div class="modal-title" data-text="成就列表">成就列表</div>
@@ -491,7 +501,7 @@ const handleBook = async () => {
             <div class="modal-head-btn-txt">全部领取</div>
           </div>
         </div>
-      </div> -->
+      </div>
     </ViewModal>
   </div>
 </template>
