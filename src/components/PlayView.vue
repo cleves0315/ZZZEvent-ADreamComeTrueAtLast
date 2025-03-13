@@ -55,20 +55,24 @@ const handleUpdateScore = (e: any) => {
 
 useBgm(ad)
 
-const toggleModalState = async () => {
-  showModal.value = !showModal.value
+const toggleModalState = throttle(
+  async () => {
+    showModal.value = !showModal.value
 
-  if (showModal.value) {
-    gsap.set(".play-view-modal", { display: "block" })
-  }
+    if (showModal.value) {
+      gsap.set(".play-view-modal", { display: "block" })
+    }
 
-  gsap.to(".play-view-modal-mask", { opacity: showModal.value ? 1 : 0, duration: 0.2 })
-  await gsap.to(".play-view-modal-body", { opacity: showModal.value ? 1 : 0, duration: 0.2 })
+    gsap.to(".play-view-modal-mask", { opacity: showModal.value ? 1 : 0, duration: 0.2 })
+    await gsap.to(".play-view-modal-body", { opacity: showModal.value ? 1 : 0, duration: 0.2 })
 
-  if (!showModal.value) {
-    gsap.set(".play-view-modal", { display: "none" })
-  }
-}
+    if (!showModal.value) {
+      gsap.set(".play-view-modal", { display: "none" })
+    }
+  },
+  500,
+  { trailing: false },
+)
 
 onMounted(() => {
   window.requestAnimationFrame(function () {
@@ -232,7 +236,7 @@ const onBack = async () => {
       <div
         class="play-view-modal-btn play-view-modal-btn-2"
         :class="isOver ? 'play-view-modal-btn-over' : ''"
-        @click="onBack"
+        @click.once="onBack"
       >
         <div class="play-view-modal-btn-txt" data-text="确认">确认</div>
       </div>

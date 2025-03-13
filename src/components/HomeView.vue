@@ -68,7 +68,7 @@ const { isMute, toggleMute } = useMusicMute()
 
 const { toggleModal } = useModal()
 
-const currentModal = ref<"book" | "achv">()
+const currentModal = ref<"book" | "achv" | "alert">()
 
 const { chatsMarked, markChatEnd } = useChatMarked()
 
@@ -224,6 +224,11 @@ const chatEndCallback = () => {
   }, 1500)
 }
 
+const handleClickDialog = () => {
+  toggleModal()
+  currentModal.value = "alert"
+}
+
 const handleNextChat = throttle(
   () => {
     if (initing.value) return
@@ -352,6 +357,7 @@ const handleBook = async () => {
           :class="item.isLock ? 'lock' : 'unlock'"
           v-for="(item, i) in dialogList"
           :key="i"
+          @click="handleClickDialog"
         >
           <div
             class="dialog-avatar"
@@ -479,8 +485,20 @@ const handleBook = async () => {
     </div>
 
     <ViewModal>
+      <!-- alert -->
+      <div v-if="currentModal === 'alert'" class="home-modal-wrap modal-alert">
+        <div class="alert-title" data-text="关卡解锁条件">关卡解锁条件</div>
+        <div class="alert-content">
+          <div class="alert-text">敬请期待</div>
+        </div>
+        <div class="alert-footer">
+          <div class="alert-btn" @click="toggleModal">
+            <span class="alert-btn-text" data-text="确认">确认</span>
+          </div>
+        </div>
+      </div>
       <!-- Book -->
-      <div v-if="currentModal === 'book'" class="home-modal-wrap book-modal">
+      <div v-else-if="currentModal === 'book'" class="home-modal-wrap book-modal">
         <div class="book-modal-title" data-text="活动说明">活动说明</div>
         <div class="book-modal-content">
           <div class="book-modal-row" v-for="(item, idx) in bookContents" :key="idx">
@@ -1280,6 +1298,114 @@ const handleBook = async () => {
   }
   &.home-modal-achv {
     background-image: url(../assets/modal_bg_2.png);
+  }
+
+  &.modal-alert {
+    position: relative;
+    width: 8.8rem;
+    height: 5.2rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../assets/alert_bg_1.png);
+    font-size: 0.3rem;
+
+    .alert-title {
+      position: absolute;
+      top: 0.39rem;
+      left: 0.57rem;
+      font-size: 0.51rem;
+      color: #fff;
+
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        color: #61478c;
+        filter: url(#stroke-text-svg-filter-5);
+      }
+    }
+
+    .alert-content {
+      position: absolute;
+      top: 1.5rem;
+      left: 0.44rem;
+      right: 0.44rem;
+      bottom: 1.47rem;
+      border: 0.08rem solid #ccb9f9;
+      background-color: #5d4888;
+      border-radius: 0.3rem;
+      padding: 0.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .alert-text {
+      position: relative;
+      font-size: 0.31rem;
+      color: #ece5fe;
+
+      &::after {
+        content: attr(data-text);
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 0;
+        color: #ccb9f9;
+        filter: url(#stroke-text-svg-filter-3);
+      }
+    }
+
+    .alert-footer {
+      position: absolute;
+      width: 100%;
+      top: 3.97rem;
+
+      .alert-btn {
+        position: absolute;
+        top: 0;
+        left: 2.5rem;
+        width: 3.8rem;
+        height: 1.2rem;
+        font-size: 0.4rem;
+        color: #2d2d2d;
+        font-style: italic;
+        cursor: pointer;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+        background-image: url(../assets/modal_btn_2.png);
+        display: flex;
+        justify-content: center;
+
+        &:active {
+          background-image: url(../assets/modal_btn_1.png);
+
+          .alert-btn-text::after {
+            color: #ffd467;
+          }
+        }
+      }
+
+      .alert-btn-text {
+        position: absolute;
+        top: 0.2rem;
+        font-size: 0.34rem;
+        color: #312d2e;
+        font-style: italic;
+
+        &::after {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 0;
+          color: #b196fe;
+          filter: url(#stroke-text-svg-filter-3);
+        }
+      }
+    }
   }
 
   .modal-achv-close {
