@@ -70,7 +70,7 @@ const { toggleModal } = useModal()
 
 const currentModal = ref<"book" | "achv" | "alert">()
 
-const { chatsMarked, markChatEnd } = useChatMarked()
+const { chatsMarked, markChatEnd, markAchv } = useChatMarked()
 
 const { bgmSound } = useBgm(bgmHome)
 
@@ -95,6 +95,26 @@ const initing = ref(true)
 const opRecords = ref<ChatMarkAction[]>([])
 
 const curChatMarked = computed(() => chatsMarked.value[curDialogIndex.value])
+
+const fisdGameCount = computed(() => {
+  let count = 0
+  chatsMarked.value.forEach((item) => {
+    if (item.game.finished) {
+      count++
+    }
+  })
+  return count
+})
+
+const achvCount = computed(() => {
+  let count = 0
+  chatsMarked.value.forEach((item) => {
+    if (item.achv) {
+      count++
+    }
+  })
+  return count
+})
 
 const curDialogOpRecords = computed(() => {
   const acc: Record<string, number> = {}
@@ -489,7 +509,8 @@ const handleBook = async () => {
       <div v-if="currentModal === 'alert'" class="home-modal-wrap modal-alert">
         <div class="alert-title" data-text="关卡解锁条件">关卡解锁条件</div>
         <div class="alert-content">
-          <div class="alert-text">敬请期待</div>
+          <div class="alert-text">1、完成前置关卡</div>
+          <div class="alert-text">2、敬请期待</div>
         </div>
         <div class="alert-footer">
           <div class="alert-btn" @click="toggleModal">
@@ -500,16 +521,19 @@ const handleBook = async () => {
       <!-- Book -->
       <div v-else-if="currentModal === 'book'" class="home-modal-wrap book-modal">
         <div class="book-modal-title" data-text="活动说明">活动说明</div>
-        <div class="book-modal-content">
-          <div class="book-modal-row" v-for="(item, idx) in bookContents" :key="idx">
-            <div class="book-modal-row-title-wrap">
-              <div class="book-modal-title-cil"></div>
-              <div class="book-modal-text" :data-text="item.title">{{ item.title }}</div>
-            </div>
-            <div class="book-modal-text" :data-text="m" v-for="(m, i) in item.content" :key="i">
-              {{ m }}
+        <div class="book-modal-body">
+          <div class="book-modal-content dc-scrollbar">
+            <div class="book-modal-row" v-for="(item, idx) in bookContents" :key="idx">
+              <div class="book-modal-row-title-wrap">
+                <div class="book-modal-title-cil"></div>
+                <div class="book-modal-text" :data-text="item.title">{{ item.title }}</div>
+              </div>
+              <div class="book-modal-text" :data-text="m" v-for="(m, i) in item.content" :key="i">
+                {{ m }}
+              </div>
             </div>
           </div>
+          <div class="modal-scrollbar-track"></div>
         </div>
         <div class="book-modal-footer">
           <div class="book-modal-btn">
@@ -531,9 +555,62 @@ const handleBook = async () => {
               活动奖励将于15分钟内通过游戏内邮箱发放
             </div>
           </div>
-          <div class="modal-head-btn">
+          <div
+            class="modal-head-btn dc-button"
+            :data-disabled="fisdGameCount > achvCount && fisdGameCount <= 1 ? false : true"
+            @click="markAchv(chatsMarked[0].user)"
+          >
+            <span v-if="fisdGameCount >= 1 && !chatsMarked[0]?.achv" class="warn-icon"></span>
             <div class="modal-head-btn-txt">全部领取</div>
           </div>
+        </div>
+        <div class="modal-body">
+          <div class="modal-body-content dc-scrollbar">
+            <div
+              v-for="(item, idx) in 5"
+              :key="item"
+              class="modal-row"
+              :style="achvCount >= item ? { display: 'none' } : {}"
+            >
+              <div
+                class="modal-row-title dc-text-stroke"
+                data-stroke="5"
+                :data-text="`帮助${item}位代理人解决难题`"
+              >
+                帮助{{ item }}位代理人解决难题
+              </div>
+              <div class="modal-gift-block">
+                <div class="modal-gift">
+                  <span class="modal-gift-num dc-text-stroke" data-stroke="3" data-text="40"
+                    >40</span
+                  >
+                </div>
+                <div class="modal-gift">
+                  <span class="modal-gift-num dc-text-stroke" data-stroke="3" data-text="4">4</span>
+                </div>
+                <div class="modal-gift">
+                  <span class="modal-gift-num dc-text-stroke" data-stroke="3" data-text="10000"
+                    >10000</span
+                  >
+                </div>
+              </div>
+              <div class="modal-row-num-wrap">({{ fisdGameCount }}/{{ item }})</div>
+              <div
+                class="modal-row-btn dc-button"
+                :data-disabled="fisdGameCount < item"
+                @click="markAchv(chatsMarked[idx].user)"
+              >
+                <span
+                  v-if="fisdGameCount >= item && !chatsMarked[idx]?.achv"
+                  class="warn-icon"
+                ></span>
+                <span class="dc-button-text">{{
+                  chatsMarked[idx]?.achv ? "已完成" : fisdGameCount >= item ? "领取" : "未完成"
+                }}</span>
+              </div>
+            </div>
+          </div>
+          <div class="modal-scrollbar-track"></div>
         </div>
       </div>
     </ViewModal>
@@ -1339,7 +1416,7 @@ const handleBook = async () => {
       padding: 0.3rem;
       display: flex;
       flex-direction: column;
-      gap: 0.4rem;
+      justify-content: center;
     }
 
     .alert-text {
@@ -1440,53 +1517,64 @@ const handleBook = async () => {
     }
   }
 
-  .book-modal-content {
+  .book-modal-body {
     position: absolute;
     top: 1.78rem;
     left: 0.44rem;
-    right: 0.44rem;
+    right: 0.4rem;
     bottom: 1.47rem;
-    border: 0.08rem solid #ccb9f9;
-    background-color: #5d4888;
-    border-radius: 0.3rem;
-    padding: 0.3rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    overflow: scroll;
-    scrollbar-width: none;
-    &::-webkit-scrollbar {
-      display: none;
+    &::after {
+      content: "";
+      position: absolute;
+      border: 0.08rem solid #ccb9f9;
+      background-color: #5d4888;
+      top: 0;
+      left: 0;
+      right: 0.4rem;
+      bottom: 0;
+      border-radius: 0.3rem;
     }
 
-    .book-modal-row-title-wrap {
-      display: flex;
-      align-items: center;
-      gap: 0.1rem;
-    }
-
-    .book-modal-row {
-      font-size: 0.31rem;
-      color: #ece5fe;
-    }
-
-    .book-modal-title-cil {
-      width: 0.28rem;
-      height: 0.28rem;
-      background-color: #ece5fe;
-      border-radius: 50%;
-    }
-
-    .book-modal-text {
+    .book-modal-content {
       position: relative;
-      &::after {
-        content: attr(data-text);
-        position: absolute;
-        top: 0;
-        left: 0;
-        z-index: 0;
-        color: #5d4888;
-        filter: url(#stroke-text-svg-filter-3);
+      height: 100%;
+      padding: 0.3rem;
+      padding-right: 0.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      z-index: 2;
+      overflow-y: scroll;
+
+      .book-modal-row-title-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.1rem;
+      }
+
+      .book-modal-row {
+        font-size: 0.31rem;
+        color: #ece5fe;
+      }
+
+      .book-modal-title-cil {
+        width: 0.28rem;
+        height: 0.28rem;
+        background-color: #ece5fe;
+        border-radius: 50%;
+      }
+
+      .book-modal-text {
+        position: relative;
+        &::after {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          z-index: 0;
+          color: #5d4888;
+          filter: url(#stroke-text-svg-filter-3);
+        }
       }
     }
   }
@@ -1569,7 +1657,7 @@ const handleBook = async () => {
 
     .modal-subtitle-wrap {
       position: absolute;
-      top: 0.7rem;
+      top: 0.67rem;
       left: 0;
     }
     .gift-box {
@@ -1609,9 +1697,12 @@ const handleBook = async () => {
       color: #2d2d2d;
       font-style: italic;
       cursor: pointer;
-      background-size: 100% auto;
-      background-repeat: no-repeat;
-      background-image: url(../assets/btn_bg_black.png);
+      background-size: 100% 100%;
+
+      &[data-disabled="true"] {
+        pointer-events: none;
+        background-image: url(../assets/btn_bg_black.png);
+      }
 
       .modal-head-btn-txt {
         position: absolute;
@@ -1619,6 +1710,143 @@ const handleBook = async () => {
         left: 0.8rem;
       }
     }
+  }
+
+  .modal-body {
+    position: absolute;
+    top: 1.72rem;
+    left: 0.44rem;
+    right: 0.4rem;
+    bottom: 0.3rem;
+
+    .modal-body-content {
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 0.13rem;
+      padding-right: 0.2rem;
+      overflow-y: scroll;
+      z-index: 1;
+    }
+
+    .modal-row {
+      position: relative;
+      flex-shrink: 0;
+      height: 2.1rem;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-image: url(../assets/achv_row_bg.png);
+    }
+
+    .modal-row-title {
+      position: absolute;
+      top: 0.3rem;
+      left: 0.37rem;
+      font-size: 0.32rem;
+      color: #fff;
+
+      &::after {
+        color: #7764ae;
+      }
+    }
+
+    .modal-gift-block {
+      position: absolute;
+      top: 0.95rem;
+      left: 0.3rem;
+      width: 2.9rem;
+      height: 3.6rem;
+      background-size: 100% auto;
+      background-repeat: no-repeat;
+      background-image: url(../assets/achv_block_bg.png);
+
+      .modal-gift {
+        position: absolute;
+        top: 0.1rem;
+        width: 0.6rem;
+        height: 0.65rem;
+        font-size: 0.3rem;
+        background-size: 100% auto;
+        background-repeat: no-repeat;
+
+        &:nth-child(1) {
+          left: 0.45rem;
+          background-image: url(../assets/ic_g_1.png);
+          .modal-gift-num {
+            left: 0.2rem;
+          }
+        }
+        &:nth-child(2) {
+          left: 1.15rem;
+          background-image: url(../assets/ic_g_3.png);
+          .modal-gift-num {
+            left: 0.35rem;
+          }
+        }
+        &:nth-child(3) {
+          left: 1.85rem;
+          background-image: url(../assets/ic_g_2.png);
+          .modal-gift-num {
+            left: 0.1rem;
+          }
+        }
+
+        .modal-gift-num {
+          position: absolute;
+          top: 0.36rem;
+          font-size: 0.2rem;
+          color: #fff;
+
+          &::after {
+            color: #040408;
+          }
+        }
+      }
+    }
+
+    .modal-row-num-wrap {
+      position: absolute;
+      top: 1.2rem;
+      right: 3.84rem;
+      font-size: 0.32rem;
+      color: #f6e4ff;
+    }
+
+    .modal-row-btn {
+      position: absolute;
+      top: 0.96rem;
+      right: 0.28rem;
+      width: 3.25rem;
+      height: 0.85rem;
+      background-size: 100% 100%;
+
+      &[data-disabled="true"] {
+        pointer-events: none;
+        background-image: url(../assets/btn_bg_black.png);
+      }
+    }
+  }
+  .warn-icon {
+    position: absolute;
+    top: -0.1rem;
+    right: 0.1rem;
+    width: 0.4rem;
+    height: 0.4rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-image: url(../assets/ic_warn.png);
+  }
+
+  .modal-scrollbar-track {
+    position: absolute;
+    top: 0.22rem;
+    bottom: 0.22rem;
+    right: -0.08rem;
+    width: 0.29rem;
+    border: 0.05rem solid #a89bcf;
+    border-radius: 999rem;
+    background-color: #7366ac;
   }
 }
 </style>
