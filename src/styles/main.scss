@@ -41,6 +41,30 @@ html {
   user-select: none;
 }
 
+.dc-text-stroke {
+  position: relative;
+  color: #fff;
+
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    color: #7764ae;
+  }
+
+  &[data-stroke="1"]::after {
+    filter: url(#stroke-text-svg-filter-1);
+  }
+  &[data-stroke="3"]::after {
+    filter: url(#stroke-text-svg-filter-3);
+  }
+  &[data-stroke="5"]::after {
+    filter: url(#stroke-text-svg-filter-5);
+  }
+}
+
 .dc-button {
   position: relative;
   width: 3.8rem;
@@ -76,5 +100,19 @@ html {
       color: #b196fe;
       filter: url(#stroke-text-svg-filter-3);
     }
+  }
+}
+
+.dc-scrollbar {
+  &::-webkit-scrollbar {
+    width: 0.15rem;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #efe2ff;
+    border-radius: 999rem;
+  }
+  &::-webkit-scrollbar-button {
+    width: 0.3rem;
+    height: 0.156rem;
   }
 }
