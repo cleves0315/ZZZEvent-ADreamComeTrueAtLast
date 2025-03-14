@@ -11,10 +11,17 @@ export interface ChatMark {
     finished: boolean
     bestScore: number
   }
+  achv: boolean
 }
 
 const defaultChatMarked: ChatMark[] = [
-  { user: "zhuyuan", chatEnd: false, game: { bestScore: 0, finished: false }, actions: [] },
+  {
+    user: "zhuyuan",
+    chatEnd: false,
+    game: { bestScore: 0, finished: false },
+    actions: [],
+    achv: false,
+  },
 ]
 
 export const useChatMarked = () => {
@@ -40,9 +47,18 @@ export const useChatMarked = () => {
     }
   }
 
+  const markAchv = (user: string) => {
+    const chat = chatsMarked.value.find((chat) => chat.user === user)
+    if (chat) {
+      chat.achv = true
+      setStorage(StorageKey.DIALOG_STATE, chatsMarked.value)
+    }
+  }
+
   return {
     chatsMarked,
     markChatEnd,
     markGameEnd,
+    markAchv,
   }
 }
