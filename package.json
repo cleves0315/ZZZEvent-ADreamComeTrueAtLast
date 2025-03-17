@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@csstools/normalize.css": "^12.1.1",
     "@types/howler": "^2.2.12",
     "@types/lodash": "^4.17.15",
     "gsap": "^3.12.7",
