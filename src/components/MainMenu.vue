@@ -3,10 +3,29 @@ import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
 import { useFirstVisit } from "../hooks/useFirstVisit"
 import { CinemaUserEnum } from "../router"
+import { ref } from "vue"
 
 const router = useRouter()
 
 const { isFirstVisit } = useFirstVisit()
+
+const loadImageAsBlob = async (imageUrl: string) => {
+  try {
+    const response = await fetch(imageUrl)
+    const blob = await response.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    return blobUrl
+  } catch (error) {
+    console.error("Error loading image as blob:", error)
+    return ""
+  }
+}
+
+const titleBg = ref("")
+
+loadImageAsBlob("/src/assets/main_title.png").then((blobUrl) => {
+  titleBg.value = blobUrl
+})
 
 const onStart = async () => {
   await slideEnter()
@@ -36,17 +55,20 @@ const onStart = async () => {
 
   <div class="main-view">
     <div class="main-share"></div>
-    <div class="main-title"></div>
+    <div class="main-title" :style="{ backgroundImage: `url(${titleBg})` }"></div>
     <div class="main-subtitle">
       约定的聚餐近在眼前，突发全员爽约危机！ 好消息，您只需付出一点点额外电费，即可消除烦恼。
     </div>
     <div class="main-tips">
-      <p data-text="完成全部关卡，在活动内成就列表领取奖励道具" class="main-tips-1">
+      <div data-text="完成全部关卡，在活动内成就列表领取奖励道具" class="main-tips-1">
         完成全部关卡，在活动内成就列表领取奖励道具
-      </p>
-      <p data-text="绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与" class="main-tips-2">
+      </div>
+      <div
+        data-text="绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与"
+        class="main-tips-2"
+      >
         绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与
-      </p>
+      </div>
     </div>
     <img class="main-reward" src="../assets/main_reward.png" />
     <div class="main-btns">
@@ -102,7 +124,7 @@ const onStart = async () => {
   background-size: 100% 100%;
   background-position: center;
   z-index: 3;
-  background-image: url(../assets/main_title.png);
+  // background-image: url(../assets/main_title.png);
 }
 
 .main-subtitle {
