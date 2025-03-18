@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CSSProperties, defineProps, ref, watchEffect } from "vue"
+import { CSSProperties, defineProps, ref, StyleValue, watchEffect } from "vue"
 import { useRoute } from "vue-router"
 
 const { style } = defineProps({
@@ -13,13 +13,21 @@ const route = useRoute()
 
 const resPath = ref()
 
+const cls = ref<StyleValue>()
+
 watchEffect(() => {
   switch (route.path) {
+    case "/":
+      resPath.value = "/video/main.mp4"
+      cls.value = { transform: "scale(1)" }
+      break
     case "/home":
-      resPath.value = "/src/assets/zhuyuan_actor.mp4"
+      resPath.value = "/video/zhuyuan_actor.mp4"
+      cls.value = {}
       break
     case "/play":
-      resPath.value = "/src/assets/zhuyuan_actor_in_play.mp4"
+      resPath.value = "/video/zhuyuan_actor_in_play.mp4"
+      cls.value = {}
       break
 
     default:
@@ -36,11 +44,12 @@ watchEffect(() => {
     autoplay
     loop
     muted
+    poster="../assets/default_bg2.jpg"
     playsinline
     webkit-playsinline
     preload="auto"
     disable-picture-in-picture="true"
-    :style="{ width: style?.width, height: style?.height }"
+    :style="[{ width: style?.width, height: style?.height }, cls]"
   ></video>
 </template>
 

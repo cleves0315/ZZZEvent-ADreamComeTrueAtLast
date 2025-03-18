@@ -3,29 +3,10 @@ import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
 import { useFirstVisit } from "../hooks/useFirstVisit"
 import { CinemaUserEnum } from "../router"
-import { ref } from "vue"
 
 const router = useRouter()
 
 const { isFirstVisit } = useFirstVisit()
-
-const loadImageAsBlob = async (imageUrl: string) => {
-  try {
-    const response = await fetch(imageUrl)
-    const blob = await response.blob()
-    const blobUrl = URL.createObjectURL(blob)
-    return blobUrl
-  } catch (error) {
-    console.error("Error loading image as blob:", error)
-    return ""
-  }
-}
-
-const titleBg = ref("")
-
-loadImageAsBlob("/src/assets/main_title.png").then((blobUrl) => {
-  titleBg.value = blobUrl
-})
 
 const onStart = async () => {
   await slideEnter()
@@ -55,7 +36,7 @@ const onStart = async () => {
 
   <div class="main-view">
     <div class="main-share"></div>
-    <div class="main-title" :style="{ backgroundImage: `url(${titleBg})` }"></div>
+    <div class="main-title"></div>
     <div class="main-subtitle">
       约定的聚餐近在眼前，突发全员爽约危机！ 好消息，您只需付出一点点额外电费，即可消除烦恼。
     </div>
@@ -70,7 +51,10 @@ const onStart = async () => {
         绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与
       </div>
     </div>
-    <img class="main-reward" src="../assets/main_reward.png" />
+    <img
+      class="main-reward"
+      src="https://fastcdn.mihoyo.com/mi18n/nap_cn/m20241113hy3an50268/upload/2df625cf3c89515646a4833394197f70_5982373795839378882.png"
+    />
     <div class="main-btns">
       <div class="main-btn-start" @click="onStart">启动游戏</div>
     </div>
@@ -84,7 +68,7 @@ const onStart = async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url(../assets/default_bg2.jpg);
+  // background-image: url(../assets/default_bg2.jpg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -124,7 +108,7 @@ const onStart = async () => {
   background-size: 100% 100%;
   background-position: center;
   z-index: 3;
-  // background-image: url(../assets/main_title.png);
+  background-image: url(https://fastcdn.mihoyo.com/mi18n/nap_cn/m20241113hy3an50268/upload/5b9c204a4833a176f6d5cedcbb2574dc_9208628070822934568.png);
 }
 
 .main-subtitle {
