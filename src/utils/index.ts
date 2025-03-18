@@ -6,6 +6,20 @@ export const ceilToTwo = (num: number, decimal = 2) => {
   return rounded.toFixed(decimal)
 }
 
+export const loadImageAsBlob = async (imageUrl: string) => {
+  try {
+    console.log("imageUrl:", imageUrl)
+
+    const response = await fetch(imageUrl)
+    const blob = await response.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    return blobUrl
+  } catch (error) {
+    console.error("Error loading image as blob:", error)
+    return ""
+  }
+}
+
 export const formatNumber = (num: number) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
 }
