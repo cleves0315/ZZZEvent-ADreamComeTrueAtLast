@@ -15,6 +15,7 @@ interface ChatRoomItem {
   user: string
   name: string
   avatar: string
+  avatarUrl?: string
   content: string
   mood?: string
 }
@@ -240,13 +241,21 @@ const chatEndCallback = async () => {
       class="user-left"
       :data-mood="userLeft?.mood"
       :class="curDirection === 'left' ? '' : 'hide'"
-      :style="{ backgroundImage: `url(/src/assets/${userLeft?.avatar})` }"
+      :style="{
+        backgroundImage: userLeft?.avatarUrl
+          ? `url(${userLeft.avatarUrl})`
+          : `url(/src/assets/${userLeft?.avatar})`,
+      }"
     ></div>
     <div
       class="user-right"
       :class="curDirection === 'right' ? '' : 'hide'"
       :data-mood="userRight?.mood"
-      :style="{ backgroundImage: `url(/src/assets/${userRight?.avatar})` }"
+      :style="{
+        backgroundImage: userRight?.avatarUrl
+          ? `url(${userRight.avatarUrl})`
+          : `url(/src/assets/${userRight?.avatar})`,
+      }"
     ></div>
   </div>
 </template>

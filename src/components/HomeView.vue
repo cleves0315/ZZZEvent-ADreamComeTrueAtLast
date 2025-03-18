@@ -20,12 +20,14 @@ import { useModal } from "../hooks/useModal"
 import { ChatMarkAction, useChatMarked } from "../hooks/useChatMark"
 import { CinemaUserEnum } from "../router"
 
+import zhuyuanAvatar from "../assets/zhuyuan_task.png"
+
 const dialogList = ref([
-  { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: "zhuyuan_task.png" },
-  { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
-  { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
-  { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
-  { isLock: true, user: "bot", name: "朱鸢", avatar: "zhuyuan_task.png" },
+  { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: zhuyuanAvatar },
+  { isLock: true, user: "bot", name: "朱鸢", avatar: zhuyuanAvatar },
+  { isLock: true, user: "bot", name: "朱鸢", avatar: zhuyuanAvatar },
+  { isLock: true, user: "bot", name: "朱鸢", avatar: zhuyuanAvatar },
+  { isLock: true, user: "bot", name: "朱鸢", avatar: zhuyuanAvatar },
 ])
 
 const bookContents = [
@@ -381,7 +383,7 @@ const handleBook = async () => {
         >
           <div
             class="dialog-avatar"
-            :style="item.isLock ? {} : { backgroundImage: `url(/src/assets/${item.avatar})` }"
+            :style="item.isLock ? {} : { backgroundImage: `url(${item.avatar})` }"
           >
             {{ item.isLock ? "?" : "" }}
           </div>
@@ -409,10 +411,7 @@ const handleBook = async () => {
               :key="idx"
             >
               <div class="chat-avatar-wrap" :class="item.user === 'bot' && 'chat-avatar-bot'">
-                <div
-                  class="chat-avatar"
-                  :style="{ backgroundImage: `url(/src/assets/${item.avatar})` }"
-                ></div>
+                <div class="chat-avatar" :style="{ backgroundImage: `url(${item.avatar})` }"></div>
               </div>
               <div class="chat-content">
                 <div class="chat-txt" :data-text="item.content">
