@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
 import ad from "/audio/play_bgm.mp3"
+// @ts-ignore
 import { GameManager, KeyboardInputManager, HTMLActuator, LocalStorageManager } from "../libs/play"
 import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
@@ -8,6 +9,7 @@ import { gsap } from "gsap"
 import throttle from "lodash/throttle"
 import { useBgm } from "../hooks/useBgm"
 import { useChatMarked } from "../hooks/useChatMark"
+import DynamicBg from "./DynamicBg.vue"
 
 const router = useRouter()
 
@@ -120,25 +122,25 @@ const onBack = async () => {
   </svg>
 
   <div class="play-view slide-enter-in">
-    <div class="qq-block-bottom"></div>
+    <DynamicBg class="qq-block-bottom" name="qq_block_bottom"></DynamicBg>
     <div class="right-top" @click="toggleModalState">
       <span class="right-top-txt">结束关卡</span>
     </div>
     <div class="play-view-suc-tips">
-      <div class="play-view-suc-tips-bg"></div>
+      <DynamicBg class="play-view-suc-tips-bg" name="play_suc_bg"></DynamicBg>
       <div class="play-view-suc-tips-text">目标达成可随时结算</div>
     </div>
 
-    <div class="play-view-random-number-wrap">
-      <div class="play-view-random-number" data-num="1"></div>
-      <div class="play-view-random-number"></div>
-      <div class="play-view-random-number"></div>
-    </div>
+    <DynamicBg class="play-view-random-number-wrap" name="random_number">
+      <DynamicBg name="play_random_num" class="play-view-random-number" data-num="1"></DynamicBg>
+      <DynamicBg name="play_random_num" class="play-view-random-number"></DynamicBg>
+      <DynamicBg name="play_random_num" class="play-view-random-number"></DynamicBg>
+    </DynamicBg>
     <div class="cover-box"></div>
-    <div class="right-bottom"></div>
+    <DynamicBg class="right-bottom" name="blk_di_3"></DynamicBg>
 
-    <div class="play-bot-avatar"></div>
-    <div class="play-container">
+    <DynamicBg name="play_bot_1" class="play-bot-avatar"></DynamicBg>
+    <DynamicBg class="play-container" name="play_form">
       <div class="heading">
         <div class="scores-container">
           <div class="score-label" data-text="当前电费">当前电费</div>
@@ -200,12 +202,12 @@ const onBack = async () => {
 
         <div class="tile-container"></div>
       </div>
-    </div>
+    </DynamicBg>
   </div>
 
   <div class="play-view-modal">
     <div class="play-view-modal-mask"></div>
-    <div class="play-view-modal-body">
+    <DynamicBg class="play-view-modal-body" name="modal_bg_1">
       <div class="play-view-modal-body-title" data-text="确认要结算吗？">确认要结算吗？</div>
       <div class="play-view-modal-body-content">
         <div class="play-view-modal-body-content-row-1">
@@ -242,7 +244,7 @@ const onBack = async () => {
       >
         <div class="dc-button-text" data-text="确认">确认</div>
       </div>
-    </div>
+    </DynamicBg>
   </div>
 </template>
 
@@ -267,7 +269,6 @@ const onBack = async () => {
   z-index: 2;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  background-image: url(../assets/qq_block_bottom.png);
 }
 .right-top {
   position: absolute;
@@ -304,7 +305,6 @@ const onBack = async () => {
     bottom: 0;
     background-size: 100% auto;
     background-repeat: no-repeat;
-    background-image: url(../assets/play_suc_bg.png);
   }
 
   .play-view-suc-tips-text {
@@ -323,7 +323,6 @@ const onBack = async () => {
   height: 2.26rem;
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-image: url(../assets/random_number.png);
 
   .play-view-random-number {
     position: absolute;
@@ -333,7 +332,6 @@ const onBack = async () => {
     background-size: 100% auto;
     background-repeat: no-repeat;
     background-position: 0 -0.5rem;
-    background-image: url(../assets/play_random_num.png);
     transform: scaleY(0.88);
 
     &:nth-child(1) {
@@ -391,7 +389,6 @@ const onBack = async () => {
   z-index: 3;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-image: url(../assets/blk_di_3.png);
 }
 .play-container {
   position: absolute;
@@ -400,7 +397,6 @@ const onBack = async () => {
   width: 10.4rem;
   height: 11rem;
   z-index: 1;
-  background-image: url(../assets/play_form.png);
   background-repeat: no-repeat;
   background-size: 100% auto;
 }
@@ -412,7 +408,6 @@ const onBack = async () => {
   height: 2rem;
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-image: url(../assets/play_bot_1.png);
 }
 .score-label {
   position: absolute;
@@ -559,7 +554,6 @@ const onBack = async () => {
     height: 7.2rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
-    background-image: url(../assets/modal_bg_1.png);
   }
 
   .play-view-modal-body-title {
