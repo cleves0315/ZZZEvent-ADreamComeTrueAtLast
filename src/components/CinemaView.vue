@@ -2,6 +2,7 @@
 import { computed, onBeforeMount, ref } from "vue"
 import { Howl } from "howler"
 import msgAnswer from "/audio/btn_click.mp3"
+import DynamicBg from "./DynamicBg.vue"
 import bgmHome from "/audio/bgm_home.mp3"
 import { useBgm } from "../hooks/useBgm"
 import { useMusicMute } from "../hooks/useMusicMute"
@@ -10,14 +11,15 @@ import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
 import { useFirstVisit } from "../hooks/useFirstVisit"
 import { CinemaUserEnum } from "../router"
+import { Assets } from "../assets-list"
 
 interface ChatRoomItem {
   user: string
   name: string
-  avatar: string
-  avatarUrl?: string
+  avatar: Assets
   content: string
-  mood?: string
+  /** "1" | "2" | "3" | "4" ｜ "5" */
+  mood?: "1" | "2" | "3" | "4"
 }
 
 const owner = {
@@ -93,6 +95,7 @@ const fetchData = async () => {
       break
   }
 
+  // @ts-ignore
   lists.value = response?.default.list || []
 }
 
@@ -213,19 +216,19 @@ const chatEndCallback = async () => {
     <div class="tips-progress"></div>
   </div>
 
-  <div class="cinema-view" @click="handleNext">
-    <div class="right-top-operator">
+  <DynamicBg class="cinema-view" name="cinema_bg" @click="handleNext">
+    <DynamicBg class="right-top-operator" name="operator_wrap_1">
       <div
         class="operator-btn mute"
         :data-state="isMute ? 'mute' : 'open'"
         @click.stop="handleMute"
       ></div>
       <div class="operator-btn jump" @click.stop="handleJump"></div>
-    </div>
-    <div class="right-bottom"></div>
+    </DynamicBg>
+    <DynamicBg class="right-bottom" name="blk_di_3"></DynamicBg>
 
-    <div class="dialog-block">
-      <div v-if="isCurUserBot" class="dialog-avatar"></div>
+    <DynamicBg class="dialog-block" name="dialog_bg">
+      <DynamicBg v-if="isCurUserBot" name="ciname_bot_avatar" class="dialog-avatar"></DynamicBg>
       <div
         class="dialog-name"
         :data-text="curItem.name"
@@ -235,29 +238,31 @@ const chatEndCallback = async () => {
       </div>
       <div class="dialog-content" :data-text="content">{{ content }}</div>
       <div class="progress"></div>
-    </div>
+    </DynamicBg>
 
-    <div
+    <DynamicBg
+      :name="userLeft?.avatar"
       class="user-left"
-      :data-mood="userLeft?.mood"
       :class="curDirection === 'left' ? '' : 'hide'"
-      :style="{
-        backgroundImage: userLeft?.avatarUrl
-          ? `url(${userLeft.avatarUrl})`
-          : `url(/src/assets/${userLeft?.avatar})`,
-      }"
-    ></div>
-    <div
+    >
+      <DynamicBg
+        class="user-left-avatar"
+        :data-mood="userLeft?.mood"
+        :name="userLeft?.mood ? `lin_l_${userLeft?.mood}` : undefined"
+      ></DynamicBg>
+    </DynamicBg>
+    <DynamicBg
+      :name="userRight?.avatar"
       class="user-right"
       :class="curDirection === 'right' ? '' : 'hide'"
-      :data-mood="userRight?.mood"
-      :style="{
-        backgroundImage: userRight?.avatarUrl
-          ? `url(${userRight.avatarUrl})`
-          : `url(/src/assets/${userRight?.avatar})`,
-      }"
-    ></div>
-  </div>
+    >
+      <DynamicBg
+        class="user-right-avatar"
+        :data-mood="userRight?.mood"
+        :name="userRight?.mood ? `ze_r_${userRight?.mood}` : undefined"
+      ></DynamicBg>
+    </DynamicBg>
+  </DynamicBg>
 </template>
 
 <style scoped lang="scss">
@@ -309,7 +314,6 @@ const chatEndCallback = async () => {
   height: 100%;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-image: url(../assets/cinema_bg.jpg);
 }
 .right-top-operator {
   position: absolute;
@@ -320,7 +324,6 @@ const chatEndCallback = async () => {
   z-index: 3;
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-image: url(../assets/operator_wrap_1.png);
 
   .operator-btn {
     position: absolute;
@@ -355,7 +358,6 @@ const chatEndCallback = async () => {
   z-index: 3;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-image: url(../assets/blk_di_3.png);
 }
 .dialog-block {
   position: absolute;
@@ -366,7 +368,6 @@ const chatEndCallback = async () => {
   z-index: 5;
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-image: url(../assets/dialog_bg.png);
   .dialog-avatar {
     // display: none;
     position: absolute;
@@ -376,7 +377,6 @@ const chatEndCallback = async () => {
     height: 1.9rem;
     background-size: 100% 100%;
     background-repeat: no-repeat;
-    background-image: url(../assets/ciname_bot_avatar.png);
   }
   .dialog-name {
     position: absolute;
@@ -442,7 +442,6 @@ const chatEndCallback = async () => {
   left: 2.5rem;
   width: 7rem;
   background-position: bottom;
-  // background-size: 100% auto;
   background-size: auto 100%;
   background-repeat: no-repeat;
   transition: filter 0.3s;
@@ -451,8 +450,7 @@ const chatEndCallback = async () => {
     filter: brightness(0.6) contrast(0.8);
   }
 
-  &::after {
-    content: "";
+  .user-left-avatar {
     position: absolute;
     top: 0;
     left: 2.57rem;
@@ -460,21 +458,6 @@ const chatEndCallback = async () => {
     height: 3.4rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
-  }
-  &[data-mood="1"]::after {
-    background-image: url(../assets/lin_l_1.png);
-  }
-  &[data-mood="2"]::after {
-    background-image: url(../assets/lin_l_2.png);
-  }
-  &[data-mood="3"]::after {
-    background-image: url(../assets/lin_l_3.png);
-  }
-  &[data-mood="4"]::after {
-    background-image: url(../assets/lin_l_4.png);
-  }
-  &[data-mood="5"]::after {
-    background-image: url(../assets/lin_l_5.png);
   }
 }
 .user-right {
@@ -491,8 +474,7 @@ const chatEndCallback = async () => {
     filter: brightness(0.6) contrast(0.8);
   }
 
-  &::after {
-    content: "";
+  .user-right-avatar {
     position: absolute;
     top: 0;
     left: 0.75rem;
@@ -500,18 +482,6 @@ const chatEndCallback = async () => {
     height: 3.8rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
-  }
-  &[data-mood="1"]::after {
-    background-image: url(../assets/ze_r_1.png);
-  }
-  &[data-mood="2"]::after {
-    background-image: url(../assets/ze_r_2.png);
-  }
-  &[data-mood="3"]::after {
-    background-image: url(../assets/ze_r_3.png);
-  }
-  &[data-mood="4"]::after {
-    background-image: url(../assets/ze_r_4.png);
   }
 }
 </style>

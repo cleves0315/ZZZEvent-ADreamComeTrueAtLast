@@ -4,48 +4,42 @@
       "user": "ling",
       "name": "铃",
       "mood": "5",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "哥～工作好多，好累，我感觉快不行了…"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "3",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "还不是因为某位小店长，积压了3个月的录像带没整理。"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "2",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "还好，只剩6箱了，不会耽误和大家的聚餐，你先休息，明天咱们加把劲吧。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "3",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "嗯嗯，好好，那我先睡啦～好期待这次聚餐啊。"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "2",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "晚安铃，我先整理完这51部记录片再休息。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "5",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "晚安哥...等等，你说多少部记录片？！"
     },
     {
@@ -58,48 +52,42 @@
       "user": "zhe",
       "name": "哲",
       "mood": "4",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "今天总有种奇怪的感觉，不太对劲，玲我们整理完早点歇息吧。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "4",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "好...可能是昨天太累了。嗯？有个敲敲消息。"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "4",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "你这是什么表情，又是乱七八糟的广告推送吗？"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "4",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "哥...你觉得朱鸢下岗的可能性大吗？"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "4",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "啊？"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "5",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "你看敲敲。"
     }
   ]

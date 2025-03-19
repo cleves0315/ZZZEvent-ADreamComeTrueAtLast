@@ -3,247 +3,215 @@
     {
       "user": "zhuyuan",
       "name": "朱鸢",
-      "avatar": "zhuyuan_chatroom.png",
-      "avatarUrl": "https://files.catbox.moe/guugti.png",
+      "avatar": "zhuyuan_chatroom",
       "content": "哲！铃！太感谢你们了！"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "5",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "这么快！你的假期问题已经解决了吗？"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "3",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "F宝，你是怎么办到的？"
     },
     {
       "user": "bot",
       "name": "F宝",
-      "avatar": "ciname_bot_avatar.png",
-      "avatarUrl": "https://files.catbox.moe/ltvzto.png",
+      "avatar": "ciname_bot_avatar",
       "content": "肯定。朱鸢的所有假期已全数让波至青衣、赛斯名下。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "4",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "啊？还能用这种方式解决的吗？"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "4",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "这可是104天假期，你怎么处理的？"
     },
     {
       "user": "zhuyuan",
       "name": "朱鸢",
-      "avatar": "zhuyuan_chatroom.png",
-      "avatarUrl": "https://files.catbox.moe/guugti.png",
+      "avatar": "zhuyuan_chatroom",
       "content": "就在刚刚，我查到赛斯又偷偷周末打卡出勤，明明强调过不可以的！今年他额外出勤了21天，于是我转移了21天调休给他。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "1",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "嗯…听上去还算合理。"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "3",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "哪里合理了，假期又不是录像带，能这样转手给其他人吗。"
     },
     {
       "user": "zhuyuan",
       "name": "朱鸢",
-      "avatar": "zhuyuan_chatroom.png",
-      "avatarUrl": "https://files.catbox.moe/guugti.png",
+      "avatar": "zhuyuan_chatroom",
       "content": "可...可是成功了！流程是我批的！"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "3",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "那还有83天呢？"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "3",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "以这个处理方式，应该要轮到青衣了。"
     },
     {
       "user": "zhuyuan",
       "name": "朱鸢",
-      "avatar": "zhuyuan_chatroom.png",
-      "avatarUrl": "https://files.catbox.moe/guugti.png",
+      "avatar": "zhuyuan_chatroom",
       "content": "对，青衣前辈无论何时都为大家备着清香温热的茶水。所以作为这项额外服务的奖励，我给青衣前辈补了15天年假。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "2",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "哥，我从明天开始帮你泡咖啡可以吗？"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "2",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "可以，但没有假期没有奖金。"
     },
     {
       "user": "zhuyuan",
       "name": "朱鸢",
-      "avatar": "zhuyuan_chatroom.png",
-      "avatarUrl": "https://files.catbox.moe/guugti.png",
+      "avatar": "zhuyuan_chatroom",
       "content": "还有，青衣前辈让办公室的开水永远保持充足；赛斯一直维护着组内文档，为大家同步最新信息。"
     },
     {
       "user": "zhuyuan",
       "name": "朱鸢",
-      "avatar": "zhuyuan_chatroom.png",
-      "avatarUrl": "https://files.catbox.moe/guugti.png",
+      "avatar": "zhuyuan_chatroom",
       "content": "仔细一盘点，大家都做了许多份外之事，也该好好休息一下了。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "3",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "最该好好休息的是你自己吧…那104天假就这样分完了？"
     },
     {
       "user": "zhuyuan",
       "name": "朱鸢",
-      "avatar": "zhuyuan_chatroom.png",
-      "avatarUrl": "https://files.catbox.moe/guugti.png",
+      "avatar": "zhuyuan_chatroom",
       "content": "没有…还剩10天。"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "1",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "青衣比我们家的某位智能管家省电多了，要不发给青衣作为奖励？"
     },
     {
       "user": "bot",
       "name": "F宝",
-      "avatar": "ciname_bot_avatar.png",
-      "avatarUrl": "https://files.catbox.moe/ltvzto.png",
+      "avatar": "ciname_bot_avatar",
       "content": "否定。这是不考虑单位电量收益的恶意对比。"
     },
     {
       "user": "zhuyuan",
       "name": "朱鸢",
-      "avatar": "zhuyuan_chatroom.png",
-      "avatarUrl": "https://files.catbox.moe/guugti.png",
+      "avatar": "zhuyuan_chatroom",
       "content": "有道理，对啊！这样假期就全部解决了！我现在就回局里审批！"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "3",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "等等！朱鸢，我开玩笑的！"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "4",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "这样真的能行吗…太乱来了，又不是在做梦。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "5",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "哥，我忽然想到个问题。青衣的替补是谁？"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "1",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "嗯？不太清楚，但大概是朱鸢吧。"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "5",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "那，赛斯的替补又是谁？"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "1",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "是青衣吧，但青衣不在的话就是朱鸢，啊…"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "4",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "…"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "4",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "…"
     },
     {
       "user": "ling",
       "name": "铃",
       "mood": "4",
-      "avatar": "user_ling_to_right.png",
-      "avatarUrl": "https://files.catbox.moe/ex5mi5.png",
+      "avatar": "user_ling_to_right",
       "content": "啊啊啊不管了，这都是什么事儿啊！睡觉！"
     },
     {
       "user": "zhe",
       "name": "哲",
       "mood": "3",
-      "avatar": "user_zhe_to_left.png",
-      "avatarUrl": "https://files.catbox.moe/wyvenn.png",
+      "avatar": "user_zhe_to_left",
       "content": "还是想想好事吧…起码朱鸢能来聚餐了，晚安铃。"
     }
   ]
