@@ -8,8 +8,6 @@ export const ceilToTwo = (num: number, decimal = 2) => {
 
 export const loadImageAsBlob = async (imageUrl: string) => {
   try {
-    console.log("imageUrl:", imageUrl)
-
     const response = await fetch(imageUrl)
     const blob = await response.blob()
     const blobUrl = URL.createObjectURL(blob)
@@ -66,4 +64,45 @@ export const slideEnter = (): Promise<string> => {
   } else {
     return Promise.reject("layout not found")
   }
+}
+
+import assetsList from "../assets-list.json"
+import { Assets } from "../assets-list"
+
+export const preloadResources = async () => {
+  // @ts-ignore
+  const obj: Record<Assets, string> = {}
+
+  assetsList.forEach(async (asset: string) => {
+    const [name, file] = asset.split(".") as [Assets, string]
+    obj[name] = ""
+
+    const loadAssets = async ({ name, file }: { name: Assets; file: string }) => {
+      let path
+      switch (file) {
+        case "png":
+          path = await import(`../assets/${name}.png`)
+          break
+        case "jpg":
+          path = await import(`../assets/${name}.jpg`)
+          break
+        case "svg":
+          path = await import(`../assets/${name}.svg`)
+          break
+
+        default:
+          path = await import(`../assets/${name}.png`)
+          break
+      }
+      return path.default
+    }
+
+    loadAssets({ name, file }).then((url) => {
+      loadImageAsBlob(url).then((blobUrl) => {
+        obj[name] = blobUrl
+      })
+    })
+  })
+
+  return obj
 }

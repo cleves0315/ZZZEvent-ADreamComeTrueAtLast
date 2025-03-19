@@ -13,7 +13,7 @@ const { name } = defineProps<Props>()
 
 const store = useStore()
 
-const assets = computed(() => store.assetsList)
+const assets = computed(() => store.assetList)
 
 const getBackgroundStyle = (name?: Assets) => {
   return name ? { backgroundImage: `url(${assets.value[name]})` } : undefined
