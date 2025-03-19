@@ -21,6 +21,7 @@ import { ChatMarkAction, useChatMarked } from "../hooks/useChatMark"
 import { CinemaUserEnum } from "../router"
 
 import zhuyuanAvatar from "../assets/zhuyuan_task.png"
+import DynamicBg from "./DynamicBg.vue"
 
 const dialogList = ref([
   { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: zhuyuanAvatar },
@@ -292,6 +293,7 @@ const handleReplay = throttle(
     markOpRecords({ index: curChatList.value.length, opIndex })
 
     const newChat = chats[curChatList.value.length]
+    // @ts-ignore
     curChatList.value.push({ ...newChat, content: msg })
 
     chatListScrollToBottom()
@@ -372,7 +374,7 @@ const handleBook = async () => {
     <div class="circle-wrap">
       <div class="back-btn" @click="handleBack"></div>
     </div>
-    <div class="qq-block">
+    <DynamicBg class="qq-block" name="qq_block">
       <div class="dialog-list">
         <div
           class="dialog-item"
@@ -475,8 +477,8 @@ const handleBook = async () => {
           </div>
         </div>
       </div>
-    </div>
-    <div class="qq-block-bottom"></div>
+    </DynamicBg>
+    <DynamicBg class="qq-block-bottom" name="qq_block_bottom"></DynamicBg>
 
     <div class="operate-wrap">
       <div
@@ -488,15 +490,16 @@ const handleBook = async () => {
       <div class="operate-item"></div>
     </div>
 
-    <div
+    <DynamicBg
       class="task-btn"
+      name="task_btn"
       @click="
         () => {
           toggleModal()
           currentModal = 'achv'
         }
       "
-    ></div>
+    ></DynamicBg>
     <div class="right-bottom"></div>
 
     <div class="mask-wrap home-view-mask">
@@ -505,7 +508,11 @@ const handleBook = async () => {
 
     <ViewModal>
       <!-- alert -->
-      <div v-if="currentModal === 'alert'" class="home-modal-wrap modal-alert">
+      <DynamicBg
+        v-if="currentModal === 'alert'"
+        class="home-modal-wrap modal-alert"
+        name="alert_bg_1"
+      >
         <div class="alert-title" data-text="关卡解锁条件">关卡解锁条件</div>
         <div class="alert-content">
           <div class="alert-text">1、完成前置关卡</div>
@@ -516,9 +523,13 @@ const handleBook = async () => {
             <span class="alert-btn-text" data-text="确认">确认</span>
           </div>
         </div>
-      </div>
+      </DynamicBg>
       <!-- Book -->
-      <div v-else-if="currentModal === 'book'" class="home-modal-wrap book-modal">
+      <DynamicBg
+        v-else-if="currentModal === 'book'"
+        class="home-modal-wrap book-modal"
+        name="modal_bg_3"
+      >
         <div class="book-modal-title" data-text="活动说明">活动说明</div>
         <div class="book-modal-body">
           <div class="book-modal-content dc-scrollbar">
@@ -542,10 +553,10 @@ const handleBook = async () => {
             <span class="book-modal-btn-text" data-text="确认">确认</span>
           </div>
         </div>
-      </div>
+      </DynamicBg>
       <!-- Achievement -->
-      <div v-else class="home-modal-wrap home-modal-achv">
-        <div class="modal-achv-close" @click="toggleModal"></div>
+      <DynamicBg v-else class="home-modal-wrap home-modal-achv" name="modal_bg_2">
+        <DynamicBg class="modal-achv-close" name="btn_close" @click="toggleModal"></DynamicBg>
         <div class="modal-head">
           <div class="modal-title" data-text="成就列表">成就列表</div>
           <div class="modal-subtitle-wrap">
@@ -565,10 +576,11 @@ const handleBook = async () => {
         </div>
         <div class="modal-body">
           <div class="modal-body-content dc-scrollbar">
-            <div
+            <DynamicBg
               v-for="(item, idx) in 5"
               :key="item"
               class="modal-row"
+              name="achv_row_bg"
               :style="achvCount >= item ? { display: 'none' } : {}"
             >
               <div
@@ -607,11 +619,11 @@ const handleBook = async () => {
                   chatsMarked[idx]?.achv ? "已完成" : fisdGameCount >= item ? "领取" : "未完成"
                 }}</span>
               </div>
-            </div>
+            </DynamicBg>
           </div>
           <div class="modal-scrollbar-track"></div>
         </div>
-      </div>
+      </DynamicBg>
     </ViewModal>
   </div>
 </template>
@@ -668,7 +680,6 @@ const handleBook = async () => {
   left: 2.1rem;
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-image: url(../assets/qq_block.png);
 }
 .qq-block-bottom {
   position: absolute;
@@ -678,7 +689,6 @@ const handleBook = async () => {
   height: 1.22rem;
   background-repeat: no-repeat;
   background-size: 100% 100%;
-  background-image: url(../assets/qq_block_bottom.png);
 }
 .dialog-list {
   position: absolute;
@@ -783,7 +793,6 @@ const handleBook = async () => {
   cursor: pointer;
   background-size: 100% auto;
   background-repeat: no-repeat;
-  background-image: url(../assets/task_btn.png);
 }
 .operate-wrap {
   position: absolute;
@@ -1369,20 +1378,12 @@ const handleBook = async () => {
   background-size: 100% 100%;
   background-repeat: no-repeat;
 
-  &.book-modal {
-    background-image: url(../assets/modal_bg_3.png);
-  }
-  &.home-modal-achv {
-    background-image: url(../assets/modal_bg_2.png);
-  }
-
   &.modal-alert {
     position: relative;
     width: 8.8rem;
     height: 5.2rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
-    background-image: url(../assets/alert_bg_1.png);
     font-size: 0.3rem;
 
     .alert-title {
@@ -1494,7 +1495,6 @@ const handleBook = async () => {
     cursor: pointer;
     background-size: 100% auto;
     background-repeat: no-repeat;
-    background-image: url("../assets/btn_close.png");
   }
 
   // book
@@ -1735,7 +1735,6 @@ const handleBook = async () => {
       height: 2.1rem;
       background-size: 100% auto;
       background-repeat: no-repeat;
-      background-image: url(../assets/achv_row_bg.png);
     }
 
     .modal-row-title {
