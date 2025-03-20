@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeMount, ref } from "vue"
 import { Howl } from "howler"
-import msgAnswer from "/audio/btn_click.mp3"
 import DynamicBg from "./DynamicBg.vue"
-import bgmHome from "/audio/bgm_home.mp3"
 import { useBgm } from "../hooks/useBgm"
 import { useMusicMute } from "../hooks/useMusicMute"
 import { gsap } from "gsap"
@@ -12,6 +10,7 @@ import { slideEnter } from "../utils"
 import { useFirstVisit } from "../hooks/useFirstVisit"
 import { CinemaUserEnum } from "../router"
 import { Assets } from "../assets-list"
+import { useStore } from "../stores"
 
 interface ChatRoomItem {
   user: string
@@ -31,6 +30,8 @@ const owner = {
 
 const lists = ref<ChatRoomItem[]>([])
 
+const store = useStore()
+
 const router = useRouter()
 
 const { user } = defineProps({
@@ -40,20 +41,26 @@ const { user } = defineProps({
 const { markVisit } = useFirstVisit()
 
 const { isMute, toggleMute } = useMusicMute()
-const { bgmSound } = useBgm(bgmHome)
+
+const { bgmSound } = useBgm(store.assetList["bgm_home"])
+
 const msgSound = ref()
 
 const content = ref("")
+
 const tipsCont = ref("")
 
 const chatEnd = ref(false)
 
 const stopWrite = ref(false)
+
 const charIndex = ref(0)
+
 const lineIndex = ref(0)
 
 msgSound.value = new Howl({
-  src: [msgAnswer],
+  src: [store.assetList["btn_click"]],
+  format: ["mp3"],
   volume: 1.0,
 })
 

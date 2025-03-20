@@ -4,8 +4,6 @@ import { formatNumber, slideEnter } from "../utils"
 import throttle from "lodash/throttle"
 import { computed, onMounted, ref } from "vue"
 import { Howl } from "howler"
-import msgAnswer from "/audio/message_answer.mp3"
-import bgmHome from "/audio/bgm_home.mp3"
 import gsap from "gsap"
 import {
   chatList as chats,
@@ -22,6 +20,7 @@ import { CinemaUserEnum } from "../router"
 
 import zhuyuanAvatar from "../assets/zhuyuan_task.png"
 import DynamicBg from "./DynamicBg.vue"
+import { useStore } from "../stores"
 
 const dialogList = ref([
   { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: zhuyuanAvatar },
@@ -67,6 +66,8 @@ const bookContents = [
   },
 ]
 
+const store = useStore()
+
 const { isMute, toggleMute } = useMusicMute()
 
 const { toggleModal } = useModal()
@@ -75,7 +76,7 @@ const currentModal = ref<"book" | "achv" | "alert">()
 
 const { chatsMarked, markChatEnd, markAchv } = useChatMarked()
 
-const { bgmSound } = useBgm(bgmHome)
+const { bgmSound } = useBgm(store.assetList["bgm_home"])
 
 const curDialogIndex = ref(0)
 
@@ -163,7 +164,8 @@ const initChatList = () => {
 
 onMounted(() => {
   msgSound.value = new Howl({
-    src: [msgAnswer],
+    src: [store.assetList["message_answer"]],
+    format: ["mp3"],
     volume: 1.0,
   })
   initChatList()

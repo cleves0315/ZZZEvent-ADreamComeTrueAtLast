@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from "vue"
-import ad from "/audio/play_bgm.mp3"
 // @ts-ignore
 import { GameManager, KeyboardInputManager, HTMLActuator, LocalStorageManager } from "../libs/play"
 import { useRouter } from "vue-router"
@@ -10,6 +9,7 @@ import throttle from "lodash/throttle"
 import { useBgm } from "../hooks/useBgm"
 import { useChatMarked } from "../hooks/useChatMark"
 import DynamicBg from "./DynamicBg.vue"
+import { useStore } from "../stores"
 
 const router = useRouter()
 
@@ -55,7 +55,9 @@ const handleUpdateScore = (e: any) => {
   score.value = parseFloat(e.detail.score)
 }
 
-useBgm(ad)
+const store = useStore()
+
+useBgm(store.assetList["play_bgm"])
 
 const toggleModalState = throttle(
   async () => {

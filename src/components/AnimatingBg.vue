@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { CSSProperties, defineProps, ref, StyleValue, watchEffect } from "vue"
 import { useRoute } from "vue-router"
+import { useStore } from "../stores"
+
+const store = useStore()
 
 const { style } = defineProps({
   style: {
@@ -22,11 +25,11 @@ watchEffect(() => {
       cls.value = { transform: "scale(1)" }
       break
     case "/home":
-      resPath.value = "/video/zhuyuan_actor.mp4"
+      resPath.value = store.assetList["zhuyuan_actor"]
       cls.value = {}
       break
     case "/play":
-      resPath.value = "/video/zhuyuan_actor_in_play.mp4"
+      resPath.value = store.assetList["zhuyuan_actor_in_play"]
       cls.value = {}
       break
 
