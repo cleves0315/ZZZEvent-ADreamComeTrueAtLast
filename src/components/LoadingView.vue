@@ -1,18 +1,27 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-import DynamicBg from "./DynamicBg.vue"
+import { onMounted, onUnmounted, ref } from "vue"
 import gsap from "gsap"
+import { preloadResources, slideEnter } from "../utils"
+import { useFirstVisit } from "../hooks/useFirstVisit"
+import { useRouter } from "vue-router"
+import { CinemaUserEnum } from "../router"
+
+import loading_ic_0 from "../assets/loading_ic_0.png"
+import loading_ic_1 from "../assets/loading_ic_1.png"
 import { useStore } from "../stores"
 
+const store = useStore()
+
+const timer = ref()
 let index = 1
 let icIndex: 0 | 1 = 0
-
-const store = useStore()
+let end = false
 
 const icCircle64 =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABkAAAAZCAYAAADE6YVjAAAACXBIWXMAAAAAAAAAAQCEeRdzAAAABGNJQ1ABBAABk7gAvQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAABGdBTUEAALGPC/xhBQAAAblJREFUeJy9VstOwkAUHTYO/AEu1U+QvbrVDTEm0BXE7l0J+jX6C6Jr4qbgGoUoWxhQEjChRTaUjvdAq7xasaGd5KbtzJ1z7r3zOGXMpXHOWfL4dFtUOumvd3mjC7NKppNZ9rOKfhpXkidncc6jblC/LRKJ/LxnUmq0eKflpC4rRmssCdDVMC4NWSkWSrlM6jy2Cm+uY3dvh11eXO+bPamNP6Xsi5EngWP95kjC3+xKDfOBs5IIAx+N7oEcyJYhvKP3zIrmE86RQzTXEAE5NBCVH4LZrKh8gvAScwSZtBqlEj35zWApI8IBXlZRp2vEtzgrFrQcaroJAseA9/hQzgMf2zROu6i27iKvXTbCo/K/Ap+9PXeUwR/b1K8NWpasEz6jA3UbBIFjQ8Jn+vQkB0YCfJDoAZMYILECJrFCyyT4NRmGsbvqYZyTUE58oHfXffkKChvOLbygJ82N6AnhAG9JtGxlPCSHtm9lFBNlbANnSRkXND5BqZb+pfHC1niah/muGj/bkU2rMVq0PEX1YrQt7+hpHH7wx7xVeK4Nu87+71IgB31h1gjU0Kd3nYFv9E/+u8hvooAu7Rv/zp/+JplMEAAAAABJRU5ErkJggg=="
 
-const live = async () => {
+const animate = async () => {
+  if (end) return
   gsap.set(`.icon-${index}`, {
     backgroundSize: ".35rem .35rem",
     backgroundPosition: "center center",
@@ -22,7 +31,7 @@ const live = async () => {
   gsap.set(`.icon-${index}`, {
     backgroundSize: "auto 100%",
     backgroundPosition: `-${index - 1}rem 0`,
-    backgroundImage: `url(${store.assetList[`loading_ic_${icIndex}`]})`,
+    backgroundImage: `url(${icIndex === 0 ? loading_ic_0 : loading_ic_1})`,
   })
   await gsap.to(`.icon-${index}`, {
     transform: "scaleX(1.4)",
@@ -36,30 +45,52 @@ const live = async () => {
   index++
 
   if (index > 5) {
-    animationEnd()
+    animateEnd()
   } else {
-    setTimeout(live, 200)
+    timer.value = setTimeout(animate, 200)
   }
 }
 
-const animationEnd = () => {
+const animateEnd = () => {
   index = 1
   setTimeout(() => {
     icIndex = icIndex === 0 ? 1 : 0
-    live()
+    animate()
   }, 1400)
 }
 
-onMounted(() => {
-  live()
+const router = useRouter()
+
+const { isFirstVisit } = useFirstVisit()
+
+const preloadResEnd = async () => {
+  await slideEnter()
+  if (isFirstVisit.value) {
+    router.replace("/home")
+  } else {
+    router.replace({ path: `/cinema/${CinemaUserEnum.zhuyuan0}` })
+  }
+}
+
+onMounted(async () => {
+  animate()
+  const obj = await preloadResources()
+  store.setAssetList(obj)
+  preloadResEnd()
+})
+
+onUnmounted(() => {
+  end = true
+  clearTimeout(timer.value)
+  gsap.killTweensOf(".icon")
 })
 </script>
 
 <template>
-  <DynamicBg name="loading_bg" class="loading-view">
-    <DynamicBg name="loading_fairy" class="fairy">
+  <div class="loading-view">
+    <div class="fairy">
       <div class="fairy-eye"></div>
-    </DynamicBg>
+    </div>
     <div class="icon-wrap">
       <div class="icon icon-1"></div>
       <div class="icon icon-2"></div>
@@ -67,7 +98,7 @@ onMounted(() => {
       <div class="icon icon-4"></div>
       <div class="icon icon-5"></div>
     </div>
-  </DynamicBg>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -79,6 +110,7 @@ onMounted(() => {
   bottom: 0;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  background-image: url(../assets/loading_bg.jpg);
 
   .fairy {
     position: absolute;
@@ -88,6 +120,7 @@ onMounted(() => {
     height: 2rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
+    background-image: url(../assets/loading_fairy.png);
   }
 
   @keyframes moveEyes {
@@ -101,6 +134,7 @@ onMounted(() => {
       transform: translate(0.22rem, 0);
     }
   }
+
   .fairy-eye {
     position: absolute;
     left: 0.76rem;
