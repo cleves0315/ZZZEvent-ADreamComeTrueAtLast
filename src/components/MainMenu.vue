@@ -1,20 +1,11 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router"
-import { slideEnter } from "../utils"
-import { useFirstVisit } from "../hooks/useFirstVisit"
-import { CinemaUserEnum } from "../router"
 
 const router = useRouter()
 
-const { isFirstVisit } = useFirstVisit()
-
 const onStart = async () => {
-  await slideEnter()
-  if (isFirstVisit.value) {
-    router.push("/home")
-  } else {
-    router.push({ path: `/cinema/${CinemaUserEnum.zhuyuan0}` })
-  }
+  // await slideEnter()
+  router.push("/loading")
 }
 </script>
 
