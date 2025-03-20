@@ -10,8 +10,11 @@ import { useBgm } from "../hooks/useBgm"
 import { useChatMarked } from "../hooks/useChatMark"
 import DynamicBg from "./DynamicBg.vue"
 import { useStore } from "../stores"
+import { CinemaUserEnum } from "../router"
 
 const router = useRouter()
+
+const store = useStore()
 
 const { markGameEnd } = useChatMarked()
 
@@ -55,8 +58,6 @@ const handleUpdateScore = (e: any) => {
   score.value = parseFloat(e.detail.score)
 }
 
-const store = useStore()
-
 useBgm(store.assetList["play_bgm"])
 
 const toggleModalState = throttle(
@@ -89,7 +90,12 @@ onMounted(() => {
 const onBack = async () => {
   toggleModalState()
   await slideEnter()
-  router.back()
+  if (isFinish.value) {
+    // TODO
+    router.replace({ path: `/cinema/${CinemaUserEnum.zhuyuan1}` })
+  } else {
+    router.replace("/home")
+  }
 }
 </script>
 

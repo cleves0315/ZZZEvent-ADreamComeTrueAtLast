@@ -319,7 +319,7 @@ const toReview = async () => {
 const toPlay = async () => {
   toggleMask()
   await slideEnter()
-  router.push("/play")
+  router.replace("/play")
 }
 
 const handleBook = async () => {
