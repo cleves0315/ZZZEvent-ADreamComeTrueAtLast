@@ -6,7 +6,7 @@ export const ceilToTwo = (num: number, decimal = 2) => {
   return rounded.toFixed(decimal)
 }
 
-export const loadImageAsBlob = async (imageUrl: string) => {
+export const loadAssetAsBlob = async (imageUrl: string) => {
   try {
     const response = await fetch(imageUrl)
     const blob = await response.blob()
@@ -70,39 +70,52 @@ import assetsList from "../assets-list.json"
 import { Assets } from "../assets-list"
 
 export const preloadResources = async () => {
-  // @ts-ignore
-  const obj: Record<Assets, string> = {}
+  return new Promise<Record<Assets, string>>((resolve) => {
+    // @ts-ignore
+    const obj: Record<Assets, string> = {}
 
-  assetsList.forEach(async (asset: string) => {
-    const [name, file] = asset.split(".") as [Assets, string]
-    obj[name] = ""
+    let count = 0
 
-    const loadAssets = async ({ name, file }: { name: Assets; file: string }) => {
-      let path
-      switch (file) {
-        case "png":
-          path = await import(`../assets/${name}.png`)
-          break
-        case "jpg":
-          path = await import(`../assets/${name}.jpg`)
-          break
-        case "svg":
-          path = await import(`../assets/${name}.svg`)
-          break
+    assetsList.forEach(async (asset: string) => {
+      const [name, file] = asset.split(".") as [Assets, string]
+      obj[name] = ""
 
-        default:
-          path = await import(`../assets/${name}.png`)
-          break
+      const getPath = async ({ name, file }: { name: Assets; file: string }) => {
+        let path
+        switch (file) {
+          case "png":
+            path = await import(`../assets/${name}.png`)
+            break
+          case "jpg":
+            path = await import(`../assets/${name}.jpg`)
+            break
+          case "svg":
+            path = await import(`../assets/${name}.svg`)
+            break
+          case "mp3":
+            path = await import(`../assets/${name}.mp3`)
+            break
+          case "mp4":
+            path = await import(`../assets/${name}.mp4`)
+            break
+
+          default:
+            path = await import(`../assets/${name}.png`)
+            break
+        }
+        return path.default
       }
-      return path.default
-    }
 
-    loadAssets({ name, file }).then((url) => {
-      loadImageAsBlob(url).then((blobUrl) => {
-        obj[name] = blobUrl
+      getPath({ name, file }).then((url) => {
+        loadAssetAsBlob(url).then((blobUrl) => {
+          count++
+          obj[name] = blobUrl
+
+          if (count === assetsList.length) {
+            resolve(obj)
+          }
+        })
       })
     })
   })
-
-  return obj
 }

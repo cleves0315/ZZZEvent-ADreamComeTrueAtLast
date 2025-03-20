@@ -3,7 +3,7 @@ import { onMounted, onUnmounted, ref } from "vue"
 import { Howl } from "howler"
 import { useMusicMute } from "./useMusicMute"
 
-export const useBgm = (bgm: string) => {
+export const useBgm = (url: string) => {
   const bgmSound = ref<Howl>()
   const bgmState = ref("none")
 
@@ -40,7 +40,8 @@ export const useBgm = (bgm: string) => {
 
   onMounted(() => {
     bgmSound.value = new Howl({
-      src: [bgm],
+      src: [url],
+      format: ["mp3"],
       autoplay: isMute.value ? false : true,
       loop: true,
       volume: 1.0,
