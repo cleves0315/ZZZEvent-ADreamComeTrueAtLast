@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc -b && vite build",
-    "preview": "vite preview"
+    "build": "vite build",
+    "preview": "vite preview",
+    "gen-assets": "deno run --allow-read --allow-write generate-assets-list.ts"
   },
   "dependencies": {
     "@types/howler": "^2.2.12",
