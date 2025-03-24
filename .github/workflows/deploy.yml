@@ -29,10 +29,10 @@ jobs:
           node-version: lts/*
 
       - name: Install step
-        run: "npm install"
+        run: "pnpm install"
 
       - name: Build step
-        run: "npm run build"
+        run: "pnpm run build"
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
@@ -40,5 +40,3 @@ jobs:
           project: "zzz-event"
           entrypoint: "https://deno.land/std@0.217.0/http/file_server.ts"
           root: "dist"
-          
-          
