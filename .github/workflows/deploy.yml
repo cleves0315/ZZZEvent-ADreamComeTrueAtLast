@@ -29,7 +29,7 @@ jobs:
           node-version: lts/*
 
       - name: Install pnpm
-        uses: "pnpm/action-setup@v2"
+        run: npm install -g pnpm
 
       - name: Install step
         run: "pnpm install"
