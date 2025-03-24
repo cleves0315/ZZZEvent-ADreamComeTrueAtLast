@@ -16,8 +16,6 @@ const store = useStore()
 
 const assets = computed(() => store.assetList)
 
-console.log("style: ", style)
-
 const getBackgroundStyle = (name?: Assets) => {
   return name ? { backgroundImage: `url(${assets.value[name]})` } : undefined
 }

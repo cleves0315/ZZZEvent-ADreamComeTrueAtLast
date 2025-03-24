@@ -1,7 +1,47 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted, ref, watchEffect } from "vue"
+import { useZIndex } from "../hooks/useZIndex"
+import { generateRandomString } from "../utils"
+import gsap from "gsap"
+
+interface Props {
+  visible: boolean
+}
+
+const index = useZIndex()
+
+const { visible } = defineProps<Props>()
+
+const randomStr = generateRandomString()
+
+const mounted = ref(false)
+
+onMounted(() => {
+  mounted.value = true
+})
+
+watchEffect(async () => {
+  const cls = `.v-view-modal[data-name='${randomStr}']`
+
+  if (!mounted.value) {
+    return
+  }
+
+  if (visible) {
+    gsap.set(cls, { display: "block" })
+  }
+
+  gsap.to(`${cls} .view-modal-mask`, { opacity: visible ? 1 : 0, duration: 0.2 })
+  await gsap.to(cls + " .view-modal-body", { opacity: visible ? 1 : 0, duration: 0.2 })
+
+  if (!visible) {
+    gsap.set(cls, { display: "none" })
+  }
+})
+</script>
 
 <template>
-  <div class="view-modal">
+  <div class="v-view-modal" :data-name="randomStr" :style="{ zIndex: index }">
     <div class="view-modal-mask"></div>
     <div class="view-modal-body">
       <slot></slot>
@@ -10,13 +50,12 @@
 </template>
 
 <style scoped lang="scss">
-.view-modal {
+.v-view-modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 100;
   display: none;
 
   .view-modal-mask {
