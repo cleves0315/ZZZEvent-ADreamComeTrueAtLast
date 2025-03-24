@@ -1,19 +1,22 @@
 <script setup lang="ts">
-import { computed, useAttrs } from "vue"
+import { computed, StyleValue, useAttrs } from "vue"
 import { useStore } from "../stores"
 import { Assets } from "../assets-list"
 
 interface Props {
   name?: Assets
+  style?: StyleValue
 }
 
 const attrs = useAttrs()
 
-const { name } = defineProps<Props>()
+const { name, style } = defineProps<Props>()
 
 const store = useStore()
 
 const assets = computed(() => store.assetList)
+
+console.log("style: ", style)
 
 const getBackgroundStyle = (name?: Assets) => {
   return name ? { backgroundImage: `url(${assets.value[name]})` } : undefined
@@ -21,7 +24,7 @@ const getBackgroundStyle = (name?: Assets) => {
 </script>
 
 <template>
-  <div :style="getBackgroundStyle(name)" v-bind="$attrs">
+  <div :style="[getBackgroundStyle(name), style]" v-bind="$attrs">
     <slot></slot>
   </div>
 </template>
