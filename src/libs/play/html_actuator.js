@@ -7,6 +7,10 @@ export function HTMLActuator() {
   this.score = 0
 }
 
+function formatNumber(num) {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+}
+
 HTMLActuator.prototype.actuate = function (grid, metadata) {
   var self = this
 
@@ -21,7 +25,7 @@ HTMLActuator.prototype.actuate = function (grid, metadata) {
       })
     })
 
-    self.updateScore(metadata.score)
+    self.updateScore(metadata.score, metadata.multedScore)
     self.updateBestScore(metadata.bestScore)
 
     if (metadata.terminated) {
@@ -105,12 +109,8 @@ HTMLActuator.prototype.positionClass = function (position) {
   return "tile-position-" + position.x + "-" + position.y
 }
 
-HTMLActuator.prototype.updateScore = function (score) {
+HTMLActuator.prototype.updateScore = function (score, multedScore) {
   this.clearContainer(this.scoreContainer)
-
-  function formatNumber(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  }
 
   var difference = score - this.score
   this.score = score
@@ -122,13 +122,26 @@ HTMLActuator.prototype.updateScore = function (score) {
       new CustomEvent("updateScore", { detail: { score: this.score } }),
     )
 
-    var addition = document.createElement("div")
-    addition.classList.add("score-addition")
-    addition.textContent = "+" + difference
-    addition.setAttribute("data-text", "+" + difference)
-
-    this.scoreContainer.appendChild(addition)
+    this.popupAddedScore(difference)
+    if (multedScore) {
+      this.popupMultedScore(multedScore)
+    }
   }
+}
+
+HTMLActuator.prototype.popupAddedScore = function (addedScore) {
+  var addition = document.createElement("div")
+  addition.classList.add("score-addition")
+  addition.textContent = "+" + addedScore
+  addition.setAttribute("data-text", "+" + addedScore)
+
+  this.scoreContainer.appendChild(addition)
+}
+
+HTMLActuator.prototype.popupMultedScore = function (multedScore) {
+  this.scoreContainer.dispatchEvent(
+    new CustomEvent("popupMultedScore", { detail: { multedScore } }),
+  )
 }
 
 HTMLActuator.prototype.updateBestScore = function (bestScore) {
@@ -159,4 +172,16 @@ HTMLActuator.prototype.addStar = function (element) {
   }
 
   element.appendChild(starWrap)
+}
+
+HTMLActuator.prototype.genRandomMultiplier = function (numberList) {
+  this.scoreContainer.dispatchEvent(
+    new CustomEvent("genRandomMultiplier", {
+      detail: { numberList: JSON.parse(JSON.stringify(numberList)) },
+    }),
+  )
+}
+
+HTMLActuator.prototype.enableMultiplier = function (numbers) {
+  this.scoreContainer.dispatchEvent(new CustomEvent("enableMultiplier"))
 }

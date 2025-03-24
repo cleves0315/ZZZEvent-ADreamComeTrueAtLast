@@ -65,12 +65,17 @@ KeyboardInputManager.prototype.listen = function () {
     if (!modifiers && event.which === 82) {
       self.restart.call(self, event)
     }
+
+    if ((!modifiers && event.code === "Space") || event.key === " ") {
+      self.enableMultiplier.call(self, event)
+    }
   })
 
   // Respond to button presses
   this.bindButtonPress(".retry-button", this.restart)
   this.bindButtonPress(".restart-button", this.restart)
   this.bindButtonPress(".keep-playing-button", this.keepPlaying)
+  this.bindButtonPress(".enable-multiplier-button", this.enableMultiplier)
 
   // Respond to swipe events
   var touchStartClientX, touchStartClientY
@@ -138,6 +143,11 @@ KeyboardInputManager.prototype.restart = function (event) {
 KeyboardInputManager.prototype.keepPlaying = function (event) {
   event.preventDefault()
   this.emit("keepPlaying")
+}
+
+KeyboardInputManager.prototype.enableMultiplier = function (event) {
+  event.preventDefault()
+  this.emit("enableMultiplier")
 }
 
 KeyboardInputManager.prototype.bindButtonPress = function (selector, fn) {

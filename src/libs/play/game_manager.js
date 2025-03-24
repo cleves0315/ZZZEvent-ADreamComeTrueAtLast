@@ -9,9 +9,17 @@ export function GameManager(size, InputManager, Actuator, StorageManager) {
 
   this.startTiles = 2
 
+  this.mergeCount = 0
+  this.maxMergeCount = 5
+  this.multiplierMaxCount = 3
+  this.multiplierList = [] // maxLength = multiplierMaxCount
+  this.isMultiplierEnabled = false
+  this.curMultedScore = 0
+
   this.inputManager.on("move", this.move.bind(this))
   this.inputManager.on("restart", this.restart.bind(this))
   this.inputManager.on("keepPlaying", this.keepPlaying.bind(this))
+  this.inputManager.on("enableMultiplier", this.enableMultiplier.bind(this))
 
   this.ganmeOverEvent = new CustomEvent("ganmeOver")
 
@@ -99,6 +107,7 @@ GameManager.prototype.actuate = function () {
     won: this.won,
     bestScore: this.storageManager.getBestScore(),
     terminated: this.isGameTerminated(),
+    multedScore: this.curMultedScore, // 0 or multiplied score
   })
 }
 
@@ -149,6 +158,8 @@ GameManager.prototype.move = function (direction) {
   // Save the current tile positions and remove merger information
   this.prepareTiles()
 
+  let thisTimeMergedScore = 0
+
   // Traverse the grid in the right direction and move tiles
   traversals.x.forEach(function (x) {
     traversals.y.forEach(function (y) {
@@ -161,8 +172,17 @@ GameManager.prototype.move = function (direction) {
 
         // Only one merger per row traversal?
         if (next && next.value === tile.value && !next.mergedFrom) {
-          // TODO
-          var merged = new Tile(positions.next, tile.value * 2)
+          const mergedScore = tile.value * 2
+
+          self.mergeCount += 1
+          if (self.multiplierList.length >= self.multiplierMaxCount) {
+            self.mergeCount = 0
+          } else if (self.mergeCount > self.maxMergeCount) {
+            self.genRandomMultiplier()
+            self.mergeCount = 0
+          }
+
+          var merged = new Tile(positions.next, mergedScore)
           merged.mergedFrom = [tile, next]
 
           self.grid.insertTile(merged)
@@ -171,11 +191,10 @@ GameManager.prototype.move = function (direction) {
           // Converge the two tiles' positions
           tile.updatePosition(positions.next)
 
-          // Update the score
-          self.score += merged.value
+          thisTimeMergedScore += merged.value
 
           // The mighty 2048 tile
-          if (merged.value === 2048) self.won = true
+          // if (merged.value === 2048) self.won = true
         } else {
           self.moveTile(tile, positions.farthest)
         }
@@ -196,7 +215,25 @@ GameManager.prototype.move = function (direction) {
       window.dispatchEvent(this.ganmeOverEvent)
     }
 
+    // Update the score
+    this.score += thisTimeMergedScore
+
     this.actuate()
+
+    if (self.isMultiplierEnabled && thisTimeMergedScore > 0) {
+      const multiplier = parseInt(this.multiplierList.reduce((acc, cur) => acc * 10 + cur, 0))
+      this.curMultedScore = thisTimeMergedScore * multiplier
+
+      this.isMultiplierEnabled = false
+      this.multiplierList = []
+
+      // Update the score
+      this.score += this.curMultedScore
+
+      this.actuate()
+
+      this.curMultedScore = 0
+    }
   }
 }
 
@@ -278,4 +315,24 @@ GameManager.prototype.tileMatchesAvailable = function () {
 
 GameManager.prototype.positionsEqual = function (first, second) {
   return first.x === second.x && first.y === second.y
+}
+
+GameManager.prototype.genRandomMultiplier = function () {
+  if (this.multiplierList.length >= this.multiplierMaxCount) return
+
+  // number 1 - 9
+  const getRandomNumber = () => Math.floor(Math.random() * 9) + 1
+  const number = getRandomNumber()
+
+  this.multiplierList.unshift(number)
+
+  this.actuator.genRandomMultiplier(this.multiplierList)
+}
+
+GameManager.prototype.enableMultiplier = function () {
+  if (this.multiplierList.length >= this.multiplierMaxCount) {
+    this.isMultiplierEnabled = true
+
+    this.actuator.enableMultiplier()
+  }
 }
