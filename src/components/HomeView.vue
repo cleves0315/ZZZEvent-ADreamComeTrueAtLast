@@ -14,13 +14,13 @@ import {
 import { useBgm } from "../hooks/useBgm"
 import { useMusicMute } from "../hooks/useMusicMute"
 import ViewModal from "./ViewModal.vue"
-import { useModal } from "../hooks/useModal"
 import { ChatMarkAction, useChatMarked } from "../hooks/useChatMark"
 import { CinemaUserEnum } from "../router"
 
 import zhuyuanAvatar from "../assets/zhuyuan_task.png"
 import DynamicBg from "./DynamicBg.vue"
 import { useStore } from "../stores"
+import { useBoolean } from "../hooks/useBoolean"
 
 const dialogList = ref([
   { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: zhuyuanAvatar },
@@ -70,13 +70,15 @@ const store = useStore()
 
 const { isMute, toggleMute } = useMusicMute()
 
-const { toggleModal } = useModal()
-
-const currentModal = ref<"book" | "achv" | "alert">()
-
 const { chatsMarked, markChatEnd, markAchv } = useChatMarked()
 
 const { bgmSound } = useBgm(store.assetList["bgm_home"])
+
+const [visAlert, { toggle: toggleAlert }] = useBoolean(false)
+
+const [visBook, { toggle: toggleBook }] = useBoolean(false)
+
+const [visAchv, { toggle: toggleAchv }] = useBoolean(false)
 
 const curDialogIndex = ref(0)
 
@@ -250,8 +252,7 @@ const chatEndCallback = () => {
 }
 
 const handleClickDialog = () => {
-  toggleModal()
-  currentModal.value = "alert"
+  toggleAlert()
 }
 
 const handleNextChat = throttle(
@@ -323,8 +324,7 @@ const toPlay = async () => {
 }
 
 const handleBook = async () => {
-  currentModal.value = "book"
-  toggleModal()
+  toggleBook()
 }
 </script>
 
@@ -493,46 +493,30 @@ const handleBook = async () => {
       <div class="operate-item"></div>
     </div>
 
-    <DynamicBg
-      class="task-btn"
-      name="task_btn"
-      @click="
-        () => {
-          toggleModal()
-          currentModal = 'achv'
-        }
-      "
-    ></DynamicBg>
+    <DynamicBg class="task-btn" name="task_btn" @click="toggleAchv"></DynamicBg>
     <DynamicBg name="blk_di_3" class="right-bottom"></DynamicBg>
 
     <div class="mask-wrap home-view-mask">
       <div class="mask"></div>
     </div>
 
-    <ViewModal>
-      <!-- alert -->
-      <DynamicBg
-        v-if="currentModal === 'alert'"
-        class="home-modal-wrap modal-alert"
-        name="alert_bg_1"
-      >
+    <ViewModal :visible="visAlert">
+      <DynamicBg class="home-modal-wrap modal-alert" name="alert_bg_1">
         <div class="alert-title" data-text="关卡解锁条件">关卡解锁条件</div>
         <div class="alert-content">
           <div class="alert-text">1、完成前置关卡</div>
           <div class="alert-text">2、敬请期待</div>
         </div>
         <div class="alert-footer">
-          <div class="alert-btn" @click="toggleModal">
+          <div class="alert-btn" @click="toggleAlert">
             <span class="alert-btn-text" data-text="确认">确认</span>
           </div>
         </div>
       </DynamicBg>
-      <!-- Book -->
-      <DynamicBg
-        v-else-if="currentModal === 'book'"
-        class="home-modal-wrap book-modal"
-        name="modal_bg_3"
-      >
+    </ViewModal>
+
+    <ViewModal :visible="visBook">
+      <DynamicBg class="home-modal-wrap book-modal" name="modal_bg_3">
         <div class="book-modal-title" data-text="活动说明">活动说明</div>
         <div class="book-modal-body">
           <div class="book-modal-content dc-scrollbar">
@@ -552,14 +536,17 @@ const handleBook = async () => {
           <div class="book-modal-btn">
             <span class="book-modal-btn-text" data-text="查看协议">查看协议</span>
           </div>
-          <div class="book-modal-btn" @click="toggleModal">
+          <div class="book-modal-btn" @click="toggleBook">
             <span class="book-modal-btn-text" data-text="确认">确认</span>
           </div>
         </div>
       </DynamicBg>
+    </ViewModal>
+
+    <ViewModal :visible="visAchv">
       <!-- Achievement -->
-      <DynamicBg v-else class="home-modal-wrap home-modal-achv" name="modal_bg_2">
-        <DynamicBg class="modal-achv-close" name="btn_close" @click="toggleModal"></DynamicBg>
+      <DynamicBg class="home-modal-wrap home-modal-achv" name="modal_bg_2">
+        <DynamicBg class="modal-achv-close" name="btn_close" @click="toggleAchv"></DynamicBg>
         <div class="modal-head">
           <div class="modal-title" data-text="成就列表">成就列表</div>
           <div class="modal-subtitle-wrap">
