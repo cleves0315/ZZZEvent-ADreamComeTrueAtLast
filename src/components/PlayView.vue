@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue"
+import { computed, onMounted, ref, watchEffect } from "vue"
 // @ts-ignore
 import { GameManager, KeyboardInputManager, HTMLActuator, LocalStorageManager } from "../libs/play"
 import { useRouter } from "vue-router"
-import { slideEnter } from "../utils"
+import { ceilToTwo, slideEnter } from "../utils"
 import { gsap } from "gsap"
 import throttle from "lodash/throttle"
 import { useBgm } from "../hooks/useBgm"
@@ -18,6 +18,8 @@ const store = useStore()
 
 const { markGameEnd } = useChatMarked()
 
+useBgm(store.assetList["play_bgm"])
+
 const isOver = ref(false)
 
 const showModal = ref(false)
@@ -25,6 +27,23 @@ const showModal = ref(false)
 const score = ref(0)
 
 const targetScore = ref(20)
+
+const randomMultiplierDefault = [0, 0, 0]
+
+const randomMultiplier = ref(randomMultiplierDefault.slice())
+
+const readyMultiplier = computed(() => {
+  for (let i = 0; i < randomMultiplier.value.length; i++) {
+    if (randomMultiplier.value[i] <= 0) {
+      return false
+    }
+  }
+  return true
+})
+
+const isMultiplierEnabled = ref(false)
+
+const multedScore = ref(0)
 
 const percent = computed(() => {
   const num = Math.ceil((score.value / targetScore.value) * 100)
@@ -49,6 +68,16 @@ const isFinish = computed((prev) => {
   return res
 })
 
+// toggleBlockLight
+watchEffect(() => {
+  const cls = ".block-light"
+  if (isMultiplierEnabled.value) {
+    gsap.to(cls, { opacity: 1, duration: 0.5 })
+  } else {
+    gsap.to(cls, { opacity: 0, duration: 0.5 })
+  }
+})
+
 const handleGameOver = () => {
   isOver.value = true
   toggleModalState()
@@ -58,7 +87,37 @@ const handleUpdateScore = (e: any) => {
   score.value = parseFloat(e.detail.score)
 }
 
-useBgm(store.assetList["play_bgm"])
+const handleGenRandomMultiplier = (e: any) => {
+  // [num] | [num, num] | [num, num, num]
+  const numberList = e.detail.numberList
+
+  let lastIdx = 2
+  let num = numberList.pop()
+
+  while (!!num) {
+    randomMultiplier.value[lastIdx] = num
+
+    num = numberList.pop()
+    lastIdx--
+  }
+}
+
+const handleEnableMultiplier = () => {
+  isMultiplierEnabled.value = true
+}
+
+const handlePopupMultedScore = async (e: any) => {
+  multedScore.value = e.detail.multedScore || 0
+  const cls = ".popup-multiplier"
+
+  isMultiplierEnabled.value = false
+  randomMultiplier.value = randomMultiplierDefault.slice()
+
+  gsap.set(cls, { transform: "scale(0)" })
+  await gsap.to(cls, { opacity: 1, transform: "scale(1.1)", duration: 0.2 })
+  await gsap.to(cls, { opacity: 1, transform: "scale(1)", duration: 0.03 })
+  await gsap.to(cls, { opacity: 0, transform: "translateY(-50%)", duration: 0.5, delay: 1 })
+}
 
 const toggleModalState = throttle(
   async () => {
@@ -84,6 +143,18 @@ onMounted(() => {
     const gameManager = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager)
     window.addEventListener("ganmeOver", throttle(handleGameOver, 1000, { trailing: false }))
     gameManager.actuator.scoreContainer?.addEventListener("updateScore", handleUpdateScore)
+    gameManager.actuator.scoreContainer?.addEventListener(
+      "genRandomMultiplier",
+      handleGenRandomMultiplier,
+    )
+    gameManager.actuator.scoreContainer?.addEventListener(
+      "enableMultiplier",
+      handleEnableMultiplier,
+    )
+    gameManager.actuator.scoreContainer?.addEventListener(
+      "popupMultedScore",
+      handlePopupMultedScore,
+    )
   })
 })
 
@@ -101,7 +172,6 @@ const onBack = async () => {
 
 <template>
   <svg
-    data-v-49463ad2=""
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -115,7 +185,6 @@ const onBack = async () => {
     </defs>
   </svg>
   <svg
-    data-v-49463ad2=""
     version="1.1"
     xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -139,16 +208,68 @@ const onBack = async () => {
       <div class="play-view-suc-tips-text">目标达成可随时结算</div>
     </div>
 
+    <div class="lighting-effects-wrap" v-show="readyMultiplier">
+      <DynamicBg
+        v-for="item in 3"
+        :key="item"
+        name="lighting_effect_a"
+        class="lighting-effects-a"
+      />
+      <DynamicBg name="lighting_effects_b" class="lighting-effects-b" />
+    </div>
+
     <DynamicBg class="play-view-random-number-wrap" name="random_number">
-      <DynamicBg name="play_random_num" class="play-view-random-number" data-num="1"></DynamicBg>
-      <DynamicBg name="play_random_num" class="play-view-random-number"></DynamicBg>
-      <DynamicBg name="play_random_num" class="play-view-random-number"></DynamicBg>
+      <DynamicBg
+        v-for="item in randomMultiplier"
+        name="play_random_num"
+        class="play-view-random-number v-random-number"
+        :data-num="item"
+      ></DynamicBg>
     </DynamicBg>
+    <div class="enable-button-wrap">
+      <DynamicBg
+        name="btn_s_1"
+        class="enable-multiplier-button"
+        :data-disabled="!readyMultiplier || isMultiplierEnabled"
+      ></DynamicBg>
+      <DynamicBg
+        v-if="readyMultiplier && !isMultiplierEnabled"
+        name="btn_light"
+        class="enable-multiplier-button-light"
+      ></DynamicBg>
+    </div>
     <div class="cover-box"></div>
     <DynamicBg class="right-bottom" name="blk_di_3"></DynamicBg>
 
     <DynamicBg name="play_bot_1" class="play-bot-avatar"></DynamicBg>
     <DynamicBg class="play-container" name="play_form">
+      <DynamicBg name="block_light" class="block-light"></DynamicBg>
+      <div class="popup-multiplier">
+        <div
+          class="multed-icon-add"
+          :style="[
+            {
+              transform: `translateX(${ceilToTwo((-1 - Math.floor(String(multedScore).length / 2)) * 0.92 + 1.6) + 'rem'})`,
+            },
+          ]"
+        ></div>
+        <DynamicBg
+          v-for="(item, idx) in String(multedScore)"
+          :key="idx"
+          name="play_random_num"
+          class="multed-num v-random-number"
+          :data-num="item"
+          :data-index="idx"
+          :style="[
+            {
+              transform:
+                `scaleY(${item === '0' ? '1' : '0.8'})` +
+                ` translateX(${ceilToTwo((idx - Math.floor(String(multedScore).length / 2)) * 0.92 + 1.6) + 'rem'})`,
+            },
+          ]"
+        ></DynamicBg>
+      </div>
+
       <div class="heading">
         <div class="scores-container">
           <div class="score-label" data-text="当前电费">当前电费</div>
@@ -268,6 +389,42 @@ const onBack = async () => {
   background-repeat: no-repeat;
   // background-image: url(../assets/bg2.jpg);
 }
+.v-random-number {
+  width: 0.9rem;
+  height: 1.7rem;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-position: 0 -0.5rem;
+  transform: scaleY(0.88);
+
+  &[data-num="1"] {
+    background-position: 0rem -5.7rem;
+  }
+  &[data-num="2"] {
+    background-position: 0rem -8.3rem;
+  }
+  &[data-num="3"] {
+    background-position: 0rem -10.9rem;
+  }
+  &[data-num="4"] {
+    background-position: 0rem -13.46rem;
+  }
+  &[data-num="5"] {
+    background-position: 0rem -16.15rem;
+  }
+  &[data-num="6"] {
+    background-position: 0rem -18.78rem;
+  }
+  &[data-num="7"] {
+    background-position: 0rem -21.4rem;
+  }
+  &[data-num="8"] {
+    background-position: 0rem -24.04rem;
+  }
+  &[data-num="9"] {
+    background-position: 0rem -26.65rem;
+  }
+}
 .qq-block-bottom {
   position: absolute;
   bottom: 0;
@@ -324,6 +481,61 @@ const onBack = async () => {
     left: 0.85rem;
   }
 }
+
+.lighting-effects-wrap {
+  @keyframes liveLightB {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+  @keyframes liveLightA {
+    0% {
+      opacity: 1;
+      transform: rotate(90deg) scale(1.2);
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(90deg) scale(0.5);
+    }
+  }
+  .lighting-effects-a {
+    position: absolute;
+    top: 2.1rem;
+    right: 5rem;
+    width: 3rem;
+    height: 6rem;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    // -1rem -0.5rem
+    background-position: -5rem 0;
+    z-index: 9;
+    transform: rotate(90deg) scale(1);
+    animation: liveLightA 0.5s linear forwards;
+
+    &:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    &:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+  }
+
+  .lighting-effects-b {
+    position: absolute;
+    top: 1.5rem;
+    right: 2.5rem;
+    width: 8.5rem;
+    height: 8rem;
+    opacity: 0.4;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    animation: liveLightB 5s linear infinite;
+  }
+}
+
 .play-view-random-number-wrap {
   position: absolute;
   top: 4.12rem;
@@ -335,14 +547,7 @@ const onBack = async () => {
 
   .play-view-random-number {
     position: absolute;
-    width: 0.9rem;
-    height: 1.7rem;
     top: 0.3rem;
-    background-size: 100% auto;
-    background-repeat: no-repeat;
-    background-position: 0 -0.5rem;
-    transform: scaleY(0.88);
-
     &:nth-child(1) {
       left: 0.3rem;
     }
@@ -351,33 +556,6 @@ const onBack = async () => {
     }
     &:nth-child(3) {
       left: 3.1rem;
-    }
-    &[data-num="1"] {
-      background-position: 0rem -5.7rem;
-    }
-    &[data-num="2"] {
-      background-position: 0rem -8.3rem;
-    }
-    &[data-num="3"] {
-      background-position: 0rem -10.9rem;
-    }
-    &[data-num="4"] {
-      background-position: 0rem -13.56rem;
-    }
-    &[data-num="5"] {
-      background-position: 0rem -16.15rem;
-    }
-    &[data-num="6"] {
-      background-position: 0rem -18.8rem;
-    }
-    &[data-num="7"] {
-      background-position: 0rem -21.4rem;
-    }
-    &[data-num="8"] {
-      background-position: 0rem -24.04rem;
-    }
-    &[data-num="9"] {
-      background-position: 0rem -26.65rem;
     }
   }
 }
@@ -408,6 +586,48 @@ const onBack = async () => {
   z-index: 1;
   background-repeat: no-repeat;
   background-size: 100% auto;
+
+  .block-light {
+    opacity: 0;
+    position: absolute;
+    top: 2.5rem;
+    left: 1rem;
+    width: 8.33rem;
+    height: 8.1rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+  }
+}
+.popup-multiplier {
+  opacity: 0;
+  position: absolute;
+  top: 4.2rem;
+  // left: 1.6rem;
+  width: 8.63rem;
+  height: 1.7rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.02rem;
+  z-index: 5;
+  pointer-events: none;
+}
+.multed-icon-add {
+  position: absolute;
+  width: 0.9rem;
+  height: 0.9rem;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-image: url(data:image/png;base64,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);
+}
+.multed-num {
+  position: absolute;
+
+  &[data-num="0"] {
+    background-position: 0;
+    transform: scaleY(1.1);
+    background-image: url(data:image/png;base64,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) !important;
+  }
 }
 .play-bot-avatar {
   position: absolute;
@@ -441,7 +661,7 @@ const onBack = async () => {
   font-size: 0.46rem;
   top: 1.45rem;
   right: 0.9rem;
-  width: 2rem;
+  width: 3rem;
   text-align: right;
 
   .score-addition {
@@ -720,6 +940,51 @@ const onBack = async () => {
         transform: translateX(-50%);
       }
     }
+  }
+}
+
+.enable-button-wrap {
+  position: absolute;
+  top: 7rem;
+  right: 3.2rem;
+  width: 2.4rem;
+  height: 2.5rem;
+
+  .enable-multiplier-button {
+    position: absolute;
+    width: 2.4rem;
+    height: 2.5rem;
+    cursor: pointer;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    z-index: 1;
+
+    &[data-disabled="true"] {
+      filter: brightness(0.6) contrast(0.8);
+    }
+  }
+
+  @keyframes live {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.3);
+    }
+    70% {
+      transform: scale(1.3);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  .enable-multiplier-button-light {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    animation: live 1.5s linear infinite;
   }
 }
 </style>
