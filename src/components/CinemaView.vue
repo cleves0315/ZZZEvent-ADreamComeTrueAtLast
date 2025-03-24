@@ -75,7 +75,7 @@ const handleMute = () => {
 }
 
 const handleJump = () => {
-  handleTipsMsg("第二天")
+  chatEndCallback()
 }
 
 const curItem = computed(() => lists.value[lineIndex.value] || {})
