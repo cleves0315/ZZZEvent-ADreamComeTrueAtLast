@@ -44,7 +44,9 @@ watchEffect(async () => {
   <div class="v-view-modal" :data-name="randomStr" :style="{ zIndex: index }">
     <div class="view-modal-mask"></div>
     <div class="view-modal-body">
-      <slot></slot>
+      <template v-if="visible">
+        <slot></slot>
+      </template>
     </div>
   </div>
 </template>

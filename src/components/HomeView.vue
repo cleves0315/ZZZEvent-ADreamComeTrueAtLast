@@ -80,6 +80,8 @@ const [visBook, { toggle: toggleBook }] = useBoolean(false)
 
 const [visAchv, { toggle: toggleAchv }] = useBoolean(false)
 
+const [visGiftAlert, { toggle: toggleGiftAlert }] = useBoolean(false)
+
 const curDialogIndex = ref(0)
 
 const showScreenMask = ref(false)
@@ -326,6 +328,16 @@ const toPlay = async () => {
 const handleBook = async () => {
   toggleBook()
 }
+
+const handleClaimAll = async () => {
+  markAchv(chatsMarked.value[0].user)
+  toggleGiftAlert()
+}
+
+const handleClaim = (index: number) => {
+  markAchv(chatsMarked.value[index].user)
+  toggleGiftAlert()
+}
 </script>
 
 <template>
@@ -508,7 +520,7 @@ const handleBook = async () => {
           <div class="alert-text">2、敬请期待</div>
         </div>
         <div class="alert-footer">
-          <div class="alert-btn" @click="toggleAlert">
+          <div class="alert-btn" @click.once="toggleAlert">
             <span class="alert-btn-text" data-text="确认">确认</span>
           </div>
         </div>
@@ -536,7 +548,7 @@ const handleBook = async () => {
           <div class="book-modal-btn">
             <span class="book-modal-btn-text" data-text="查看协议">查看协议</span>
           </div>
-          <div class="book-modal-btn" @click="toggleBook">
+          <div class="book-modal-btn" @click.once="toggleBook">
             <span class="book-modal-btn-text" data-text="确认">确认</span>
           </div>
         </div>
@@ -546,7 +558,7 @@ const handleBook = async () => {
     <ViewModal :visible="visAchv">
       <!-- Achievement -->
       <DynamicBg class="home-modal-wrap home-modal-achv" name="modal_bg_2">
-        <DynamicBg class="modal-achv-close" name="btn_close" @click="toggleAchv"></DynamicBg>
+        <DynamicBg class="modal-achv-close" name="btn_close" @click.once="toggleAchv"></DynamicBg>
         <div class="modal-head">
           <div class="modal-title" data-text="成就列表">成就列表</div>
           <div class="modal-subtitle-wrap">
@@ -558,7 +570,7 @@ const handleBook = async () => {
           <div
             class="modal-head-btn dc-button"
             :data-disabled="fisdGameCount > achvCount && fisdGameCount <= 1 ? false : true"
-            @click="markAchv(chatsMarked[0].user)"
+            @click.once="handleClaimAll"
           >
             <span v-if="fisdGameCount >= 1 && !chatsMarked[0]?.achv" class="warn-icon"></span>
             <div class="modal-head-btn-txt">全部领取</div>
@@ -598,7 +610,7 @@ const handleBook = async () => {
               <div
                 class="modal-row-btn dc-button"
                 :data-disabled="fisdGameCount < item"
-                @click="markAchv(chatsMarked[idx].user)"
+                @click.once="handleClaim(idx)"
               >
                 <span
                   v-if="fisdGameCount >= item && !chatsMarked[idx]?.achv"
@@ -611,6 +623,22 @@ const handleBook = async () => {
             </div>
           </div>
           <div class="modal-scrollbar-track"></div>
+        </div>
+      </DynamicBg>
+    </ViewModal>
+
+    <ViewModal :visible="visGiftAlert">
+      <DynamicBg class="home-modal-wrap modal-alert" name="alert_bg_1">
+        <div class="alert-title" data-text="领取成功">领取成功</div>
+        <div class="alert-content">
+          <div class="alert-text" style="text-align: center">
+            活动奖励将于15分钟内通过游戏内部邮箱发放(假的)
+          </div>
+        </div>
+        <div class="alert-footer">
+          <div class="alert-btn" @click.once="toggleGiftAlert">
+            <span class="alert-btn-text" data-text="确认">确认</span>
+          </div>
         </div>
       </DynamicBg>
     </ViewModal>
@@ -1397,7 +1425,7 @@ const handleBook = async () => {
 
     .alert-text {
       position: relative;
-      font-size: 0.31rem;
+      font-size: 0.3rem;
       color: #ece5fe;
 
       &::after {
