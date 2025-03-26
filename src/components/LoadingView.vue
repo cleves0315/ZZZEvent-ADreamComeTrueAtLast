@@ -4,12 +4,12 @@ import gsap from "gsap"
 import { preloadResources, slideEnter } from "../utils"
 import { useRouter } from "vue-router"
 import { CinemaUserEnum } from "../router"
+import assetsList from "../assets-list.json"
 
-import loading_ic_0 from "../assets/loading_ic_0.png"
-import loading_ic_1 from "../assets/loading_ic_1.png"
 import { useStore } from "../stores"
 import { useChatMarked } from "../hooks/useChatMark"
 import isNumber from "lodash/isNumber"
+import DynamicBg from "./DynamicBg.vue"
 
 const store = useStore()
 
@@ -32,7 +32,7 @@ const animate = async () => {
   gsap.set(`.icon-${index}`, {
     backgroundSize: "auto 100%",
     backgroundPosition: `-${index - 1}rem 0`,
-    backgroundImage: `url(${icIndex === 0 ? loading_ic_0 : loading_ic_1})`,
+    backgroundImage: `url(${icIndex === 0 ? store.assetList["loading_ic_0"] : store.assetList["loading_ic_1"]})`,
   })
   await gsap.to(`.icon-${index}`, {
     transform: "scaleX(1.4)",
@@ -75,7 +75,7 @@ const preloadResEnd = async () => {
 
 onMounted(async () => {
   animate()
-  const obj = await preloadResources()
+  const obj = await preloadResources(assetsList)
   store.setAssetList(obj)
   preloadResEnd()
 })
@@ -88,10 +88,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <div class="loading-view">
-    <div class="fairy">
+  <DynamicBg class="loading-view" name="loading_bg">
+    <DynamicBg class="fairy" name="loading_fairy">
       <div class="fairy-eye"></div>
-    </div>
+    </DynamicBg>
     <div class="icon-wrap">
       <div class="icon icon-1"></div>
       <div class="icon icon-2"></div>
@@ -99,7 +99,7 @@ onUnmounted(() => {
       <div class="icon icon-4"></div>
       <div class="icon icon-5"></div>
     </div>
-  </div>
+  </DynamicBg>
 </template>
 
 <style scoped lang="scss">
@@ -111,7 +111,6 @@ onUnmounted(() => {
   bottom: 0;
   background-size: 100% 100%;
   background-repeat: no-repeat;
-  background-image: url(../assets/loading_bg.jpg);
 
   .fairy {
     position: absolute;
@@ -121,7 +120,6 @@ onUnmounted(() => {
     height: 2rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
-    background-image: url(../assets/loading_fairy.png);
   }
 
   @keyframes moveEyes {

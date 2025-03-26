@@ -16,6 +16,8 @@ const route = useRoute()
 
 const resPath = ref()
 
+const posterPath = ref("")
+
 const cls = ref<StyleValue>()
 
 watchEffect(() => {
@@ -23,10 +25,14 @@ watchEffect(() => {
     case "/":
       resPath.value = "/video/main.mp4"
       cls.value = { transform: "scale(1)" }
+
+      posterPath.value = "../assets/default_bg2.jpg"
       break
     case "/home":
       resPath.value = store.assetList["zhuyuan_actor"]
       cls.value = {}
+
+      posterPath.value = store.assetList["loading_bg"]
       break
     case "/play":
       resPath.value = store.assetList["zhuyuan_actor_in_play"]
@@ -47,7 +53,7 @@ watchEffect(() => {
     autoplay
     loop
     muted
-    poster="../assets/default_bg2.jpg"
+    :poster="posterPath"
     playsinline
     webkit-playsinline
     preload="auto"

@@ -78,10 +78,9 @@ export const slideEnter = (): Promise<string> => {
   }
 }
 
-import assetsList from "../assets-list.json"
 import { Assets } from "../assets-list"
 
-export const preloadResources = async () => {
+export const preloadResources = async (assetsList: string[]) => {
   return new Promise<Record<Assets, string>>((resolve) => {
     // @ts-ignore
     const obj: Record<Assets, string> = {}
