@@ -2,13 +2,14 @@
 import { onMounted, onUnmounted, ref } from "vue"
 import gsap from "gsap"
 import { preloadResources, slideEnter } from "../utils"
-import { useFirstVisit } from "../hooks/useFirstVisit"
 import { useRouter } from "vue-router"
 import { CinemaUserEnum } from "../router"
 
 import loading_ic_0 from "../assets/loading_ic_0.png"
 import loading_ic_1 from "../assets/loading_ic_1.png"
 import { useStore } from "../stores"
+import { useChatMarked } from "../hooks/useChatMark"
+import isNumber from "lodash/isNumber"
 
 const store = useStore()
 
@@ -61,11 +62,11 @@ const animateEnd = () => {
 
 const router = useRouter()
 
-const { isFirstVisit } = useFirstVisit()
+const { chatsMarked } = useChatMarked()
 
 const preloadResEnd = async () => {
   await slideEnter()
-  if (isFirstVisit.value) {
+  if (isNumber(chatsMarked.value[0].plot) && chatsMarked.value[0].plot !== 0) {
     router.replace("/home")
   } else {
     router.replace({ path: `/cinema/${CinemaUserEnum.zhuyuan0}` })

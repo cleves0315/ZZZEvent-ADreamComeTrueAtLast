@@ -16,7 +16,11 @@ const router = useRouter()
 
 const store = useStore()
 
-const { markGameEnd } = useChatMarked()
+const { markGameEnd, chatsMarked } = useChatMarked()
+
+const userDialogIdx = 0
+
+const curChatMarked = computed(() => chatsMarked.value[userDialogIdx])
 
 useBgm(store.assetList["play_bgm"])
 
@@ -161,8 +165,7 @@ onMounted(() => {
 const onBack = async () => {
   toggleModalState()
   await slideEnter()
-  if (isFinish.value) {
-    // TODO
+  if (isFinish.value && curChatMarked.value.plot !== 2) {
     router.replace({ path: `/cinema/${CinemaUserEnum.zhuyuan1}` })
   } else {
     router.replace("/home")

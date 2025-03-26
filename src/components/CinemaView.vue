@@ -7,10 +7,14 @@ import { useMusicMute } from "../hooks/useMusicMute"
 import { gsap } from "gsap"
 import { useRouter } from "vue-router"
 import { slideEnter } from "../utils"
-import { useFirstVisit } from "../hooks/useFirstVisit"
 import { CinemaUserEnum } from "../router"
 import { Assets } from "../assets-list"
 import { useStore } from "../stores"
+import { useChatMarked } from "../hooks/useChatMark"
+
+interface Props {
+  user: CinemaUserEnum
+}
 
 interface ChatRoomItem {
   user: string
@@ -34,11 +38,9 @@ const store = useStore()
 
 const router = useRouter()
 
-const { user } = defineProps({
-  user: String,
-})
+const { user } = defineProps<Props>()
 
-const { markVisit } = useFirstVisit()
+const { markPlot } = useChatMarked()
 
 const { isMute, toggleMute } = useMusicMute()
 
@@ -195,8 +197,22 @@ const handleTipsNext = async () => {
   tipsCont.value = ""
 }
 
+const markChatEnd = () => {
+  switch (user) {
+    case CinemaUserEnum.zhuyuan0:
+      markPlot("zhuyuan", 1)
+      break
+    case CinemaUserEnum.zhuyuan1:
+      markPlot("zhuyuan", 2)
+      break
+
+    default:
+      break
+  }
+}
+
 const chatEndCallback = async () => {
-  markVisit()
+  markChatEnd()
   await slideEnter()
   router.replace("/home")
 }
