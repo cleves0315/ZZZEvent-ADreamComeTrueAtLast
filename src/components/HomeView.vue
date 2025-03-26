@@ -152,7 +152,13 @@ const initChatList = () => {
       for (let i = 0; i < chatFirstIndex; i++) {
         setTimeout(
           () => {
-            curChatList.value.push(chats[i])
+            const newChat = chats[i]
+            if (newChat.reply?.length) {
+              handleReplyChat()
+            } else {
+              curChatList.value.push(newChat)
+            }
+
             if (i === chatFirstIndex - 1) {
               requestAnimationFrame(() => {
                 initing.value = false
@@ -257,6 +263,20 @@ const handleClickDialog = () => {
   toggleAlert()
 }
 
+const handleReplyChat = () => {
+  const newChat = chats[curChatList.value.length]
+  curReplys.value = newChat.reply as string[]
+
+  toggleReply()
+
+  const h = document.querySelector(".chat-list-inner")?.scrollHeight || 0
+  const h2 = document.querySelector(".chat-operate-bg")?.clientHeight || 0
+  gsap.set(".chat-list-inner", { minHeight: h + h2 + "px" })
+  chatListScrollToBottom()
+
+  return
+}
+
 const handleNextChat = throttle(
   () => {
     if (initing.value) return
@@ -265,15 +285,7 @@ const handleNextChat = throttle(
 
     const newChat = chats[curChatList.value.length]
     if (newChat.reply?.length) {
-      curReplys.value = newChat.reply as string[]
-
-      toggleReply()
-
-      const h = document.querySelector(".chat-list-inner")?.scrollHeight || 0
-      const h2 = document.querySelector(".chat-operate-bg")?.clientHeight || 0
-      gsap.set(".chat-list-inner", { minHeight: h + h2 + "px" })
-      chatListScrollToBottom()
-
+      handleReplyChat()
       return
     }
 
@@ -1363,7 +1375,6 @@ const handleClaim = (index: number) => {
   right: 0;
   bottom: 0;
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.7);
 
   .mask {
     position: absolute;
@@ -1371,7 +1382,7 @@ const handleClaim = (index: number) => {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.7);
   }
 }
 
