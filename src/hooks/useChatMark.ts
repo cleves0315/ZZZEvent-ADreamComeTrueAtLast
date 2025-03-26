@@ -4,7 +4,7 @@ import { getStorage, setStorage, StorageKey } from "../utils/storage"
 export type ChatMarkAction = { index: number; opIndex: number }
 
 export interface ChatMark {
-  user: string
+  user: "zhuyuan"
   chatEnd: boolean
   actions: ChatMarkAction[]
   game: {
