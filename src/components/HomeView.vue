@@ -21,6 +21,12 @@ import zhuyuanAvatar from "../assets/zhuyuan_task.png"
 import DynamicBg from "./DynamicBg.vue"
 import { useStore } from "../stores"
 import { useBoolean } from "../hooks/useBoolean"
+import {
+  botChatAvatarBase64,
+  lingChatAvatarBase64,
+  zheChatAvatarBase64,
+  zyChatAvatarBase64,
+} from "../contants"
 
 const dialogList = ref([
   { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: zhuyuanAvatar },
@@ -131,6 +137,25 @@ const curDialogOpRecords = computed(() => {
   })
   return acc
 })
+
+const renderAvatar = (user: string) => {
+  switch (user) {
+    case "zhuyuan":
+      return zyChatAvatarBase64
+
+    case "ling":
+      return lingChatAvatarBase64
+
+    case "bot":
+      return botChatAvatarBase64
+
+    case "zhe":
+      return zheChatAvatarBase64
+
+    default:
+      return ""
+  }
+}
 
 const markOpRecords = (action: ChatMarkAction) => {
   opRecords.value.push(action)
@@ -439,7 +464,10 @@ const handleClaim = (index: number) => {
               :key="idx"
             >
               <div class="chat-avatar-wrap" :class="item.user === 'bot' && 'chat-avatar-bot'">
-                <div class="chat-avatar" :style="{ backgroundImage: `url(${item.avatar})` }"></div>
+                <div
+                  class="chat-avatar"
+                  :style="{ backgroundImage: `url(${renderAvatar(item.user)})` }"
+                ></div>
               </div>
               <div class="chat-content">
                 <div class="chat-txt" :data-text="item.content">
