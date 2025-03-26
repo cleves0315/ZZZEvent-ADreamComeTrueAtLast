@@ -1856,7 +1856,7 @@ const handleClaim = (index: number) => {
     position: absolute;
     top: 0.22rem;
     bottom: 0.22rem;
-    right: -0.08rem;
+    right: -0.07rem;
     width: 0.29rem;
     border: 0.05rem solid #a89bcf;
     border-radius: 999rem;
