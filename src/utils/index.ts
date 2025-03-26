@@ -131,3 +131,76 @@ export const preloadResources = async () => {
     })
   })
 }
+
+export const copyToClipboard = (
+  text: string,
+  options?: { successMessage: string; errorMessage: string },
+) => {
+  const { successMessage = "已复制到剪贴板", errorMessage = "复制失败，请手动复制" } = options || {}
+
+  return new Promise((resolve) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => {
+          if (successMessage !== null) {
+            alert(successMessage)
+          }
+          resolve(true)
+        })
+        .catch((err) => {
+          console.error("Clipboard API 复制失败:", err)
+          if (fallbackCopy(text)) {
+            resolve(true)
+          } else {
+            if (errorMessage !== null) {
+              alert(errorMessage)
+            }
+            resolve(false)
+          }
+        })
+    } else {
+      if (fallbackCopy(text)) {
+        if (successMessage !== null) {
+          alert(successMessage)
+        }
+        resolve(true)
+      } else {
+        if (errorMessage !== null) {
+          alert(errorMessage)
+        }
+        resolve(false)
+      }
+    }
+  })
+
+  function fallbackCopy(text: string) {
+    try {
+      const textarea = document.createElement("textarea")
+      textarea.value = text
+      textarea.style.position = "fixed"
+      textarea.style.opacity = "0"
+      document.body.appendChild(textarea)
+      textarea.select()
+
+      if (navigator.userAgent.match(/ipad|iphone|android/i)) {
+        // @ts-ignore
+        textarea.contentEditable = true
+        textarea.readOnly = true
+        const range = document.createRange()
+        range.selectNodeContents(textarea)
+        const selection = window.getSelection()
+        selection?.removeAllRanges()
+        selection?.addRange(range)
+        textarea.setSelectionRange(0, 999999)
+      }
+
+      const successful = document.execCommand("copy")
+      document.body.removeChild(textarea)
+      return successful
+    } catch (err) {
+      console.error("传统复制方法失败:", err)
+      return false
+    }
+  }
+}

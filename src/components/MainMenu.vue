@@ -1,7 +1,16 @@
 <script setup lang="ts">
 import { useRouter } from "vue-router"
 
+import { useBoolean } from "../hooks/useBoolean"
+import ShareModal from "./ShareModal.vue"
+
 const router = useRouter()
+
+const [visShare, { toggle: toggleShare }] = useBoolean()
+
+const handleShare = () => {
+  toggleShare()
+}
 
 const onStart = async () => {
   // await slideEnter()
@@ -26,7 +35,7 @@ const onStart = async () => {
   </svg>
 
   <div class="main-view">
-    <div class="main-share"></div>
+    <div class="main-share" @click="handleShare"></div>
     <div class="main-title"></div>
     <div class="main-subtitle">
       约定的聚餐近在眼前，突发全员爽约危机！ 好消息，您只需付出一点点额外电费，即可消除烦恼。
@@ -49,6 +58,8 @@ const onStart = async () => {
     <div class="main-btns">
       <div class="main-btn-start" @click="onStart">启动游戏</div>
     </div>
+
+    <ShareModal :visible="visShare" @click-by-mask="toggleShare" />
   </div>
 </template>
 

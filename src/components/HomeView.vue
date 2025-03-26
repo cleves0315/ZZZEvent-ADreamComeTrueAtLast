@@ -27,6 +27,7 @@ import {
   zheChatAvatarBase64,
   zyChatAvatarBase64,
 } from "../contants"
+import ShareModal from "./ShareModal.vue"
 
 const dialogList = ref([
   { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: zhuyuanAvatar },
@@ -87,6 +88,8 @@ const [visBook, { toggle: toggleBook }] = useBoolean(false)
 const [visAchv, { toggle: toggleAchv }] = useBoolean(false)
 
 const [visGiftAlert, { toggle: toggleGiftAlert }] = useBoolean(false)
+
+const [visShare, { toggle: toggleShare }] = useBoolean()
 
 const curDialogIndex = ref(0)
 
@@ -542,7 +545,7 @@ const handleClaim = (index: number) => {
         @click="handleChangeMuteState"
       ></div>
       <div class="operate-item" @click="handleBook"></div>
-      <div class="operate-item"></div>
+      <div class="operate-item" @click="toggleShare"></div>
     </div>
 
     <DynamicBg class="task-btn" name="task_btn" @click="toggleAchv"></DynamicBg>
@@ -682,6 +685,8 @@ const handleClaim = (index: number) => {
         </div>
       </DynamicBg>
     </ViewModal>
+
+    <ShareModal :visible="visShare" @click-by-mask="toggleShare" />
   </div>
 </template>
 

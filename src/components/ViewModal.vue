@@ -12,6 +12,8 @@ const index = useZIndex()
 
 const { visible } = defineProps<Props>()
 
+const emits = defineEmits(["clickByMask"])
+
 const randomStr = generateRandomString()
 
 const mounted = ref(false)
@@ -38,11 +40,15 @@ watchEffect(async () => {
     gsap.set(cls, { display: "none" })
   }
 })
+
+const handleClickMask = () => {
+  emits("clickByMask")
+}
 </script>
 
 <template>
   <div class="v-view-modal" :data-name="randomStr" :style="{ zIndex: index }">
-    <div class="view-modal-mask"></div>
+    <div class="view-modal-mask" @click="handleClickMask"></div>
     <div class="view-modal-body">
       <template v-if="visible">
         <slot></slot>
