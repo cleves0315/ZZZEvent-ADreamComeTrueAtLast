@@ -30,7 +30,7 @@ const showModal = ref(false)
 
 const score = ref(0)
 
-const targetScore = ref(20)
+const targetScore = ref(20000)
 
 const randomMultiplierDefault = [0, 0, 0]
 
