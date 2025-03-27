@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CSSProperties, defineProps, ref, StyleValue, watchEffect } from "vue"
+import { CSSProperties, ref, StyleValue, watchEffect } from "vue"
 import { useRoute } from "vue-router"
 import { useStore } from "../stores"
 
