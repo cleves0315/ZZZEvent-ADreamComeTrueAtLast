@@ -88,10 +88,10 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <DynamicBg class="loading-view" name="loading_bg">
-    <DynamicBg class="fairy" name="loading_fairy">
+  <div class="loading-view" name="loading_bg">
+    <div class="fairy" name="loading_fairy">
       <div class="fairy-eye"></div>
-    </DynamicBg>
+    </div>
     <div class="icon-wrap">
       <div class="icon icon-1"></div>
       <div class="icon icon-2"></div>
@@ -99,7 +99,7 @@ onUnmounted(() => {
       <div class="icon icon-4"></div>
       <div class="icon icon-5"></div>
     </div>
-  </DynamicBg>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -111,6 +111,7 @@ onUnmounted(() => {
   bottom: 0;
   background-size: 100% 100%;
   background-repeat: no-repeat;
+  background-image: url(../assets/loading_bg.jpg);
 
   .fairy {
     position: absolute;
@@ -120,6 +121,7 @@ onUnmounted(() => {
     height: 2rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
+    background-image: url(../assets/loading_fairy.png);
   }
 
   @keyframes moveEyes {
