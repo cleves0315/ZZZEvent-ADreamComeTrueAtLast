@@ -6,10 +6,12 @@ import { useRouter } from "vue-router"
 import { CinemaUserEnum } from "../router"
 import assetsList from "../assets-list.json"
 
+import loading_ic_0 from "../assets/loading_ic_0.png"
+import loading_ic_1 from "../assets/loading_ic_1.png"
+
 import { useStore } from "../stores"
 import { useChatMarked } from "../hooks/useChatMark"
 import isNumber from "lodash/isNumber"
-import DynamicBg from "./DynamicBg.vue"
 
 const store = useStore()
 
@@ -32,7 +34,7 @@ const animate = async () => {
   gsap.set(`.icon-${index}`, {
     backgroundSize: "auto 100%",
     backgroundPosition: `-${index - 1}rem 0`,
-    backgroundImage: `url(${icIndex === 0 ? store.assetList["loading_ic_0"] : store.assetList["loading_ic_1"]})`,
+    backgroundImage: `url(${icIndex === 0 ? loading_ic_0 : loading_ic_1})`,
   })
   await gsap.to(`.icon-${index}`, {
     transform: "scaleX(1.4)",

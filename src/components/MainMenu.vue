@@ -3,8 +3,8 @@ import { useRouter } from "vue-router"
 
 import { useBoolean } from "../hooks/useBoolean"
 import ShareModal from "./ShareModal.vue"
-import { computed, onMounted } from "vue"
-import { preloadResources, slideEnter } from "../utils"
+import { computed } from "vue"
+import { slideEnter } from "../utils"
 import { useStore } from "../stores"
 
 const router = useRouter()
@@ -15,26 +15,27 @@ const store = useStore()
 
 const asstLength = computed(() => Object.keys(store.assetList).length)
 
-const loadingAssets = [
-  "loading_bg.jpg",
-  "loading_fairy.png",
-  "loading_ic_0.png",
-  "loading_ic_1.png",
-]
+// const loadingAssets = [
+//   "loading_bg.jpg",
+//   "loading_fairy.png",
+//   "loading_ic_0.png",
+//   "loading_ic_1.png",
+// ]
 
-onMounted(async () => {
-  if (!asstLength) {
-    const obj = await preloadResources(loadingAssets)
-    store.setAssetList(obj)
-  }
-})
+// onMounted(async () => {
+//   if (!asstLength) {
+//     const obj = await preloadResources(loadingAssets)
+//     store.setAssetList(obj)
+//   }
+// })
 
 const handleShare = () => {
   toggleShare()
 }
 
 const onStart = async () => {
-  if (asstLength.value > loadingAssets.length) {
+  // if (asstLength.value > loadingAssets.length) {
+  if (asstLength.value > 0) {
     await slideEnter()
     router.push("/home")
   } else {
