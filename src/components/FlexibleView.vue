@@ -127,7 +127,7 @@ onMounted(() => {
 }
 .route-slide-wrapper {
   position: absolute;
-  z-index: 9;
+  z-index: 999;
   top: 50%;
   left: 50%;
   overflow: hidden;

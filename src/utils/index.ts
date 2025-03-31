@@ -1,5 +1,11 @@
 import { gsap } from "gsap"
 
+export const isMobile = () => {
+  const userAgent = navigator.userAgent
+  const reg = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+  return reg.test(userAgent)
+}
+
 export const ceilToTwo = (num: number, decimal = 2) => {
   const factor = Math.pow(10, decimal)
   const rounded = Math.ceil(num * factor) / factor
@@ -45,7 +51,7 @@ export const slideEnter = (): Promise<string> => {
       width: frameWidth,
       height: frameWidth,
       opacity: 1,
-      zIndex: 99,
+      zIndex: 999,
     })
 
     gsap.set(".route-slide-line-right", { x: frameWidth })
