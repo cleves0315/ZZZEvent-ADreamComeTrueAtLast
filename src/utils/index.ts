@@ -84,7 +84,6 @@ export const preloadResources = async (assetsList: string[]) => {
   return new Promise<Record<Assets, string>>((resolve) => {
     // @ts-ignore
     const obj: Record<Assets, string> = {}
-
     let count = 0
 
     assetsList.forEach(async (asset: string) => {
@@ -92,40 +91,47 @@ export const preloadResources = async (assetsList: string[]) => {
       obj[name] = ""
 
       const getPath = async ({ name, file }: { name: Assets; file: string }) => {
-        let path
-        switch (file) {
-          case "png":
-            path = await import(`../assets/${name}.png`)
-            break
-          case "jpg":
-            path = await import(`../assets/${name}.jpg`)
-            break
-          case "svg":
-            path = await import(`../assets/${name}.svg`)
-            break
-          case "mp3":
-            path = await import(`../assets/${name}.mp3`)
-            break
-          case "mp4":
-            path = await import(`../assets/${name}.mp4`)
-            break
+        let path = { default: "" }
+        try {
+          switch (file) {
+            case "png":
+              path = await import(`../assets/${name}.png`)
+              break
+            case "jpg":
+              path = await import(`../assets/${name}.jpg`)
+              break
+            case "svg":
+              path = await import(`../assets/${name}.svg`)
+              break
+            case "mp3":
+              path = await import(`../assets/${name}.mp3`)
+              break
+            case "mp4":
+              path = await import(`../assets/${name}.mp4`)
+              break
 
-          default:
-            path = await import(`../assets/${name}.png`)
-            break
+            default:
+              path = await import(`../assets/${name}.png`)
+              break
+          }
+        } catch (e) {
+          // console.error(`Error loading asset: ${name}.${file}`, e)
         }
         return path.default
       }
 
       getPath({ name, file }).then((url) => {
-        loadAssetAsBlob(url).then((blobUrl) => {
-          count++
-          obj[name] = blobUrl
+        loadAssetAsBlob(url)
+          .then((blobUrl) => {
+            obj[name] = blobUrl
+          })
+          .finally(() => {
+            count++
 
-          if (count === assetsList.length) {
-            resolve(obj)
-          }
-        })
+            if (count === assetsList.length) {
+              resolve(obj)
+            }
+          })
       })
     })
   })
