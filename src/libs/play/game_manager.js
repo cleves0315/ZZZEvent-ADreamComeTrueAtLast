@@ -227,6 +227,10 @@ GameManager.prototype.move = function (direction) {
 
     this.actuate()
 
+    if (this.actuator.scoreContainer) {
+      this.actuator.scoreContainer.dispatchEvent(new CustomEvent("moved"))
+    }
+
     if (self.isMultiplierEnabled && thisTimeMergedScore > 0) {
       const multiplier = parseInt(this.multiplierList.reduce((acc, cur) => acc * 10 + cur, 0))
       this.curMultedScore = thisTimeMergedScore * multiplier
