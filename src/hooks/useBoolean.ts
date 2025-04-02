@@ -1,4 +1,4 @@
-import { ref } from "vue"
+import { Ref, ref } from "vue"
 
 export const useBoolean = (initialValue = false) => {
   const visible = ref(initialValue)
@@ -12,7 +12,7 @@ export const useBoolean = (initialValue = false) => {
   }
 
   return [visible, { toggle, setValue }] as unknown as [
-    boolean,
+    Ref<boolean, boolean>,
     { toggle: () => void; setValue: (value: boolean) => void },
   ]
 }
