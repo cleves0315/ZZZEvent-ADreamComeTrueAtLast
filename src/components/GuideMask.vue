@@ -11,6 +11,7 @@ import {
   icW64,
   space64,
   icALight64,
+  icStar64,
 } from "../contants"
 import { isMobile } from "../utils"
 
@@ -276,7 +277,7 @@ const handleStart = () => {
 
     <div v-if="position === 'reply'" class="reply-tips tips-popup">
       回复代理人的消息吧
-      <DynamicBg name="star" class="r-icon"></DynamicBg>
+      <div class="r-icon" :style="{ backgroundImage: `url(${icStar64})` }"></div>
     </div>
     <div
       v-else-if="position === 'award'"
@@ -284,7 +285,7 @@ const handleStart = () => {
       :style="{ top: '8.6rem', left: '14.9rem' }"
     >
       有奖励可以领取啦
-      <DynamicBg name="star" class="r-icon"></DynamicBg>
+      <div class="r-icon" :style="{ backgroundImage: `url(${icStar64})` }"></div>
       <div class="play-score-text">点击领取</div>
     </div>
     <template v-else-if="position === 'play'">
