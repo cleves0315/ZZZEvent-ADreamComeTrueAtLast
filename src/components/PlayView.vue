@@ -304,7 +304,7 @@ onMounted(() => {
   window.requestAnimationFrame(function () {
     document.addEventListener("keydown", handleKeydown)
     gameManager.value = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager)
-    console.log("gameManager.value", gameManager.value)
+    // console.log("gameManager.value", gameManager.value)
     window.addEventListener("ganmeOver", handleGameOver)
     gameManager.value.actuator.scoreContainer?.addEventListener("moveBefore", handleMoveBefore)
     gameManager.value.actuator.scoreContainer?.addEventListener("updateScore", handleUpdateScore)
@@ -388,6 +388,8 @@ const onBack = async () => {
   </svg>
 
   <div class="play-view slide-enter-in">
+    <div class="game-control-container"></div>
+
     <div class="qq-block-bottom"></div>
     <div class="right-top" @click="toggleModalState">
       <span class="right-top-txt">结束关卡</span>
@@ -1258,5 +1260,14 @@ const onBack = async () => {
   display: inline-block;
   width: 0.7rem;
   height: auto;
+}
+
+.game-control-container {
+  position: absolute;
+  top: 2rem;
+  left: 3rem;
+  right: 3rem;
+  bottom: 0;
+  z-index: 2;
 }
 </style>
