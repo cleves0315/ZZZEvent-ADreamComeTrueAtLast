@@ -418,11 +418,7 @@ const handleStart = () => {
           {{ tipsText }}
         </div>
       </div>
-      <div
-        class="enable-button-wrap"
-        @click.stop="handleStart"
-        :style="{ pointerEvents: 'initial' }"
-      >
+      <div class="enable-button-wrap" @click.stop="handleStart">
         <DynamicBg
           :data-disabled="true"
           name="btn_s_1"
@@ -431,8 +427,19 @@ const handleStart = () => {
       </div>
     </template>
 
-    <div class="guide-view-1"></div>
-    <div v-if="windowNum > 1" class="guide-view-2"></div>
+    <div
+      class="guide-view-1"
+      :style="
+        position === 'reply' || position === 'award' ? undefined : { pointerEvents: 'initial' }
+      "
+    ></div>
+    <div
+      v-if="windowNum > 1"
+      class="guide-view-2"
+      :style="
+        position === 'reply' || position === 'award' ? undefined : { pointerEvents: 'initial' }
+      "
+    ></div>
   </div>
 </template>
 
