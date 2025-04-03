@@ -723,16 +723,6 @@ const handleClickTask = () => {
   background-repeat: no-repeat;
   // background-image: url(../assets/bg2.jpg);
 }
-// .actor {
-//   position: absolute;
-//   top: 1rem;
-//   right: 5rem;
-//   width: 4rem;
-//   height: 10rem;
-//   background-size: 100% auto;
-//   background-repeat: no-repeat;
-//   background-image: url(../assets/niko.png);
-// }
 .circle-wrap {
   position: absolute;
   top: -0.03rem;
@@ -1424,7 +1414,7 @@ const handleClickTask = () => {
 
 .mask-wrap {
   display: none;
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -1444,8 +1434,8 @@ const handleClickTask = () => {
     position: absolute;
     width: 6.6rem;
     height: 1rem;
-    top: 10.5rem;
-    left: 5.87rem;
+    top: 8.15rem;
+    left: 8.76rem;
     box-shadow: 0 0 0.2rem 0.1rem rgba(255, 255, 255, 0.8);
     border-radius: 0.43rem;
   }

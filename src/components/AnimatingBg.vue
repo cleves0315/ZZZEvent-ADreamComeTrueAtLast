@@ -26,7 +26,7 @@ watchEffect(() => {
       resPath.value = "/video/main.mp4"
       cls.value = { transform: "scale(1)" }
 
-      posterPath.value = "../assets/default_bg2.jpg"
+      posterPath.value = store.assetList["default_bg2"]
       break
     case "/home":
       resPath.value = store.assetList["zhuyuan_actor"]
