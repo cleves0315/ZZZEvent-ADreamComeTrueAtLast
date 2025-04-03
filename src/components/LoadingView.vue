@@ -28,7 +28,6 @@ const animate = async () => {
   gsap.set(`.icon-${index}`, {
     backgroundSize: ".35rem .35rem",
     backgroundPosition: "center center",
-    backgroundImage: `url(${icCircle64})`,
   })
   await gsap.to(`.icon-${index}`, { transform: "scaleX(0)", duration: 0.1 })
   gsap.set(`.icon-${index}`, {
@@ -36,6 +35,7 @@ const animate = async () => {
     backgroundPosition: `-${index - 1}rem 0`,
     backgroundImage: `url(${icIndex === 0 ? loading_ic_0 : loading_ic_1})`,
   })
+
   await gsap.to(`.icon-${index}`, {
     transform: "scaleX(1.4)",
     duration: 0.1,
@@ -95,11 +95,12 @@ onUnmounted(() => {
       <div class="fairy-eye"></div>
     </div>
     <div class="icon-wrap">
-      <div class="icon icon-1"></div>
-      <div class="icon icon-2"></div>
-      <div class="icon icon-3"></div>
-      <div class="icon icon-4"></div>
-      <div class="icon icon-5"></div>
+      <div
+        v-for="item in 4"
+        class="icon"
+        :class="`icon-${item}`"
+        :style="{ backgroundImage: `url(${icCircle64})` }"
+      ></div>
     </div>
   </div>
 </template>
