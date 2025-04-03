@@ -145,7 +145,7 @@ const handleNextGuide = () => {
     toggleGameBlock(true)
     toggleGuide()
     requestAnimationFrame(() => {
-      guideToNext({ block: false })
+      toggleGameBlock(false)
       guideEndCallback()
     })
   }
