@@ -3,6 +3,8 @@ import { CSSProperties, onMounted, ref, StyleValue, watchEffect } from "vue"
 import { useRoute } from "vue-router"
 import { useStore } from "../stores"
 
+import mainMp4 from "/video/main.mp4"
+
 import defaultBg from "../assets/default_bg2.jpg"
 
 const store = useStore()
@@ -27,7 +29,7 @@ const cls = ref<StyleValue>()
 watchEffect(async () => {
   switch (route.path) {
     case "/":
-      resPath.value = "/video/main.mp4"
+      resPath.value = mainMp4
       cls.value = { transform: "scale(1)" }
 
       posterPath.value = defaultBg
