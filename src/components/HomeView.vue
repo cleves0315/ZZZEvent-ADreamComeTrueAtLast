@@ -503,15 +503,18 @@ const handleClickTask = () => {
 
         <div class="chat-operate-bg"></div>
         <div class="chat-operate">
-          <DynamicBg
+          <div
             class="reply-item"
             v-for="(item, idx) in curReplys"
-            :name="idx === 0 ? 'reply_1' : 'reply_2'"
             :key="idx"
             @click.stop="handleReplay(item, idx)"
+            :style="{
+              '--active-bg1': `url(${store.assetList['reply_1']})`,
+              '--active-bg2': `url(${store.assetList['reply_2']})`,
+            }"
           >
             <span class="reply-item-txt" :data-text="item">{{ item }}</span>
-          </DynamicBg>
+          </div>
         </div>
 
         <div class="chat-tips-mask home-view-mask">
@@ -1148,19 +1151,22 @@ const handleClickTask = () => {
     font-size: 0.26rem;
     background-size: 100% auto;
     background-repeat: no-repeat;
+    background-image: var(--active-bg2);
 
-    &:nth-child(1) {
-      top: 0.15rem;
+    &:active {
+      background-image: var(--active-bg1);
+
       .reply-item-txt::after {
         color: #ffd265;
       }
     }
 
+    &:nth-child(1) {
+      top: 0.15rem;
+    }
+
     &:nth-child(2) {
       top: 1rem;
-      .reply-item-txt::after {
-        color: #decfff;
-      }
     }
 
     .reply-item-txt {
@@ -1171,6 +1177,7 @@ const handleClickTask = () => {
         top: 0;
         left: 0;
         z-index: 0;
+        color: #decfff;
         filter: url(#stroke-text-svg-filter-3);
       }
     }
