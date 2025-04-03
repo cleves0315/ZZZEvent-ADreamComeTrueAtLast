@@ -28,6 +28,7 @@ import {
   zyChatAvatarBase64,
 } from "../contants"
 import ShareModal from "./ShareModal.vue"
+import GuideMask, { GuidePosition } from "./GuideMask.vue"
 
 const dialogList = ref([
   { isLock: false, user: "zhuyuan", name: "朱鸢", avatar: zhuyuanAvatar },
@@ -91,6 +92,10 @@ const [visGiftAlert, { toggle: toggleGiftAlert }] = useBoolean(false)
 
 const [visShare, { toggle: toggleShare }] = useBoolean()
 
+const [visGuide, { toggle: toggleGuide, setValue: setGuide }] = useBoolean()
+
+const guidePos = ref<GuidePosition>("reply")
+
 const curDialogIndex = ref(0)
 
 const showScreenMask = ref(false)
@@ -123,7 +128,7 @@ const fisdGameCount = computed(() => {
   return count
 })
 
-const achvCount = computed(() => {
+const achvedCount = computed(() => {
   let count = 0
   chatsMarked.value.forEach((item) => {
     if (item.achv) {
@@ -184,13 +189,15 @@ const initChatList = () => {
             if (newChat.reply?.length) {
               handleReplyChat()
             } else {
+              playMsgSound()
               curChatList.value.push(newChat)
             }
 
             if (i === chatFirstIndex - 1) {
-              requestAnimationFrame(() => {
+              setTimeout(() => {
+                toggleGuide()
                 initing.value = false
-              })
+              }, 500)
             }
           },
           interval * i + 1,
@@ -207,6 +214,13 @@ onMounted(() => {
     volume: 1.0,
   })
   initChatList()
+
+  requestAnimationFrame(() => {
+    if (fisdGameCount.value === 1 && achvedCount.value === 0) {
+      toggleGuide()
+      guidePos.value = "award"
+    }
+  })
 })
 
 const handleChangeMuteState = () => {
@@ -307,7 +321,6 @@ const handleReplyChat = () => {
 
 const handleNextChat = throttle(
   () => {
-    if (initing.value) return
     if (curChatList.value.length >= chats.length) return
     if (showReply.value) return
 
@@ -334,6 +347,7 @@ const handleNextChat = throttle(
 
 const handleReplay = throttle(
   async (msg: string, opIndex: number) => {
+    setGuide(false)
     playMsgSound()
     markOpRecords({ index: curChatList.value.length, opIndex })
 
@@ -377,6 +391,11 @@ const handleClaimAll = async () => {
 const handleClaim = (index: number) => {
   markAchv(chatsMarked.value[index].user)
   toggleGiftAlert()
+}
+
+const handleClickTask = () => {
+  setGuide(false)
+  toggleAchv()
 }
 </script>
 
@@ -424,7 +443,7 @@ const handleClaim = (index: number) => {
     </defs>
   </svg>
 
-  <div class="home-view">
+  <div class="home-view" :style="initing ? { pointerEvents: 'none' } : undefined">
     <div class="circle-wrap">
       <div class="back-btn" @click="handleBack"></div>
     </div>
@@ -548,11 +567,12 @@ const handleClaim = (index: number) => {
       <div class="operate-item" @click="toggleShare"></div>
     </div>
 
-    <DynamicBg class="task-btn" name="task_btn" @click="toggleAchv"></DynamicBg>
+    <DynamicBg class="task-btn" name="task_btn" @click="handleClickTask"></DynamicBg>
     <DynamicBg name="blk_di_3" class="right-bottom"></DynamicBg>
 
     <div class="mask-wrap home-view-mask">
       <div class="mask"></div>
+      <div class="btn-shadow"></div>
     </div>
 
     <ViewModal :visible="visAlert">
@@ -612,7 +632,7 @@ const handleClaim = (index: number) => {
           </div>
           <div
             class="modal-head-btn dc-button"
-            :data-disabled="fisdGameCount > achvCount && fisdGameCount <= 1 ? false : true"
+            :data-disabled="fisdGameCount > achvedCount && fisdGameCount <= 1 ? false : true"
             @click.once="handleClaimAll"
           >
             <span v-if="fisdGameCount >= 1 && !chatsMarked[0]?.achv" class="warn-icon"></span>
@@ -625,7 +645,7 @@ const handleClaim = (index: number) => {
               v-for="(item, idx) in 5"
               :key="item"
               class="modal-row"
-              :style="achvCount >= item ? { display: 'none' } : {}"
+              :style="achvedCount >= item ? { display: 'none' } : {}"
             >
               <div
                 class="modal-row-title dc-text-stroke"
@@ -687,6 +707,8 @@ const handleClaim = (index: number) => {
     </ViewModal>
 
     <ShareModal :visible="visShare" @click-by-mask="toggleShare" />
+
+    <GuideMask :visible="visGuide" :position="guidePos" />
   </div>
 </template>
 
@@ -1416,6 +1438,16 @@ const handleClaim = (index: number) => {
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  .btn-shadow {
+    position: absolute;
+    width: 6.6rem;
+    height: 1rem;
+    top: 10.5rem;
+    left: 5.87rem;
+    box-shadow: 0 0 0.2rem 0.1rem rgba(255, 255, 255, 0.8);
+    border-radius: 0.43rem;
   }
 }
 
