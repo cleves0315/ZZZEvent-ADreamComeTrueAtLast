@@ -54,8 +54,8 @@ watchEffect(() => {
     loop
     muted
     :poster="posterPath"
-    playsinline
     webkit-playsinline
+    playsinline
     preload="auto"
     disable-picture-in-picture="true"
     :style="[{ width: style?.width, height: style?.height }, cls]"
