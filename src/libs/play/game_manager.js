@@ -6,6 +6,7 @@ export function GameManager(size, InputManager, Actuator, StorageManager) {
   this.inputManager = new InputManager()
   this.storageManager = new StorageManager()
   this.actuator = new Actuator()
+  this.isBlockInput = false
 
   this.startTiles = 2
 
@@ -147,7 +148,16 @@ GameManager.prototype.moveTile = function (tile, cell) {
 }
 
 // Move tiles on the grid in the specified direction
-GameManager.prototype.move = function (direction) {
+GameManager.prototype.move = function (dire) {
+  // The screen is rotated 90 degrees, so the direction must be adjusted
+  var direction = window.isFrameRotated ? (dire - 1 < 0 ? 3 : dire - 1) : dire
+
+  if (this.actuator.scoreContainer) {
+    this.actuator.scoreContainer.dispatchEvent(
+      new CustomEvent("moveBefore", { detail: { direction } }),
+    )
+  }
+  if (this.isBlockInput) return
   // 0: up, 1: right, 2: down, 3: left
   var self = this
 
@@ -155,10 +165,7 @@ GameManager.prototype.move = function (direction) {
 
   var cell, tile
 
-  var vector = this.getVector(
-    // The screen is rotated 90 degrees, so the direction must be adjusted
-    window.isFrameRotated ? (direction - 1 < 0 ? 3 : direction - 1) : direction,
-  )
+  var vector = this.getVector(direction)
   var traversals = this.buildTraversals(vector)
   var moved = false
 
@@ -226,10 +233,6 @@ GameManager.prototype.move = function (direction) {
     this.score += thisTimeMergedScore
 
     this.actuate()
-
-    if (this.actuator.scoreContainer) {
-      this.actuator.scoreContainer.dispatchEvent(new CustomEvent("moved"))
-    }
 
     if (self.isMultiplierEnabled && thisTimeMergedScore > 0) {
       const multiplier = parseInt(this.multiplierList.reduce((acc, cur) => acc * 10 + cur, 0))
