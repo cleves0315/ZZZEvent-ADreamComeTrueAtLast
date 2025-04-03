@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watchEffect } from "vue"
+import { computed, onMounted, onUnmounted, ref, watchEffect } from "vue"
 // @ts-ignore
 import { GameManager, KeyboardInputManager, HTMLActuator, LocalStorageManager } from "../libs/play"
 import { useRouter } from "vue-router"
-import { ceilToTwo, slideEnter } from "../utils"
+import { ceilToTwo, isMobile, slideEnter } from "../utils"
 import { gsap } from "gsap"
 import throttle from "lodash/throttle"
 import { useBgm } from "../hooks/useBgm"
@@ -11,12 +11,38 @@ import { useChatMarked } from "../hooks/useChatMark"
 import DynamicBg from "./DynamicBg.vue"
 import { useStore } from "../stores"
 import { CinemaUserEnum } from "../router"
+import GuideMask, { GuidePosition } from "./GuideMask.vue"
+import { useBoolean } from "../hooks/useBoolean"
+import { icA64, icD64, icS64, icW64, space64 } from "../contants"
+import isBoolean from "lodash/isBoolean"
+import once from "lodash/once"
+import { getStorage, setStorage, StorageKey } from "../utils/storage"
+
+const guideList: GuidePosition[] = [
+  "play",
+  "play-2",
+  "play-score",
+  "play-elect",
+  "multip",
+  "multip-miss-one",
+  "multip-finish",
+  "multip-start",
+  "multip-started",
+]
+
+const ismobile = isMobile()
 
 const router = useRouter()
 
 const store = useStore()
 
 const { markGameEnd, chatsMarked } = useChatMarked()
+
+const isGuided = ref(getStorage(StorageKey.PLAY_GUIDED) || false)
+
+const [visGuide, { toggle: toggleGuide }] = useBoolean(!isGuided.value)
+
+const guidePos = ref<GuidePosition>(guideList[0])
 
 const userDialogIdx = 0
 
@@ -72,6 +98,132 @@ const isFinish = computed((prev) => {
   return res
 })
 
+const toggleGameBlock = (block = false) => {
+  gameManager.value.isBlockInput = block
+}
+
+const guideToNext = (params?: { block: boolean }) => {
+  const { block } = params || {}
+
+  if (isBoolean(block)) toggleGameBlock(block)
+
+  const findIdx = guideList.findIndex((item) => item === guidePos.value)
+  guidePos.value = guideList[findIdx + 1]
+}
+
+const handleNextGuide = () => {
+  if (guidePos.value === "play-score") {
+    guideToNext({ block: true })
+    return
+  }
+  if (guidePos.value === "play-elect") {
+    toggleGameBlock(true)
+    toggleGuide()
+    requestAnimationFrame(() => {
+      guideToNext({ block: false })
+    })
+    return
+  }
+
+  if (visGuide.value && guidePos.value === "multip") {
+    guideToNext({ block: true })
+    return
+  }
+  if (visGuide.value && guidePos.value === "multip-miss-one") {
+    toggleGameBlock(true)
+    toggleGuide()
+    requestAnimationFrame(() => {
+      guideToNext({ block: false })
+    })
+    return
+  }
+  if (visGuide.value && guidePos.value === "multip-finish") {
+    guideToNext({ block: true })
+    return
+  }
+  if (visGuide.value && guidePos.value === "multip-started") {
+    toggleGameBlock(true)
+    toggleGuide()
+    requestAnimationFrame(() => {
+      guideToNext({ block: false })
+      guideEndCallback()
+    })
+  }
+}
+
+const guideEndCallback = () => {
+  setStorage(StorageKey.PLAY_GUIDED, true)
+}
+
+const handleKeydown = (e: KeyboardEvent) => {
+  const modifiers = e.altKey || e.ctrlKey || e.metaKey || e.shiftKey
+
+  if (modifiers || !visGuide.value) return
+
+  handleNextGuide()
+  if (
+    (visGuide.value && guidePos.value === "multip-start" && e.code === "Space") ||
+    e.key === " "
+  ) {
+    guideToNext({ block: true })
+    return
+  }
+}
+
+const handleGuideStart = () => {
+  if (visGuide.value && guidePos.value === "multip-start") {
+    guideToNext({ block: true })
+    // trigger game multiplier
+    const elm = document.querySelector<HTMLElement>(".enable-multiplier-button")
+    elm?.click()
+  }
+}
+
+const handleMoveBefore = (() => {
+  const handleBlockGameMove = (e: any) => {
+    // 0: up, 1: right, 2: down, 3: left
+    const { direction } = e.detail
+
+    if (guidePos.value === "play") {
+      if (direction === 2) {
+        guideToNext({ block: false })
+      } else {
+        toggleGameBlock(true)
+      }
+      return
+    }
+    if (guidePos.value === "play-2") {
+      if (direction === 3) {
+        guideToNext({ block: false })
+      } else {
+        toggleGameBlock(true)
+      }
+      return
+    }
+  }
+  return isGuided.value ? () => {} : handleBlockGameMove
+})()
+
+const onceRandomMult1 = once(() => {
+  toggleGuide()
+  toggleGameBlock(true)
+  return
+})
+const onceRandomMult2 = once(() => {
+  toggleGuide()
+  toggleGameBlock(true)
+  return
+})
+
+watchEffect(() => {
+  if (!isGuided.value && randomMultiplier.value[1] > 0) {
+    onceRandomMult1()
+  }
+  if (!isGuided.value && randomMultiplier.value[0] > 0) {
+    onceRandomMult2()
+  }
+})
+
 // toggleBlockLight
 watchEffect(() => {
   const cls = ".block-light"
@@ -82,10 +234,14 @@ watchEffect(() => {
   }
 })
 
-const handleGameOver = () => {
-  isOver.value = true
-  toggleModalState()
-}
+const handleGameOver = throttle(
+  () => {
+    isOver.value = true
+    toggleModalState()
+  },
+  1000,
+  { trailing: false },
+)
 
 const handleUpdateScore = (e: any) => {
   score.value = parseFloat(e.detail.score)
@@ -142,24 +298,54 @@ const toggleModalState = throttle(
   { trailing: false },
 )
 
+const gameManager = ref()
+
 onMounted(() => {
   window.requestAnimationFrame(function () {
-    const gameManager = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager)
-    window.addEventListener("ganmeOver", throttle(handleGameOver, 1000, { trailing: false }))
-    gameManager.actuator.scoreContainer?.addEventListener("updateScore", handleUpdateScore)
-    gameManager.actuator.scoreContainer?.addEventListener(
+    document.addEventListener("keydown", handleKeydown)
+    gameManager.value = new GameManager(4, KeyboardInputManager, HTMLActuator, LocalStorageManager)
+    console.log("gameManager.value", gameManager.value)
+    window.addEventListener("ganmeOver", handleGameOver)
+    gameManager.value.actuator.scoreContainer?.addEventListener("moveBefore", handleMoveBefore)
+    gameManager.value.actuator.scoreContainer?.addEventListener("updateScore", handleUpdateScore)
+    gameManager.value.actuator.scoreContainer?.addEventListener(
       "genRandomMultiplier",
       handleGenRandomMultiplier,
     )
-    gameManager.actuator.scoreContainer?.addEventListener(
+    gameManager.value.actuator.scoreContainer?.addEventListener(
       "enableMultiplier",
       handleEnableMultiplier,
     )
-    gameManager.actuator.scoreContainer?.addEventListener(
+    gameManager.value.actuator.scoreContainer?.addEventListener(
       "popupMultedScore",
       handlePopupMultedScore,
     )
+
+    if (!isGuided.value) {
+      gameManager.value.isBlockInput = true
+    }
   })
+})
+
+onUnmounted(() => {
+  if (gameManager.value) {
+    document.removeEventListener("keydown", handleKeydown)
+    window.removeEventListener("ganmeOver", handleGameOver)
+    gameManager.value.actuator.scoreContainer?.removeEventListener("moveBefore", handleMoveBefore)
+    gameManager.value.actuator.scoreContainer?.removeEventListener("updateScore", handleUpdateScore)
+    gameManager.value.actuator.scoreContainer?.removeEventListener(
+      "genRandomMultiplier",
+      handleGenRandomMultiplier,
+    )
+    gameManager.value.actuator.scoreContainer?.removeEventListener(
+      "enableMultiplier",
+      handleEnableMultiplier,
+    )
+    gameManager.value.actuator.scoreContainer?.removeEventListener(
+      "popupMultedScore",
+      handlePopupMultedScore,
+    )
+  }
 })
 
 const onBack = async () => {
@@ -242,7 +428,25 @@ const onBack = async () => {
       ></DynamicBg>
     </div>
     <div class="cover-box"></div>
-    <DynamicBg class="right-bottom" name="blk_di_3"></DynamicBg>
+    <DynamicBg class="right-bottom" name="blk_di_3">
+      <div v-if="!ismobile">
+        <div class="dirc-wrap">
+          <div class="dirc-item dirc-w" :style="{ backgroundImage: `url(${icW64})` }"></div>
+          <div class="dirc-item dirc-a" :style="{ backgroundImage: `url(${icA64})` }"></div>
+          <div class="dirc-item dirc-s" :style="{ backgroundImage: `url(${icS64})` }"></div>
+          <div class="dirc-item dirc-d" :style="{ backgroundImage: `url(${icD64})` }"></div>
+        </div>
+        <span class="right-bottom-tips-text" :style="{ left: '1.4rem' }" data-text="滑动"
+          >滑动</span
+        >
+        <div class="space-tips-wrap">
+          <img class="space-icon" :src="space64" alt="" />
+        </div>
+        <span class="right-bottom-tips-text" data-text="电费加倍" :style="{ left: '3.3rem' }"
+          >电费加倍</span
+        >
+      </div>
+    </DynamicBg>
 
     <DynamicBg name="play_bot_1" class="play-bot-avatar"></DynamicBg>
     <DynamicBg class="play-container" name="play_form">
@@ -336,6 +540,13 @@ const onBack = async () => {
       </div>
     </DynamicBg>
   </div>
+
+  <GuideMask
+    :visible="visGuide"
+    :position="guidePos"
+    @click="handleNextGuide"
+    @start="handleGuideStart"
+  />
 
   <div class="play-view-modal">
     <div class="play-view-modal-mask"></div>
@@ -989,5 +1200,63 @@ const onBack = async () => {
     background-repeat: no-repeat;
     animation: live 1.5s linear infinite;
   }
+}
+
+.dirc-wrap {
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+
+  .dirc-item {
+    position: absolute;
+    width: 0.3rem;
+    height: 0.3rem;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+  }
+
+  .dirc-w {
+    top: 0.5rem;
+    left: 0.44rem;
+  }
+  .dirc-a {
+    left: 0.16rem;
+    top: 0.74rem;
+  }
+  .dirc-s {
+    left: 0.44rem;
+    top: 0.74rem;
+  }
+  .dirc-d {
+    left: 0.72rem;
+    top: 0.74rem;
+  }
+}
+
+.space-tips-wrap {
+  position: absolute;
+  top: 0.15rem;
+  left: 2.4rem;
+}
+.right-bottom-tips-text {
+  position: absolute;
+  top: 0.9rem;
+  color: #fdf2ff;
+  font-size: 0.24rem;
+
+  &::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #69589f;
+    filter: url(#stroke-text-svg-filter-3);
+  }
+}
+
+.space-icon {
+  display: inline-block;
+  width: 0.7rem;
+  height: auto;
 }
 </style>
