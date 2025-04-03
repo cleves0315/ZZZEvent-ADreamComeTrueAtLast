@@ -3,6 +3,8 @@ import { CSSProperties, ref, StyleValue, watchEffect } from "vue"
 import { useRoute } from "vue-router"
 import { useStore } from "../stores"
 
+import defaultBg from "../assets/default_bg2.jpg"
+
 const store = useStore()
 
 const { style } = defineProps({
@@ -20,13 +22,13 @@ const posterPath = ref("")
 
 const cls = ref<StyleValue>()
 
-watchEffect(() => {
+watchEffect(async () => {
   switch (route.path) {
     case "/":
       resPath.value = "/video/main.mp4"
       cls.value = { transform: "scale(1)" }
 
-      posterPath.value = store.assetList["default_bg2"]
+      posterPath.value = defaultBg
       break
     case "/home":
       resPath.value = store.assetList["zhuyuan_actor"]
