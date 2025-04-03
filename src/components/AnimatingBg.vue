@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { CSSProperties, ref, StyleValue, watchEffect } from "vue"
+import { CSSProperties, onMounted, ref, StyleValue, watchEffect } from "vue"
 import { useRoute } from "vue-router"
 import { useStore } from "../stores"
 
 import defaultBg from "../assets/default_bg2.jpg"
 
 const store = useStore()
+
+const videoElm = ref<HTMLVideoElement | null>(null)
 
 const { style } = defineProps({
   style: {
@@ -46,15 +48,26 @@ watchEffect(async () => {
       break
   }
 })
+
+onMounted(() => {
+  document.addEventListener(
+    "click",
+    () => {
+      videoElm.value?.play()
+    },
+    { once: true },
+  )
+})
 </script>
 
 <template>
   <video
     class="mv"
+    ref="videoElm"
     :src="resPath"
-    autoplay
     loop
     muted
+    autoplay
     :poster="posterPath"
     webkit-playsinline
     playsinline
