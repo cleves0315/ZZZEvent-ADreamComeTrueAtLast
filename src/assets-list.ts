@@ -50,6 +50,7 @@ export type Assets =
   | "mute_ban_1"
   | "mute_open_1"
   | "lin_l_3"
+  | "main"
   | "task_btn"
   | "user_zhe_to_right"
   | "lin_l_2"
