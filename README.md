@@ -3,7 +3,7 @@
     <img width="180" src="https://fastcdn.mihoyo.com/static-resource-v2/2025/01/16/a35fb8692bda00dcecf3bb81bedbb583_6851083330073124616.png" alt="绝区零活动复刻LOGO">
   </a>
   <h1>ZZZEvent-ADreamComeTrueAtLast</h1>
-  <p>🎮 精准复刻《绝区零》限时活动网页，体验原汁原味的游戏互动</p>
+  <p>🎮 精准复刻《绝区零》「美梦如约而至」限时活动网页，体验原汁原味的游戏互动</p>
 
 [![Deno Version](https://img.shields.io/badge/deno-blue?logo=deno)](https://deno.land)
 [![Vite](https://img.shields.io/badge/vite-blueviolet?logo=vite)](https://vitejs.dev/)
