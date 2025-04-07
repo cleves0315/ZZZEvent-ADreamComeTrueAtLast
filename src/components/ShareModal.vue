@@ -2,7 +2,7 @@
 import ViewModal from "./ViewModal.vue"
 
 import { copyToClipboard } from "../utils"
-import { throttle } from "lodash"
+import throttle from "lodash/throttle"
 import { ref } from "vue"
 import { useBoolean } from "../hooks/useBoolean"
 
