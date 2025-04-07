@@ -44,5 +44,6 @@ jobs:
           entrypoint: "server.ts"
           import-map: "deno.json"
           include: "dist/*"
+          root: "/"
         env:
           DENO_ENV: production
