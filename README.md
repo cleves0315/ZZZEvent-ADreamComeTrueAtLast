@@ -6,7 +6,7 @@
   <p>🎮 精准复刻《绝区零》「美梦如约而至」限时活动网页，体验原汁原味的游戏互动</p>
 
 [![Deno Version](https://img.shields.io/badge/deno-blue?logo=deno)](https://deno.land)
-[![Vite](https://img.shields.io/badge/vite-blueviolet?logo=vite)](https://vitejs.dev/)
+[![Vite](https://img.shields.io/badge/vite-brightgreen?logo=vite)](https://vitejs.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Uptime](https://img.shields.io/website?url=https%3A%2F%2Fzzz-event.deno.dev)](https://zzz-event.deno.dev)
 [![Visitors](https://visitor-badge.laobi.icu/badge?page_id=ZZZEvent-ADreamComeTrueAtLast)](https://zzz-event.deno.dev)
