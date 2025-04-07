@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: a64d7b6e-ba0f-4dc8-a53e-5c1c5890e163
+      id-token: "a64d7b6e-ba0f-4dc8-a53e-5c1c5890e163"
       contents: read
 
     steps:
