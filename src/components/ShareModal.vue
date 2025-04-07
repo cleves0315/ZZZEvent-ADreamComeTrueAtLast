@@ -34,6 +34,7 @@ const handleClickByMask = throttle(
 <template>
   <ViewModal :visible="visite" @click-by-mask="handleClickByMask">
     <div class="share-img"></div>
+    <div class="qr"></div>
     <a
       href="https://github.com/cleves0315/ZZZEvent-ADreamComeTrueAtLast"
       target="_blank"
@@ -46,10 +47,10 @@ const handleClickByMask = throttle(
         class="share-popover-icon"
       />
     </a>
-    <div class="share-btn" @click="togglePoppver">
+    <!-- <div class="share-btn" @click="togglePoppver">
       <div class="share-popover" v-if="visPoppver">
         <div class="share-popover-list">
-          <!-- <div class="share-popover-item">
+          <div class="share-popover-item">
             <a href="https://github.com/cleves0315/ZZZEvent-ADreamComeTrueAtLast" target="_blank">
               <img
                 style="border-radius: 50%; background-color: #000"
@@ -58,7 +59,7 @@ const handleClickByMask = throttle(
                 class="share-popover-icon"
               />
             </a>
-          </div> -->
+          </div>
           <div class="share-popover-item" @click="handleClickShareItem">
             <img
               src="https://fastcdn.mihoyo.com/static-resource-v2/2023/09/06/e933078d70f84f2d50270019641a65bc_2926926410987141994.png"
@@ -68,7 +69,7 @@ const handleClickByMask = throttle(
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </ViewModal>
 </template>
 
@@ -89,16 +90,13 @@ const handleClickByMask = throttle(
 }
 .github-share {
   display: block;
-  width: 1rem;
-  height: 1rem;
+  width: 0.8rem;
+  height: 0.8rem;
   position: absolute;
-  left: -1.4rem;
-  top: 4.7rem;
-  border: 0.04em solid #8975bf;
+  left: -1.1rem;
+  // top: 4.7rem;
+  bottom: 0;
   border-radius: 50%;
-  &:hover {
-    border-color: #fdd034;
-  }
   img {
     display: block;
     width: 100%;
@@ -150,5 +148,19 @@ const handleClickByMask = throttle(
     width: 100%;
     height: 100%;
   }
+}
+.qr {
+  position: absolute;
+  top: 5.22rem;
+  left: 8.8rem;
+  width: 1.4rem;
+  height: 1.4rem;
+  padding: 0.1rem;
+  border-radius: 0.1rem;
+  background-origin: content-box;
+  background-color: #6041a1;
+  background-size: 100% auto;
+  background-repeat: no-repeat;
+  background-image: url(/QRcode_a1.png);
 }
 </style>
