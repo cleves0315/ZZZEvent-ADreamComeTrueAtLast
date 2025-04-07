@@ -43,6 +43,6 @@ jobs:
           project: "zzz-event"
           entrypoint: "server.ts"
           import-map: "deno.json"
-          include: "dist/*,server.ts"
+          include: "dist/*,server.ts,deno.json"
         env:
           DENO_ENV: production
