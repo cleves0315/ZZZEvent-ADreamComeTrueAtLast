@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "@oak/oak": "jsr:@oak/oak@^17.1.4",
+    "@std/path": "jsr:@std/path@^1.0.8"
+  }
+}

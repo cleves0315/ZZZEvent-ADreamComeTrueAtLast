@@ -11,8 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      id-token: write # Needed for auth with Deno Deploy
-      contents: read # Needed to clone the repository
+      id-token: a64d7b6e-ba0f-4dc8-a53e-5c1c5890e163
+      contents: read
 
     steps:
       - name: Clone repository
@@ -41,5 +41,8 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "zzz-event"
-          entrypoint: "https://deno.land/std@0.217.0/http/file_server.ts"
-          root: "dist"
+          entrypoint: "server.ts"
+          import-map: "deno.json"
+          include: "dist/*"
+        env:
+          DENO_ENV: production
