@@ -1,8 +1,6 @@
 import { Application, Router, send } from "jsr:@oak/oak"
 import * as path from "jsr:@std/path"
 
-console.log("Resolved dist path:", path.join(Deno.cwd(), "dist"))
-
 const app = new Application()
 const router = new Router()
 
@@ -39,5 +37,9 @@ app.use(async (ctx) => {
 
 const isDev = Deno.env.get("DENO_ENV") === "development"
 const port = isDev ? 8000 : undefined
-console.log(`Server running on http://localhost:${port || ""}`)
+
+if (isDev) {
+  console.log(`Server running on http://localhost:${port}`)
+}
+
 await app.listen(isDev ? { port: Number(port) } : undefined)
