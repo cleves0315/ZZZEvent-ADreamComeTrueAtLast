@@ -5,6 +5,7 @@ specifiers:
   '@types/howler': ^2.2.12
   '@types/lodash': ^4.17.15
   '@vercel/analytics': ^1.5.0
+  '@vercel/speed-insights': ^1.2.0
   '@vitejs/plugin-vue': ^5.1.2
   eslint: ^9.10.0
   eslint-config-prettier: ^9.1.0
@@ -28,6 +29,7 @@ dependencies:
   '@types/howler': 2.2.12
   '@types/lodash': 4.17.16
   '@vercel/analytics': 1.5.0_4zkhmgh5wx2nmrd47udboenwxe
+  '@vercel/speed-insights': 1.2.0_4zkhmgh5wx2nmrd47udboenwxe
   gsap: 3.12.7
   howler: 2.2.4
   lodash: 4.17.21
@@ -883,6 +885,34 @@ packages:
     peerDependenciesMeta:
       '@remix-run/react':
         optional: true
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
+        optional: true
+    dependencies:
+      vue: 3.5.13_typescript@5.8.3
+      vue-router: 4.5.0_vue@3.5.13
+    dev: false
+
+  /@vercel/speed-insights/1.2.0_4zkhmgh5wx2nmrd47udboenwxe:
+    resolution: {integrity: sha512-y9GVzrUJ2xmgtQlzFP2KhVRoCglwfRQgjyfY607aU0hh0Un6d0OUyrJkjuAlsV18qR4zfoFPs/BiIj9YDS6Wzw==}
+    requiresBuild: true
+    peerDependencies:
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19 || ^19.0.0-rc
+      svelte: '>= 4'
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
       '@sveltejs/kit':
         optional: true
       next:

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import FlexibleView from "./components/FlexibleView.vue"
+import { SpeedInsights } from "@vercel/speed-insights/vue"
+
 document.ondblclick = function (e) {
   e.preventDefault()
 }
@@ -7,6 +9,7 @@ document.ondblclick = function (e) {
 
 <template>
   <div class="app-container">
+    <SpeedInsights />
     <FlexibleView />
   </div>
 </template>
