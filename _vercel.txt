@@ -1,2 +1,0 @@
-vc-domain-verify=zzz-event.vervel.app,5cbe9f350d7366018078
-

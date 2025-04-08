@@ -1,4 +1,10 @@
 {
+  "rewrites": [
+    {
+      "source": "/e20250124year/(.*)",
+      "destination": "/"
+    }
+  ],
   "headers": [
     {
       "source": "/assets/(.*)",
