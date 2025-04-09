@@ -1,15 +1,14 @@
 <div align="center">
-  <a href="https://zzz-event.deno.dev/" target="_blank" rel="noopener noreferrer">
+  <a href="https://zzz-events.vercel.app/" target="_blank" rel="noopener noreferrer">
     <img width="180" src="https://fastcdn.mihoyo.com/static-resource-v2/2025/01/16/a35fb8692bda00dcecf3bb81bedbb583_6851083330073124616.png" alt="绝区零活动复刻LOGO">
   </a>
   <h1>ZZZEvent-ADreamComeTrueAtLast</h1>
   <p>🎮 精准复刻《绝区零》「美梦如约而至」限时活动网页，体验原汁原味的游戏互动</p>
 
-[![Deno](https://img.shields.io/badge/deno-blue?logo=deno)](https://deno.land)
 [![Vite](https://img.shields.io/badge/vite-64C4ED?logo=vite)](https://vitejs.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Uptime](https://img.shields.io/website?url=https%3A%2F%2Fzzz-event.deno.dev)](https://zzz-event.deno.dev)
-[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=ZZZEvent-ADreamComeTrueAtLast)](https://zzz-event.deno.dev)
+[![Uptime](https://img.shields.io/website?url=https%3A%2F%2Fzzz-events.vercel.app)](https://zzz-events.vercel.app/)
+[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=ZZZEvent-ADreamComeTrueAtLast)](https://zzz-events.vercel.app/)
 
 </div>
 
@@ -18,7 +17,7 @@
 - **🎯 高度还原**：近乎完美地复刻原版视觉设计，相似度高达 98% 以上。
 - **📱 全端适配**：响应式布局，完美支持移动端、平板电脑及桌面电脑访问。
 - **🎮 原生体验**：精心再现游戏内的交互动画与音效系统，带来沉浸式体验。
-- **🛠️ 技术栈**：基于 Vue.js 框架和 Vite 构建工具，使用 Deno 进行部署。
+- **🛠️ 技术栈**：基于 Vue.js 框架和 Vite 构建工具，部署在 Vercel 服务中。
 
 ## 🖼️ 效果预览
 
@@ -29,7 +28,7 @@
 
 ## 🚀 在线体验
 
-[![体验演示](https://img.shields.io/badge/%E7%82%B9%E5%87%BB%E4%BD%93%E9%AA%8C-%E5%9C%A8%E7%BA%BF%E6%BC%94%E7%A4%BA-blue?logo=google-chrome)](https://zzz-event.deno.dev)
+[![体验演示](https://img.shields.io/badge/%E7%82%B9%E5%87%BB%E4%BD%93%E9%AA%8C-%E5%9C%A8%E7%BA%BF%E6%BC%94%E7%A4%BA-blue?logo=google-chrome)](https://zzz-events.vercel.app/)
 
 > 📱 推荐使用 Chrome 或 Safari 最新版本访问，以获得最佳体验。
 
