@@ -22,8 +22,8 @@
 ## 🖼️ 效果预览
 
 <div style="display: flex; gap: 2%;">
-  <img src="./docs/preview1.jpg" alt="活动主界面预览" style="width: 49%;" />
-  <img src="./docs/preview2.jpg" alt="活动互动环节预览" style="width: 49%;" />
+  <img src="https://i.imgur.com/AhDtKFY.jpeg" alt="活动主界面预览" style="width: 49%;" />
+  <img src="https://i.imgur.com/1L5C84b.jpeg" alt="活动互动环节预览" style="width: 49%;" />
 </div>
 
 ## 🚀 在线体验
@@ -35,7 +35,7 @@
 📱 移动端扫码体验：
 
 <div>
-  <img src="./docs/qr_code.jpg" width="150" alt="移动端扫码体验">
+  <img src="https://i.imgur.com/d3TVo4W.jpeg" width="150" alt="移动端扫码体验">
 </div>
 
 ## 📜 协议声明
