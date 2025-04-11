@@ -30,6 +30,8 @@
 
 [![体验演示](https://img.shields.io/badge/%E7%82%B9%E5%87%BB%E4%BD%93%E9%AA%8C-%E5%9C%A8%E7%BA%BF%E6%BC%94%E7%A4%BA-blue?logo=google-chrome)](https://zzz-events.vercel.app/)
 
+[国内备用](https://zzz-event.deno.dev/)
+
 > 📱 推荐使用 Chrome 或 Safari 最新版本访问，以获得最佳体验。
 
 📱 移动端扫码体验：
