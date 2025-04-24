@@ -62,7 +62,7 @@ const onStart = async () => {
 
   <div class="main-view">
     <div class="main-share" @click="handleShare"></div>
-    <div class="main-title"></div>
+    <img class="main-title" src="/main_title.png" alt="title" />
     <div class="main-subtitle">
       约定的聚餐近在眼前，突发全员爽约危机！ 好消息，您只需付出一点点额外电费，即可消除烦恼。
     </div>
@@ -93,7 +93,6 @@ const onStart = async () => {
   left: 0;
   right: 0;
   bottom: 0;
-  // background-image: url(../assets/default_bg2.jpg);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
@@ -129,11 +128,7 @@ const onStart = async () => {
   height: 2.94rem;
   left: 15.38rem;
   top: 1.82rem;
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
-  background-position: center;
   z-index: 3;
-  background-image: url(/main_title.png);
 }
 
 .main-subtitle {

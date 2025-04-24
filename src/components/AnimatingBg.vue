@@ -5,7 +5,7 @@ import { useStore } from "../stores"
 
 import mainMp4 from "../assets/main.mp4"
 
-import defaultBg from "../assets/default_bg2.jpg"
+const defaultBg = "/default_bg.jpg"
 
 const store = useStore()
 

@@ -34,7 +34,6 @@ export type Assets =
   | "btn_s_1"
   | "random_number"
   | "reply_1"
-  | "default_bg2"
   | "chat_block"
   | "alert_bg_1"
   | "loading_ic_0"
