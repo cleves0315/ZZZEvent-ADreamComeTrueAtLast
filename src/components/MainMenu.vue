@@ -77,10 +77,7 @@ const onStart = async () => {
         绳网等级≥8级，在主线序章·幕间中解锁「活动」功能后即可参与
       </div>
     </div>
-    <img
-      class="main-reward"
-      src="https://fastcdn.mihoyo.com/mi18n/nap_cn/m20241113hy3an50268/upload/2df625cf3c89515646a4833394197f70_5982373795839378882.png"
-    />
+    <img class="main-reward" src="/main_reward.png" alt="reward" />
     <div class="main-btns">
       <div class="main-btn-start" @click="onStart">启动游戏</div>
     </div>
@@ -136,7 +133,7 @@ const onStart = async () => {
   background-size: 100% 100%;
   background-position: center;
   z-index: 3;
-  background-image: url(https://fastcdn.mihoyo.com/mi18n/nap_cn/m20241113hy3an50268/upload/5b9c204a4833a176f6d5cedcbb2574dc_9208628070822934568.png);
+  background-image: url(/main_title.png);
 }
 
 .main-subtitle {
