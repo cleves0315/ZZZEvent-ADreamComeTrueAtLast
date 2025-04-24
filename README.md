@@ -35,7 +35,7 @@
 📷 **扫码预览**（移动端）：
 
 <div>
-  <img src="https://i.imgur.com/d3TVo4W.jpeg" width="150" alt="移动端扫码体验">
+  <img src="https://i.imgur.com/tyaHHYT.png" width="150" alt="移动端扫码体验">
 </div>
 
 ## 📜 协议与声明 License & Notice
