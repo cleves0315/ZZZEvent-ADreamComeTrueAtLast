@@ -34,7 +34,6 @@ const handleClickByMask = throttle(
 <template>
   <ViewModal :visible="visite" @click-by-mask="handleClickByMask">
     <div class="share-img"></div>
-    <div class="qr"></div>
     <a
       href="https://github.com/cleves0315/ZZZEvent-ADreamComeTrueAtLast"
       target="_blank"
@@ -65,11 +64,6 @@ const handleClickByMask = throttle(
             </a>
           </div>
           <div class="share-popover-item" @click="handleClickShareItem">
-            <img
-              src="https://fastcdn.mihoyo.com/static-resource-v2/2023/09/06/e933078d70f84f2d50270019641a65bc_2926926410987141994.png"
-              alt=""
-              class="share-popover-icon"
-            />
           </div>
         </div>
       </div>
@@ -87,7 +81,7 @@ const handleClickByMask = throttle(
   background-size: cover;
   border-radius: 0.4rem;
   border: 0.12rem solid #392e58;
-  background-image: url("https://fastcdn.mihoyo.com/mi18n/nap_cn/m20241113hy3an50268/upload/7ab08bcde8d519b6f957f7f5605e0b41_913778883666944205.png");
+  background-image: url(/share.png);
 }
 .github-share {
   display: block;
@@ -147,19 +141,5 @@ const handleClickByMask = throttle(
     width: 100%;
     height: 100%;
   }
-}
-.qr {
-  position: absolute;
-  top: 5.22rem;
-  left: 8.8rem;
-  width: 1.4rem;
-  height: 1.4rem;
-  padding: 0.1rem;
-  border-radius: 0.1rem;
-  background-origin: content-box;
-  background-color: #6041a1;
-  background-size: 100% auto;
-  background-repeat: no-repeat;
-  background-image: url(/QRcode_a1.png);
 }
 </style>
