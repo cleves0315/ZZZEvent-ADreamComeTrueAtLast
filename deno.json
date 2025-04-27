@@ -1,0 +1,18 @@
+{
+  "imports": {
+    "@oak/oak": "jsr:@oak/oak@^17.1.4",
+    "@std/path": "jsr:@std/path@^1.0.8"
+  },
+  "deploy": {
+    "project": "4be2586e-087c-4737-ae68-8e390b8a50a7",
+    "exclude": [
+      "**/node_modules"
+    ],
+    "include": [
+      "dist/*",
+      "server.ts",
+      "deno.json"
+    ],
+    "entrypoint": "server.ts"
+  }
+}
