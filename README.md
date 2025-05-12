@@ -1,5 +1,5 @@
 <div align="center">
-  <a href="https://zzz-events.vercel.app/" target="_blank" rel="noopener noreferrer">
+  <a href="https://z3dream.cleves.me/" target="_blank" rel="noopener noreferrer">
     <img width="180" src="https://fastcdn.mihoyo.com/static-resource-v2/2025/01/16/a35fb8692bda00dcecf3bb81bedbb583_6851083330073124616.png" alt="绝区零活动复刻LOGO">
   </a>
   <h1>ZenlessZoneZero-ADreamComeTrueAtLast</h1>
@@ -7,8 +7,8 @@
 
 [![Vite](https://img.shields.io/badge/vite-64C4ED?logo=vite)](https://vitejs.dev/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Uptime](https://img.shields.io/website?url=https%3A%2F%2Fzzz-events.vercel.app)](https://zzz-events.vercel.app/)
-[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=ZZZEvent-ADreamComeTrueAtLast)](https://zzz-events.vercel.app/)
+[![Uptime](https://img.shields.io/website?url=https%3A%2F%2Fz3dream.cleves.me)](https://z3dream.cleves.me/)
+[![Visitors](https://visitor-badge.laobi.icu/badge?page_id=ZZZEvent-ADreamComeTrueAtLast)](https://z3dream.cleves.me/)
 
 </div>
 
@@ -28,9 +28,9 @@
 
 ## 🚀 在线体验 **Online**
 
-🎬 访问地址：[zzz-events.vercel.app](https://zzz-events.vercel.app)
+🎬 访问地址：[z3dream.cleves.me](https://z3dream.cleves.me)
 
-[国内备用](https://zzz-event.deno.dev/)
+[备用](https://zzz-event.deno.dev/)
 
 📷 **扫码预览**（移动端）：
 
