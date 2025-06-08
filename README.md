@@ -43,3 +43,7 @@
 - 本项目遵循 [MIT License](LICENSE) 开源协议。
 - 所有使用的《绝区零》素材（图片 / 音频等）版权归米哈游所有。
 - 本项目仅供技术研究与学习交流，禁止任何形式的商业用途。
+
+## 致谢 Acknowledgements
+
+- 2048 - [gabrielecirulli/2048](https://github.com/gabrielecirulli/2048)
